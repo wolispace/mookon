@@ -43,6 +43,15 @@ We should be able to change an elements shape!
 - Group
 - Switch
 
+## Rewards
+A puzzle definition starts with a 'victory' message / as the first virtual panel.
 
+Id like to add another element to the start of a puzzle config that is a 'reward' maybe formatted as 
 
+Well cone! [pencil] /
 
+When the victory panel is added to the screen the reward should be formatted as a font-awesome icon that can be clicked on.
+
+When the player clicks on the this reward icon, it is moved over to the rewards area so a list of all rewards found are showin in the vertical column of rewards.
+
+When each reward is clicked on it is also added to a list that is saved in local storage, so when the webpage is opened, all rewards strings eg "book", "pencil", "dice" are added to the rewards column.

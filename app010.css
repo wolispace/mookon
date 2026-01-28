@@ -179,12 +179,48 @@ body {
     border: none !important;
     box-shadow: none !important;
     display: flex !important;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 20px;
     text-align: center;
     padding: 20px;
+    pointer-events: none;
+}
+
+.victory-message {
     font-size: 2rem;
     color: rgba(255, 255, 255, 0.85);
-    pointer-events: none;
+}
+
+.reward-icon {
+    font-size: 48px;
+    color: #ffd700;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.reward-icon:hover {
+    transform: scale(1.2) rotate(10deg);
+    color: #ffed4e;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+}
+
+.reward-collected {
+    font-size: 24px;
+    color: #ffd700;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.reward-collected:hover {
+    transform: scale(1.1);
+    color: #ffed4e;
+}
+
+#rewards-area .reward-collected {
+    margin: 5px 0;
 }
 
 .hidden {

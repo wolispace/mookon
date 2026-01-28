@@ -83,10 +83,19 @@ class PuzzleParser {
     static parse(puzzleString) {
         try {
             const sections = puzzleString.split('/').map(s => s.trim());
-            const message = sections[0] || '';
+            let messageText = sections[0] || '';
+            let reward = null;
+
+            // Extract reward from square brackets if present
+            const rewardMatch = messageText.match(/\[([^\]]+)\]/);
+            if (rewardMatch) {
+                reward = rewardMatch[1].trim();
+                messageText = messageText.replace(/\[([^\]]+)\]/, '').trim();
+            }
+
             const panels = sections.slice(1).filter(s => s);
             if (panels.length === 0) throw new Error("No panels defined.");
-            return { message, panels };
+            return { message: messageText, reward, panels };
         } catch (error) {
             PuzzleParser.showError(error.message);
             throw error;
@@ -1472,7 +1481,50 @@ class Panel {
 
         if (config.color === 'victory') {
             this.container.className += ' panel-victory';
-            this.container.textContent = config.message;
+
+            // Create message text
+            const messageSpan = document.createElement('span');
+            messageSpan.textContent = config.message;
+            messageSpan.className = 'victory-message';
+            this.container.appendChild(messageSpan);
+
+            // Add reward icon if present
+            if (config.reward) {
+                const rewardIcon = RewardsManager.createRewardIcon(config.reward, (icon) => {
+                    // Animate icon moving to rewards area
+                    const rewardsArea = document.getElementById('rewards-area');
+                    const iconRect = icon.getBoundingClientRect();
+                    const rewardsRect = rewardsArea.getBoundingClientRect();
+
+                    // Create a clone for animation
+                    const clone = icon.cloneNode(true);
+                    clone.style.position = 'fixed';
+                    clone.style.left = `${iconRect.left}px`;
+                    clone.style.top = `${iconRect.top}px`;
+                    clone.style.transition = 'all 0.6s ease-in-out';
+                    clone.style.zIndex = '9999';
+                    document.body.appendChild(clone);
+
+                    // Remove original icon
+                    icon.remove();
+
+                    // Animate to rewards area
+                    requestAnimationFrame(() => {
+                        clone.style.left = `${rewardsRect.left + rewardsRect.width / 2 - 12}px`;
+                        clone.style.top = `${rewardsRect.top + 10}px`;
+                        clone.style.transform = 'scale(0.8)';
+                        clone.style.opacity = '0.5';
+                    });
+
+                    // Remove clone after animation
+                    setTimeout(() => {
+                        clone.remove();
+                    }, 600);
+                });
+
+                this.container.appendChild(rewardIcon);
+            }
+
             return;
         }
 
@@ -1605,13 +1657,13 @@ class Panel {
 class Game {
     constructor(config) {
         const puzzleConfig = config;
-        const { message, panels } = PuzzleParser.parse(config);
+        const { message, reward, panels } = PuzzleParser.parse(config);
         const rootArea = document.getElementById('puzzle-area');
         rootArea.style.position = 'relative';
 
         this.panelConfigs = panels.map(p => PuzzleParser.parsePanel(p));
         // Add victory pseudo-panel at the bottom (index 0)
-        this.panelConfigs.unshift({ color: 'victory', message: message, elements: [] });
+        this.panelConfigs.unshift({ color: 'victory', message: message, reward: reward, elements: [] });
 
         this.panels = [];
         this.incompletePanels = 0; // Counter for incomplete panels
@@ -1660,6 +1712,19 @@ const VICTORY_MESSAGES = [
     "Amazing!",
     "Way to go!",
     "You're a wiz!"
+];
+
+const REWARDS = [
+    "book",
+    "pencil",
+    "dice",
+    "coin",
+    "key",
+    "wand",
+    "shield",
+    "wand",
+    "wand",
+    "wand"
 ];
 
 // Debug configuration - set to override random generation
@@ -3021,9 +3086,20 @@ class PuzzleGenerator {
 
     toString() {
         const message = VICTORY_MESSAGES[randBetween(0, VICTORY_MESSAGES.length - 1)];
+        const reward = chooseReward();
         const panelsStr = this.panels.map(p => p.toString()).join('\n/\n');
-        return `${message}\n/\n${panelsStr}`;
+        return `${message} [${reward}]\n/\n${panelsStr}`;
     }
+}
+
+function chooseReward() {
+    return REWARDS[randBetween(0, REWARDS.length - 1)];
+}
+
+function buildReward(reward) {
+    return `<div class="reward" title="Reward ${reward}">
+                <i class="fa-solid fa-${reward}"></i>
+            </div>`;
 }
 
 // Global instance
@@ -3104,11 +3180,105 @@ function populatePuzzleSelect() {
     });
 }
 
+// Rewards Manager
+class RewardsManager {
+    static STORAGE_KEY = 'mookon_rewards';
+
+    // Map reward names to Font Awesome icon classes
+    static ICON_MAP = {
+        'pencil': 'fa-pencil',
+        'book': 'fa-book',
+        'dice': 'fa-dice',
+        'star': 'fa-star',
+        'trophy': 'fa-trophy',
+        'key': 'fa-key',
+        'gem': 'fa-gem',
+        'crown': 'fa-crown',
+        'heart': 'fa-heart',
+        'flag': 'fa-flag',
+        'medal': 'fa-medal',
+        'award': 'fa-award',
+        'gift': 'fa-gift',
+        'lightbulb': 'fa-lightbulb',
+        'compass': 'fa-compass',
+        'map': 'fa-map',
+        'scroll': 'fa-scroll',
+        'feather': 'fa-feather',
+        'shield': 'fa-shield',
+        'wand': 'fa-wand-magic-sparkles'
+    };
+
+    static loadRewards() {
+        try {
+            const stored = localStorage.getItem(this.STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        } catch (e) {
+            console.error('Failed to load rewards:', e);
+            return [];
+        }
+    }
+
+    static saveRewards(rewards) {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(rewards));
+        } catch (e) {
+            console.error('Failed to save rewards:', e);
+        }
+    }
+
+    static addReward(rewardName) {
+        const rewards = this.loadRewards();
+        if (!rewards.includes(rewardName)) {
+            rewards.push(rewardName);
+            this.saveRewards(rewards);
+        }
+        this.renderRewards();
+    }
+
+    static renderRewards() {
+        const rewardsArea = document.getElementById('rewards-area');
+        if (!rewardsArea) return;
+
+        const rewards = this.loadRewards();
+        rewardsArea.innerHTML = '';
+
+        rewards.forEach(rewardName => {
+            const icon = document.createElement('i');
+            icon.className = `fas ${this.getIconClass(rewardName)} reward-collected`;
+            icon.title = rewardName;
+            rewardsArea.appendChild(icon);
+        });
+    }
+
+    static getIconClass(rewardName) {
+        const normalized = rewardName.toLowerCase().trim();
+        return this.ICON_MAP[normalized] || 'fa-star'; // Default to star if unknown
+    }
+
+    static createRewardIcon(rewardName, onClickCallback) {
+        const icon = document.createElement('i');
+        icon.className = `fas ${this.getIconClass(rewardName)} reward-icon`;
+        icon.title = `Click to collect: ${rewardName}`;
+        icon.style.cursor = 'pointer';
+
+        icon.addEventListener('click', () => {
+            this.addReward(rewardName);
+            if (onClickCallback) onClickCallback(icon);
+        });
+
+        return icon;
+    }
+}
+
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
     // Initialize SVG factory for filters
     if (typeof SVGFactory !== 'undefined') SVGFactory.init();
 
+    // Load and render saved rewards
+    RewardsManager.renderRewards();
+
+    populatePuzzleSelect();
     const selector = document.getElementById('puzzle-select');
 
     selector.addEventListener('change', (e) => {
