@@ -1,0 +1,433 @@
+:root {
+    --bg-color: #1a1a1a;
+    --panel-border-depth: 3px;
+    --panel-padding: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: white;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#puzzle-selector {
+    position: absolute;
+    z-index: 1000;
+    padding: 2px 2px;
+    border-radius: 4px;
+}
+
+#puzzle-selector label {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#puzzle-select {
+    padding: 2px 2px;
+    border-radius: 3px;
+    border: 1px solid #666;
+    background: #333;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#puzzle-select:hover {
+    background: #444;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+#puzzle-area,
+#storage-area {
+    height: 49vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#puzzle-area {
+    height: 49vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    border-bottom: 2px solid transparent;
+}
+
+#puzzle-area>.panel {
+    grid-area: 1 / 1;
+}
+
+.panel {
+    width: calc(var(--cell-size) * 8 + (var(--panel-padding) * 2) + (var(--panel-border-depth) * 2));
+    height: calc(var(--cell-size) * 8 + (var(--panel-padding) * 2) + (var(--panel-border-depth) * 2));
+    display: block;
+    /* Elements are absolutely positioned */
+    position: relative;
+    padding: var(--panel-padding);
+    border: var(--panel-border-depth) solid;
+    border-color:
+        rgba(255, 255, 255, 0.2)
+        /* top: highlight */
+        rgba(0, 0, 0, 0.3)
+        /* right: shadow */
+        rgba(0, 0, 0, 0.5)
+        /* bottom: shadow */
+        rgba(255, 255, 255, 0.1);
+    /* left: highlight */
+
+    border-radius: 4px;
+    transition: transform 0.6s ease-in-out;
+    box-sizing: border-box;
+}
+
+/* Panel 3D borders based on element colors but muted */
+.panel-black {
+    background-color: #222;
+}
+
+.panel-teal {
+    background-color: #244;
+}
+
+.panel-orange {
+    background-color: #442;
+}
+
+.panel-white {
+    background-color: #444;
+}
+
+.panel-red {
+    background-color: #432;
+}
+
+.panel-blue {
+    background-color: #234;
+}
+
+.panel-green {
+    background-color: #242;
+}
+
+.panel-yellow {
+    background-color: #442;
+}
+
+.panel-grey {
+    background-color: #444;
+}
+
+.panel-victory {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.85);
+    pointer-events: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.element {
+    justify-self: start;
+    align-self: start;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.element.raised,
+.element.controller {
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(3px 3px 1px rgba(0, 0, 0, 0.3));
+}
+
+.element.unlocked {
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.85));
+}
+
+.element.draggable {
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.85));
+}
+
+.element.rotates {
+    filter: none;
+}
+
+.element.unlocked.rotates {
+    filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.85));
+}
+
+.element.dragging {
+    pointer-events: none;
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.5)) drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.95));
+    transition: none;
+}
+
+.element.dragging.rotates {
+    pointer-events: none;
+    filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.95));
+}
+
+.element.sunken {
+    cursor: default !important;
+}
+
+/* Animations */
+@keyframes wiggle {
+
+    0% {
+        transform: rotate(0deg);
+    }
+
+    10% {
+        transform: rotate(3deg);
+    }
+
+    20% {
+        transform: rotate(-3deg);
+    }
+
+    30% {
+        transform: rotate(3deg);
+    }
+
+    40% {
+        transform: rotate(0deg);
+    }
+
+    70% {
+        transform: translateY(40px);
+    }
+
+    95% {
+        transform: translateY(40px);
+    }
+
+    100% {
+        transform: translateY(15px);
+    }
+
+}
+
+@keyframes jump {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateReverse {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.wiggle {
+    animation: wiggle 1.5s ease-in-out forwards;
+}
+
+.jump {
+    animation: jump 0.2s ease-in-out;
+}
+
+.rotating {
+    animation: rotate 0.5s linear;
+}
+
+.rotating-reverse {
+    animation: rotateReverse 0.5s linear;
+}
+
+/* Switch visuals */
+.switch-ball {
+    transition: cx 0.2s ease;
+}
+
+/* confetti styles */
+.confetti-piece {
+    position: fixed;
+    top: -10px;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 2px;
+    animation: confetti-fall 1.2s ease-out forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+#info-button {
+    position: absolute;
+    top: -4px;
+    right: 2px;
+    background: none;
+    border: none;
+    color: #87ceeb;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2000;
+    user-select: none;
+}
+
+#reload-button {
+    position: absolute;
+    top:40%;
+    right: 0;
+    background: none;
+    border: none;
+    color: #87ceeb;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2000;
+    user-select: none;
+}
+
+#new-button {
+    position: absolute;
+    top:40%;
+    left: 0;
+    background: none;
+    border: none;
+    color: #87ceeb;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2000;
+    user-select: none;
+}
+
+#info-button:hover,
+#reload-button:hover,
+#new-button:hover  {
+    opacity: 0.75;
+}
+
+#info-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+#info-content {
+    background: #2a2a2a;
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    position: relative;
+    color: white;
+}
+
+#info-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+#info-close:hover {
+    opacity: 0.75;
+}
+
+#info-content h3 {
+    margin: 0 0 15px 0;
+    color: #4ecdc4;
+}
+
+#info-content p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+#info-content strong {
+    color: #2df386;
+}
+
+#share-button {
+    background-color: #c0c0c0;
+    color: rgb(31, 37, 44);
+    padding: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#share-button:hover {
+    opacity: 0.75;
+}
+
+/* Switch ball raised effect */
+.switch-ball.raised {
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(3px 3px 1px rgba(0, 0, 0, 0.3));
+}
+
+/* Switch pill sunken effect */
+.switch-pill.sunken {
+    filter: url(#sunken-filter) drop-shadow(-1px -1px 1px rgba(0, 0, 0, 1)) drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5));
+}

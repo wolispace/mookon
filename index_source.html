@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mookon Box v 010 @VER@</title>
+    <link rel="stylesheet" href="app010.css?v=@VER@">
+    <script src="lz-string.min.js?v=@VER@"></script>
+    <script src="puzzles.js?v=@VER@"></script>
+    <script src="app010.js?v=@VER@"></script>
+    <script>const v = '@VER@';</script>
+</head>
+
+
+<body>
+    <div id="puzzle-selector">
+        <select id="puzzle-select">
+        </select>
+    </div>
+    <div id="game-container">
+        <div id="puzzle-area"></div>
+        <div id="storage-area"></div>
+    </div>
+    <div id="info-button" title="Slightly helpful information">?</div>
+    <div id="reload-button" title="Retry this puzzle">⟲</div>
+    <div id="new-button">
+        <button onclick="location.reload()" title="New Random Puzzle" style="background:none;border:none;cursor:pointer;">
+            <svg width="28" height="24" viewBox="0 0 24 24" fill="none" stroke="#87ceeb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle cx="8" cy="8" r="1.5"></circle>
+                <circle cx="16" cy="16" r="1.5"></circle>
+                <circle cx="16" cy="8" r="1.5"></circle>
+                <circle cx="8" cy="16" r="1.5"></circle>
+            </svg>
+        </button>
+    </div>  
+
+    <div id="info-dialog" class="hidden">
+        <div id="info-content">
+            <div id="info-close">×</div>
+            <h2>Mookon Box</h2>
+            <h3>A sequential puzzle box simulator.</h3>
+            <p>Interact with elements to unlock some of them.</p>
+            <p>Unlock panels to reveal the next.</p>
+            <p>Elements may be required on other panels.</p>
+            <p>The rewind button resets the puzzle.</p>
+            <p>The dice reloads a new random puzzle.</p>
+            <p>Don't use external tools or force.</p>
+            <p><button id="share-button">Copy current puzzle to clipboard</button></p>
+        </div>
+    </div>
+</body>
+
+</html>
