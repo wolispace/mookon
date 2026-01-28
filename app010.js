@@ -3170,6 +3170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoDialog = document.getElementById('info-dialog');
     const infoClose = document.getElementById('info-close');
     const reloadButton = document.getElementById('reload-button');
+    const newButton = document.getElementById('new-button');
 
     if (infoButton) {
         infoButton.addEventListener('click', () => {
@@ -3197,6 +3198,13 @@ document.addEventListener('DOMContentLoaded', () => {
             loadPuzzle(currentPuzzleIndex);
         });
     }
+
+    if (newButton) {
+        newButton.addEventListener('click', () => {
+            location.reload();
+        });
+    }
+
 });
 // Encode/decode functions with separate message and puzzle encoding
 const PUZZLE_CHARSET = 'ctswr0123456789abdefghiABCDEFGHI .,:/-><=jkmnopuvxyz';

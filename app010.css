@@ -18,15 +18,23 @@ body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     overflow: hidden;
     height: 100vh;
+    display: grid;
+    grid-template-rows: 40px 1fr;
+    grid-template-columns: 1fr;
+}
+
+#controls {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 15px;
 }
 
 #puzzle-selector {
-    position: absolute;
-    z-index: 1000;
-    padding: 2px 2px;
-    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 #puzzle-selector label {
@@ -36,7 +44,7 @@ body {
 }
 
 #puzzle-select {
-    padding: 2px 2px;
+    padding: 4px 8px;
     border-radius: 3px;
     border: 1px solid #666;
     background: #333;
@@ -49,11 +57,39 @@ body {
     background: #444;
 }
 
+#main-content {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#rewards-area {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 20px;
+}
+
+#rewards-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+#rewards-area::-webkit-scrollbar-track {}
+
+#rewards-area::-webkit-scrollbar-thumb {}
+
+#rewards-area::-webkit-scrollbar-thumb:hover {}
+
 #game-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     position: relative;
 }
 
@@ -312,51 +348,26 @@ body {
     }
 }
 
+.button {
+    background: none;
+    border: none;
+    color: #87ceeb;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #info-button {
-    position: absolute;
-    top: -4px;
-    right: 2px;
-    background: none;
-    border: none;
-    color: #87ceeb;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 2000;
-    user-select: none;
-}
-
-#reload-button {
-    position: absolute;
-    top:40%;
-    right: 0;
-    background: none;
-    border: none;
-    color: #87ceeb;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 2000;
-    user-select: none;
-}
-
-#new-button {
-    position: absolute;
-    top:40%;
-    left: 0;
-    background: none;
-    border: none;
-    color: #87ceeb;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 2000;
-    user-select: none;
+    margin-left: auto;
 }
 
 #info-button:hover,
 #reload-button:hover,
-#new-button:hover  {
+#new-button:hover {
     opacity: 0.75;
 }
 

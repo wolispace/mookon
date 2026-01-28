@@ -1,26 +1,26 @@
 const puzzleConfigs = [
-    `
-    Job done!
-    /
-    blue:
-    r1 1x2 1x1 0 2,
-    w1 1x2 3x3 0 0-6-3 tap state 1 r1 drag move,
-    `,
-    `
-    Congrats!
-    /
-    green:
-    w1 3 3x3 0 0-5-0 tap state 2,
-    /
-    blue:
-    w1 1 3x3 0 0-5-0 tap state 1,
-    w1 1 3x4 0 0-5-0 tap state 1,
-    /
-    green:
-    w1 1 3x3 0 0-2-4 tap state 1,
-    c1 1 3x4.5+ 0 2 drag,   
-    `,
-    `
+`
+Job done!
+/
+blue:
+r1 1x2 1x1 0 2,
+w1 1x2 3x3 0 0-6-3 tap state 1 r1 drag move,
+`,
+`
+Congrats!
+/
+green:
+w1 3 3x3 0 0-5-0 tap state 2,
+/
+blue:
+w1 1 3x3 0 0-5-0 tap state 1,
+w1 1 3x4 0 0-5-0 tap state 1,
+/
+green:
+w1 1 3x3 0 0-2-4 tap state 1,
+c1 1 3x4.5+ 0 2 drag,   
+`,
+`
 You found it!
 /
 blue:
@@ -34,8 +34,7 @@ r11 2 2x3 0 3 tap color 6 r11 drag move,
 r12 2 4x3 0 3,
 r13 2 6x3 0 3,
 `,
-
-    `Great!
+`Great!
 /
 blue:
 r1 6x0.1 1x6+ 0 3,  
@@ -48,7 +47,7 @@ c1 .5 3.5x6.7- 0 1,
 s4 1.4 3x6.4+ 0 2 hold rotate 3 s4 drag,
 
 `,
-    `Check!
+`Check!
 /blue:
 r10 1 0x0 0 0,
 r11 1 2x0 0 0,
@@ -93,7 +92,7 @@ r82 1 5x7 0 0,
 r83 1 7x7 0 0,
 
 `,
-    `Woo hoo!
+`Woo hoo!
 /
 red:
 c1 1.4 1x0.5- 0 1 =,
@@ -104,7 +103,7 @@ c5 1 4x1 0 4 drag,
 c6 1.4 4x3 0 4 drag,
 c7 1.8 4x5 0 4 drag
 `,
-    `Success!
+`Success!
 /
 green:
 t0 1.8 1x1 0 1,
@@ -119,18 +118,18 @@ s1 1.4 1x1+ 0 0 hold rotate 3 s1 drag move,
 t2 1.8 1x3 0 3 tap color 5 t2 drag,
 c1 1.8 4x4 0 1 drag,
 `,
-    `Way to move!
-    /
-    grey:
-    r0 1 2x1+ 0 0 tap c0 0x-.5,
-    r1 1 1x2+ 0 0 tap c0 -.5x0,
-    r3 1 2x2+ 0 0 tap c0 0x.5,
-    r2 1 3x2+ 0 0 tap c0 .5x0,
+`Way to move!
+/
+grey:
+r0 1 2x1+ 0 0 tap c0 0x-.5,
+r1 1 1x2+ 0 0 tap c0 -.5x0,
+r3 1 2x2+ 0 0 tap c0 0x.5,
+r2 1 3x2+ 0 0 tap c0 .5x0,
 
-    c0 1 3x1+ 0 3,
-    r9 8x0.1 0x0+ 0 0,
-    c1 1 7x7- 0 1 =,
-    `,
+c0 1 3x1+ 0 3,
+r9 8x0.1 0x0+ 0 0,
+c1 1 7x7- 0 1 =,
+`,
 
 ];
 

@@ -35,6 +35,14 @@ Multiple obscuring can happen, eg a plug can be covered by a rectangle that cant
 We should be able to change an elements shape! 
 
 
+## Status
+### Techniques
+- Maze 
+- Hole
+- Screw
+- Group
+- Switch
+
 
 
 
