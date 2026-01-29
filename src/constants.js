@@ -101,3 +101,15 @@ const DEBUG_CONFIG = {
 };
 
 let elementIdCounter = 1;
+
+
+let globalZIndex = 1000;
+
+
+
+const panelOverrides = []; // ['screw', 'switch', 'hunt'
+let currentGame = null;
+let currentPuzzleIndex = 0;
+let sharedPuzzle = null;
+let randomPuzzle = null; // Generate on demand, not at module load
+let thisPuzzle = '';
