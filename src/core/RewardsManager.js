@@ -1,3 +1,4 @@
+// https://fontawesome.com/icons/pen?f=classic&s=light
 // Rewards Manager
 class RewardsManager {
     static STORAGE_KEY = 'mookon_rewards';
