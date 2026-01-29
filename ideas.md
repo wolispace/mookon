@@ -55,3 +55,24 @@ When the victory panel is added to the screen the reward should be formatted as 
 When the player clicks on the this reward icon, it is moved over to the rewards area so a list of all rewards found are showin in the vertical column of rewards.
 
 When each reward is clicked on it is also added to a list that is saved in local storage, so when the webpage is opened, all rewards strings eg "book", "pencil", "dice" are added to the rewards column.
+
+Font awsome shadow options:
+
+``` css
+.fa {
+  color: #444; /* base icon colour */
+  text-shadow:
+    /* top-left highlight */
+    -1px -1px 1px rgba(255,255,255,0.8),
+
+    /* bottom-right inner dark */
+    1px 1px 1px rgba(0,0,0,0.4),
+
+    /* bottom-left softer inner dark */
+    -1px 1px 1px rgba(0,0,0,0.25),
+
+    /* outer drop shadow */
+    2px 3px 4px rgba(0,0,0,0.35);
+}
+```
+

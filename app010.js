@@ -79,7 +79,7 @@ const ELEMENT_ID_PATTERN = /^[ctswr]\d+$/;
 const NUMERIC_PATTERN = /^\d+$/;
 
 // Configuration Parser
-class PuzzleParser {
+class OLDPuzzleParser {
     static parse(puzzleString) {
         try {
             const sections = puzzleString.split('/').map(s => s.trim());
@@ -2885,7 +2885,6 @@ class GroupTechnique {
         });
     }
 }
-
 
 
 class PuzzleGenerator {
