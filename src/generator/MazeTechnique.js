@@ -78,8 +78,8 @@ class MazeTechnique {
             panel.coverableElements.push({
                 id: `gap-${gapPos.x}-${gapPos.y}`,
                 elementString: `r 1x1 ${gapPos.x}x${gapPos.y}- 0 0 none`, // virtual string for parsing if needed
-                width: 1,
-                height: 1,
+                gridWidth: 1,
+                gridHeight: 1,
                 x: gapPos.x,
                 y: gapPos.y,
                 elevation: '-',

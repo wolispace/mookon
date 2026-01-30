@@ -12,8 +12,8 @@ class GroupTechnique {
         }
 
         const templateShape = plug ? SHAPE_PREFIX_MAP[plug.type] || 'rectangle' : DRAGGABLE_SHAPES[randBetween(0, DRAGGABLE_SHAPES.length - 1)];
-        const templateWidth = plug ? plug.width : randDecimal(1, 2);
-        const templateHeight = plug ? plug.height : randDecimal(1, 2);
+        const templateWidth = plug ? plug.gridWidth : randDecimal(1, 2);
+        const templateHeight = plug ? plug.gridHeight : randDecimal(1, 2);
 
         const keyColor = plug ? plug.color : randBetween(0, COLOR_ARRAY.length - 1);
         let baseColor = randBetween(0, COLOR_ARRAY.length - 1);
@@ -53,8 +53,8 @@ class GroupTechnique {
 
                 if (keep) {
                     const el = new BuildElement(templateShape);
-                    el.width = templateWidth;
-                    el.height = templateHeight;
+                    el.gridWidth = templateWidth;
+                    el.gridHeight = templateHeight;
                     el.x = gridPos.x + c * templateWidth;
                     el.y = gridPos.y + r * templateHeight;
                     el.color = baseColor;

@@ -44,8 +44,8 @@ class SwitchTechnique {
         for (let i = 0; i < numSwitches; i++) {
             const { size, targetState } = switchConfigs[i];
             const sw = new BuildElement('switch');
-            sw.width = size;
-            sw.height = 1;
+            sw.gridWidth = size;
+            sw.gridHeight = 1;
             sw.x = startX;
             sw.y = startY + i; // Vertical stack
 

@@ -50,7 +50,7 @@ class GeneratedPanel {
             const id = tokens[0];
             const sizeStr = tokens[1];
             const locStr = tokens[2];
-            const { width, height } = parseSize(sizeStr);
+            const { gridWidth, gridHeight } = parseSize(sizeStr);
             const elevation = locStr.includes('+') ? '+' : '-';
             const [xPart, yPart] = locStr.replace(/[+\-]/g, '').split('x');
             const x = parseFloat(xPart);
@@ -64,8 +64,8 @@ class GeneratedPanel {
             this.coverableElements.push({
                 id,
                 elementString,
-                width,
-                height,
+                gridWidth,
+                gridHeight,
                 x,
                 y,
                 elevation,
@@ -130,8 +130,8 @@ class GeneratedPanel {
 
         for (const [direction, offsetX, offsetY, action] of controllers) {
             const controller = new BuildElement('rectangle');
-            controller.width = controllerSize;
-            controller.height = controllerSize;
+            controller.gridWidth = controllerSize;
+            controller.gridHeight = controllerSize;
             controller.color = controllerColor;
             controller.elevation = '+';
             controller.method = 'tap';
@@ -220,9 +220,9 @@ class GeneratedPanel {
                 const sizeStr = tokens[1];
                 const locStr = tokens[2];
 
-                const { width, height } = parseSize(sizeStr);
+                const { gridWidth, gridHeight } = parseSize(sizeStr);
                 // Switches are 1 unit wider
-                let elementWidth = width;
+                let elementWidth = gridWidth;
                 if (elementId.toLowerCase().startsWith('w')) {
                     elementWidth += 1;
                 }
@@ -235,7 +235,7 @@ class GeneratedPanel {
                 // Element spans from (elementX, elementY) to (elementX + elementWidth, elementY + height)
                 if (this.rectsOverlap(
                     controllerX, controllerY, controllerSize, controllerSize,
-                    elementX, elementY, elementWidth, height
+                    elementX, elementY, elementWidth, gridHeight
                 )) {
                     return false;
                 }
@@ -294,15 +294,15 @@ class GeneratedPanel {
                 const shapes = ['rectangle', 'circle', 'screw'];
                 const coverShape = shapes[randBetween(0, 2)];
                 const cover = new BuildElement(coverShape);
-                cover.width = element.width + randDecimal(0.4, 1.5);
-                cover.height = element.height + randDecimal(0.4, 1.5);
+                cover.gridWidth = element.gridWidth + randDecimal(0.4, 1.5);
+                cover.gridHeight = element.gridHeight + randDecimal(0.4, 1.5);
 
                 if (coverShape === 'screw') {
-                    const size = Math.max(cover.width, cover.height);
-                    cover.width = cover.height = size;
+                    const size = Math.max(cover.gridWidth, cover.gridHeight);
+                    cover.gridWidth = cover.gridHeight = size;
                 }
 
-                cover.setRandomColor();
+                cover.color = randBetween(0, COLOR_NAMES.length - 1);
                 cover.elevation = '+';
                 cover.x = element.x - 0.2;
                 cover.y = element.y - 0.2;
@@ -346,8 +346,8 @@ class GeneratedPanel {
                 if (element.type === 'w') {
                     // Switch cover
                     const cover = new BuildElement(shapeName);
-                    cover.width = element.width + randDecimal(0.2, 0.8);
-                    cover.height = element.height + randDecimal(0.2, 0.8);
+                    cover.gridWidth = element.gridWidth + randDecimal(0.2, 0.8);
+                    cover.gridHeight = element.gridHeight + randDecimal(0.2, 0.8);
                     cover.setRandomColor();
                     cover.elevation = '+';
                     cover.x = element.x - 0.1;
@@ -381,21 +381,21 @@ class GeneratedPanel {
                     const groupRows = randBetween(1, 2);
                     const targetCol = randBetween(0, groupCols - 1);
                     const targetRow = randBetween(0, groupRows - 1);
-                    const originX = element.x - (targetCol * element.width);
-                    const originY = element.y - (targetRow * element.height);
+                    const originX = element.x - (targetCol * element.gridWidth);
+                    const originY = element.y - (targetRow * element.gridHeight);
 
                     for (let r = 0; r < groupRows; r++) {
                         for (let c = 0; c < groupCols; c++) {
                             if (r === targetRow && c === targetCol) continue;
 
-                            const dx = originX + (c * element.width);
-                            const dy = originY + (r * element.height);
+                            const dx = originX + (c * element.gridWidth);
+                            const dy = originY + (r * element.gridHeight);
 
-                            if (dx >= 0 && dx + element.width <= 8 && dy >= 0 && dy + element.height <= 8) {
-                                if (this.checkFree(dx, dy, element.width, element.height)) {
+                            if (dx >= 0 && dx + element.gridWidth <= 8 && dy >= 0 && dy + element.gridHeight <= 8) {
+                                if (this.checkFree(dx, dy, element.gridWidth, element.gridHeight)) {
                                     const distractor = new BuildElement(shapeName);
-                                    distractor.width = element.width;
-                                    distractor.height = element.height;
+                                    distractor.gridWidth = element.gridWidth;
+                                    distractor.gridHeight = element.gridHeight;
                                     distractor.x = dx;
                                     distractor.y = dy;
                                     distractor.color = randBetween(0, 8);
@@ -417,8 +417,8 @@ class GeneratedPanel {
                     const tokens = element.elementString.split(/\s+/);
                     const modified = new BuildElement(SHAPE_PREFIX_MAP[element.type]);
                     modified.id = tokens[0];
-                    modified.width = element.width;
-                    modified.height = element.height;
+                    modified.gridWidth = element.gridWidth;
+                    modified.gridHeight = element.gridHeight;
                     modified.x = element.x;
                     modified.y = element.y;
                     modified.color = tokens[4]; // Use index 4 to stay before any method/target tokens
@@ -445,8 +445,8 @@ class GeneratedPanel {
                     if (swPos) {
                         const modified = new BuildElement(SHAPE_PREFIX_MAP[element.type] || 'circle');
                         modified.id = tokens[0];
-                        modified.width = element.width;
-                        modified.height = element.height;
+                        modified.gridWidth = element.gridWidth;
+                        modified.gridHeight = element.gridHeight;
                         modified.x = element.x;
                         modified.y = element.y;
                         modified.color = tokens[4]; // Use index 4 to stay before any method/target tokens
@@ -455,8 +455,8 @@ class GeneratedPanel {
                         modified.context = `Released by switch`;
 
                         const sw = new BuildElement('switch');
-                        sw.width = swSize;
-                        sw.height = 1;
+                        sw.gridWidth = swSize;
+                        sw.gridHeight = 1;
                         sw.x = swPos.x;
                         sw.y = swPos.y;
 
@@ -531,8 +531,8 @@ class GeneratedPanel {
             const sizeStr = tokens[1];
             const locStr = tokens[2];
 
-            let { width, height } = parseSize(sizeStr);
-            if (tokens[0].toLowerCase().startsWith('w')) width += 1;
+            let { gridWidth, gridHeight } = parseSize(sizeStr);
+            if (tokens[0].toLowerCase().startsWith('w')) gridWidth += 1;
 
             // Remove elevation markers (+ or -) from location string
             const cleanLocStr = locStr.replace(/[+\-]/g, '');

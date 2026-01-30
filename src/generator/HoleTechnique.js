@@ -18,7 +18,7 @@ class HoleTechnique {
 
             // Create socket (hole - sunken shape) only if we have space
             const hole = new BuildElement(shape);
-            hole.width = hole.height = size;
+            hole.gridWidth = hole.gridHeight = size;
             hole.color = color;
             hole.elevation = '-';
             hole.elevationTarget = ''; // Target elevation to apply when dragged
@@ -31,7 +31,7 @@ class HoleTechnique {
 
             // Create corresponding plug (draggable shape)
             const plug = new BuildElement(shape);
-            plug.width = plug.height = size;
+            plug.gridWidth = plug.gridHeight = size;
             plug.color = color;
             plug.elevation = '+';
 

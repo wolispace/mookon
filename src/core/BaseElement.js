@@ -5,8 +5,8 @@ class BaseElement {
     x = 0;
     y = 0;
     type = 'c';
-    width = 1;
-    height = 1;
+    gridWidth = 1;
+    gridHeight = 1;
     size = 1;
     color = 0;
     elevation = ''; // +|-
@@ -27,9 +27,9 @@ class BaseElement {
         const sizeStr = `${size}`;
         if (sizeStr.includes('x')) {
             const parts = sizeStr.split('x');
-            this.width = parseFloat(parts[0]);
-            this.height = parseFloat(parts[1]);
-            this.size = Math.max(this.width, this.height);
+            this.gridWidth = parseFloat(parts[0]);
+            this.gridHeight = parseFloat(parts[1]);
+            this.size = Math.max(this.gridWidth, this.gridHeight);
         } else {
             const newSize = parseFloat(sizeStr);
             if (this.size > 0 && this.rectWidth !== undefined && this.rectHeight !== undefined) {
@@ -37,7 +37,7 @@ class BaseElement {
                 this.rectWidth *= ratio;
                 this.rectHeight *= ratio;
             }
-            this.width = this.height = this.size = newSize;
+            this.gridWidth = this.gridHeight = this.size = newSize;
         }
     }
 

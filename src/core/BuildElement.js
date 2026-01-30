@@ -6,18 +6,18 @@ class BuildElement extends BaseElement {
 
     // Adjust width and height to fit within the 8x8 panel grid
     clampToPanel() {
-        if (this.x + this.width > 8) this.width = Math.max(0.5, 8 - this.x);
-        if (this.y + this.height > 8) this.height = Math.max(0.5, 8 - this.y);
+        if (this.x + this.gridWidth > 8) this.gridWidth = Math.max(0.5, 8 - this.x);
+        if (this.y + this.gridHeight > 8) this.gridHeight = Math.max(0.5, 8 - this.y);
     }
 
     // assign a location but make sure its not out of bounds of the panel
     keepInBounds() {
         if (randBetween(1, 3) < 2) {
-            this.x = randBetween(0, 1) === 0 ? 0 : Math.max(0, 8 - this.width);
-            this.y = randBetween(0, 1) === 0 ? 0 : Math.max(0, 8 - this.height);
+            this.x = randBetween(0, 1) === 0 ? 0 : Math.max(0, 8 - this.gridWidth);
+            this.y = randBetween(0, 1) === 0 ? 0 : Math.max(0, 8 - this.gridHeight);
         } else {
-            this.x = randBetween(0, Math.max(0, 8 - this.width));
-            this.y = randBetween(0, Math.max(0, 8 - this.height));
+            this.x = randBetween(0, Math.max(0, 8 - this.gridWidth));
+            this.y = randBetween(0, Math.max(0, 8 - this.gridHeight));
         }
 
         this.clampToPanel();
@@ -25,8 +25,8 @@ class BuildElement extends BaseElement {
 
     toString() {
         const round = (val) => Math.round(val * 100) / 100;
-        const w = round(this.width);
-        const h = round(this.height);
+        const w = round(this.gridWidth);
+        const h = round(this.gridHeight);
         const x = round(this.x);
         const y = round(this.y);
 

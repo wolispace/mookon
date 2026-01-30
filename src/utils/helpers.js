@@ -22,15 +22,15 @@ function randDecimal(min, max) {
 
 // Parse size string ("1x2" or "1") into {width, height}
 function parseSize(sizeStr) {
-    let width = 1, height = 1;
+    let gridWidth = 1, gridHeight = 1;
     if (sizeStr.includes('x')) {
         const parts = sizeStr.split('x');
-        width = parseFloat(parts[0]);
-        height = parseFloat(parts[1]);
+        gridWidth = parseFloat(parts[0]);
+        gridHeight = parseFloat(parts[1]);
     } else {
-        width = height = parseFloat(sizeStr);
+        gridWidth = gridHeight = parseFloat(sizeStr);
     }
-    return { width, height };
+    return { gridWidth, gridHeight };
 }
 
 // Confetti burst animation
@@ -42,7 +42,7 @@ function confettiBurst() {
         const confetti = document.createElement('div');
         confetti.className = 'confetti-piece';
         confetti.style.left = `${Math.random() * 100}%`;
-        confetti.style.top = `${Math.random() * -10 +-30}px`;
+        confetti.style.top = `${Math.random() * -10 + -30}px`;
         confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.width = `${Math.random() * 10 + 5}px`;
         confetti.style.height = `${Math.random() * 10 + 5}px`;
