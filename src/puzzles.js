@@ -4,13 +4,14 @@ Job done! [pencil]
 /
 blue:
 r1 1x1 1x1+ 0 2,
-w1 1x1 3x1 0 0-6-3 tap state 9 r1 size,
+w1 1x4 3x1 0 0-6-3 tap state 9 r1 size,
 w2 1x1 3x2 0 0-6-3 tap state 1 r1 drag,
-r3 1x1 6x2- 0 1 =,
+r3 2x2 6x2- 0 1 =,
 c1 1 1x3+ 0 5 tap size 4 c1 drag,
 c2 2 3x3- 0 1 =,
 r2 1 1x6+ 0 0 tap c0 .5x0,
 c0 1 3x6+ 0 3,
+c4 1 5x6- 0 1 =,
 `,
     `
 Congrats! [book]

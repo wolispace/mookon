@@ -8,7 +8,7 @@ class UIElement extends BaseElement {
 
     toString() {
         if (!this.isSatisfied()) {
-            //console.log(`${this.id}: method=${this.method}, change=${this.change}, targetState=${this.targetState}, state=${this.state}, remoteActions=${JSON.stringify(this.remoteActions)}`);
+            console.log(`${this.id}: method=${this.method}, change=${this.change}, targetState=${this.targetState}, state=${this.state}, remoteActions=${JSON.stringify(this.remoteActions)}`);
         }
     }
 
@@ -820,6 +820,12 @@ class UIElement extends BaseElement {
                 return true;
             }
         }
+
+        // Elements with unreachable target states (continuous controllers) are satisfied for panel completion
+        if (typeof this.targetState === 'number' && this.targetState > this.maxState) {
+            return true;
+        }
+
         return this.state === this.targetState;
     }
 
