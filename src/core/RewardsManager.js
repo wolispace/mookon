@@ -76,7 +76,7 @@ class RewardsManager {
 
     static createRewardIcon(rewardName, onClickCallback) {
         const icon = document.createElement('i');
-        icon.className = `fas ${this.getIconClass(rewardName)} reward-icon`;
+        icon.className = `fa-solid ${this.getIconClass(rewardName)} reward-icon`;
         icon.title = `Click to collect: ${rewardName}`;
         icon.style.cursor = 'pointer';
 

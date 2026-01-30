@@ -36,21 +36,22 @@ function parseSize(sizeStr) {
 // Confetti burst animation
 function confettiBurst() {
     const colors = ["#ff4757", "#1e90ff", "#2ed573", "#ffa502", "#eccc68"];
-    const confettiCount = 100;
+    const confettiCount = 200;
 
     for (let i = 0; i < confettiCount; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti-piece';
         confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.top = `${Math.random() * -10 +-30}px`;
         confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.width = `${Math.random() * 10 + 5}px`;
         confetti.style.height = `${Math.random() * 10 + 5}px`;
-        confetti.style.animationDuration = `${Math.random() * 0.5 + 1}s`;
-        confetti.style.animationDelay = `${Math.random() * 0.3}s`;
+        confetti.style.animationDuration = `${Math.random() * 3 + 1.5}s`;
+        confetti.style.animationDelay = `${Math.random() * 1.5}s`;
 
         document.body.appendChild(confetti);
 
-        setTimeout(() => confetti.remove(), 1500);
+        setTimeout(() => confetti.remove(), 10000);
     }
 }
 
