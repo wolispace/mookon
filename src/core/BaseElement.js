@@ -31,7 +31,13 @@ class BaseElement {
             this.height = parseFloat(parts[1]);
             this.size = Math.max(this.width, this.height);
         } else {
-            this.width = this.height = this.size = parseFloat(sizeStr);
+            const newSize = parseFloat(sizeStr);
+            if (this.size > 0 && this.rectWidth !== undefined && this.rectHeight !== undefined) {
+                const ratio = newSize / this.size;
+                this.rectWidth *= ratio;
+                this.rectHeight *= ratio;
+            }
+            this.width = this.height = this.size = newSize;
         }
     }
 

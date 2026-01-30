@@ -173,7 +173,11 @@ class UIElement extends BaseElement {
         if (this.change !== CHANGE_NONE) {
             this.state = (this.state + 1) % (this.maxState + 1);
         }
+        this.applyState();
+        this.checkTargetState();
+    }
 
+    applyState() {
         if (this.change === CHANGE_COLOR) {
             this.element.classList.remove('raised', 'unlocked', 'sunken');
             this.color = this.state;
@@ -201,20 +205,15 @@ class UIElement extends BaseElement {
             this.setSize(newSize);
 
             // Re-initialize to update SVG and event listeners
-            // But we need to keep the old element's position
             const oldElement = this.element;
             const parent = oldElement.parentElement;
-
             this.initialize();
-
-            if (parent) {
+            if (parent && oldElement.parentElement === parent) {
                 parent.replaceChild(this.element, oldElement);
             }
         } else {
             this.updateVisuals();
         }
-
-        this.checkTargetState();
     }
 
     checkTargetState() {
@@ -224,7 +223,8 @@ class UIElement extends BaseElement {
         let shouldTrigger = false;
 
         // Standard trigger: state matches target
-        if (this.state === this.targetState) {
+        // OR unreachable target state (allows for continuous controllers)
+        if (this.state === this.targetState || (typeof this.targetState === 'number' && this.targetState > this.maxState)) {
             shouldTrigger = true;
         }
         // Strict Remote Control Trigger:
@@ -326,7 +326,6 @@ class UIElement extends BaseElement {
 
                             } else {
                                 // Existing Configure Logic
-                                // Existing Configure Logic
                                 targetElement.method = remoteAction.method;
                                 if (remoteAction.change !== CHANGE_NONE) {
                                     targetElement.change = remoteAction.change;
@@ -339,7 +338,15 @@ class UIElement extends BaseElement {
                                     if (remoteAction.change === CHANGE_MOVE) {
                                         targetElement.state = 0;
                                     } else {
-                                        targetElement.progressState();
+                                        // Synchronization Logic:
+                                        // If this (controller) has a change property, sync the target's state to this state.
+                                        // Otherwise (if this is just a button), trigger target state progression.
+                                        if (this.change !== CHANGE_NONE) {
+                                            targetElement.state = this.state % (targetElement.maxState + 1);
+                                            targetElement.applyState();
+                                        } else {
+                                            targetElement.progressState();
+                                        }
                                     }
                                 } else {
                                     targetElement.change = CHANGE_NONE;
