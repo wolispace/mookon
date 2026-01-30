@@ -95,12 +95,9 @@ const PUZZLE_CONFIG = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: false,                          // Master debug flag
-    forcePanelTypes: true,                 // Use panelTypes array instead of random
-    forcePlugsToNextPanel: true,           // Force plugs onto next panel instead of current
-    panelTypes: ['maze', 'screw', 'screw'], // Panel type sequence when forcePanelTypes is true
-    forceCoversOnAllElements: false,        // Force covers on every coverable element
-    forceCoverStyle: 3                      // Force Style 3 (Switch Release) for testing
+    enabled: true,
+    technique: 'hole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group'
+    coverStyle: 1      // forced cover style: 0=Physical, 1=Group, 2=Remote-Only, 3=Switch Release
 };
 
 let elementIdCounter = 1;

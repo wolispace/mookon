@@ -268,8 +268,8 @@ class GeneratedPanel {
         for (const element of this.coverableElements) {
             if (coversAdded >= MAX_COVERS) break;
 
-            // Debug: force covers on all elements
-            const shouldCover = DEBUG_CONFIG.enabled && DEBUG_CONFIG.forceCoversOnAllElements
+            // Debug: force covers on all elements if strict mode is on
+            const shouldCover = (DEBUG_CONFIG.enabled)
                 ? true
                 : Math.random() > probability;
 
@@ -285,11 +285,10 @@ class GeneratedPanel {
             }
 
             let coverStyle;
-            if (DEBUG_CONFIG.enabled && DEBUG_CONFIG.forceCoverStyle !== undefined && DEBUG_CONFIG.forceCoverStyle !== null) {
-                if (DEBUG_CONFIG.forceCoverStyle > maxStyle) {
-                    // console.log(`%c[Debug] Capping forceCoverStyle from ${DEBUG_CONFIG.forceCoverStyle} to ${maxStyle} for element ${element.id} (elevation=${element.elevation}, hasRemote=${element.hasRemote}, remotes=${this.remoteSetsCount})`, 'color: #888');
-                }
-                coverStyle = Math.min(DEBUG_CONFIG.forceCoverStyle, maxStyle);
+            if (DEBUG_CONFIG.enabled && DEBUG_CONFIG.coverStyle !== undefined && DEBUG_CONFIG.coverStyle !== null) {
+                // In strict debug mode, we honor the requested style even if it's "impossible" 
+                // (e.g. Style 2/3 normally requires raised elements, but debug should show what happens)
+                coverStyle = DEBUG_CONFIG.coverStyle;
             } else {
                 coverStyle = randBetween(0, maxStyle);
             }
@@ -298,8 +297,13 @@ class GeneratedPanel {
                 // Style 0: Physical Cover
                 const coverShape = DRAGGABLE_SHAPES[randBetween(0, DRAGGABLE_SHAPES.length - 1)];
                 const cover = new BuildElement(coverShape);
-                cover.gridWidth = element.gridWidth + randDecimal(0.4, 1.5);
-                cover.gridHeight = element.gridHeight + randDecimal(0.4, 1.5);
+                const targetScale = SHAPES[SHAPE_PREFIX_MAP[element.type]]?.scale || 1;
+                const coverScale = SHAPES[coverShape]?.scale || 1;
+
+                // Ensure cover is visualy larger than target.
+                // We calculate unscaled size needed to achieve covering visualy.
+                cover.gridWidth = (element.gridWidth * targetScale / coverScale) + randDecimal(0.5, 1.0);
+                cover.gridHeight = (element.gridHeight * targetScale / coverScale) + randDecimal(0.5, 1.0);
 
                 if (coverShape === 'screw') {
                     const size = Math.max(cover.gridWidth, cover.gridHeight);
@@ -308,8 +312,10 @@ class GeneratedPanel {
 
                 cover.color = randBetween(0, COLOR_NAMES.length - 1);
                 cover.elevation = '+';
-                cover.x = element.x - 0.2;
-                cover.y = element.y - 0.2;
+                // Center visually
+                cover.x = element.x - (cover.gridWidth * coverScale - element.gridWidth * targetScale) / 2;
+                cover.y = element.y - (cover.gridHeight * coverScale - element.gridHeight * targetScale) / 2;
+                cover.clampToPanel();
 
                 // Randomly choose movement type for cover
                 let movementType;
@@ -381,22 +387,31 @@ class GeneratedPanel {
                     }
                 } else {
                     // Group pattern for non-switches
+                    const scale = SHAPES[shapeName]?.scale || 1;
                     const groupCols = randBetween(2, 3);
                     const groupRows = randBetween(1, 2);
                     const targetCol = randBetween(0, groupCols - 1);
                     const targetRow = randBetween(0, groupRows - 1);
-                    const originX = element.x - (targetCol * element.gridWidth);
-                    const originY = element.y - (targetRow * element.gridHeight);
+
+                    // Space distractors based on rounded up scaled dimensions to ensure grid slots work
+                    const spacingX = Math.ceil(element.gridWidth * scale);
+                    const spacingY = Math.ceil(element.gridHeight * scale);
+
+                    const originX = element.x - (targetCol * spacingX);
+                    const originY = element.y - (targetRow * spacingY);
 
                     for (let r = 0; r < groupRows; r++) {
                         for (let c = 0; c < groupCols; c++) {
                             if (r === targetRow && c === targetCol) continue;
 
-                            const dx = originX + (c * element.gridWidth);
-                            const dy = originY + (r * element.gridHeight);
+                            const dx = originX + (c * spacingX);
+                            const dy = originY + (r * spacingY);
 
-                            if (dx >= 0 && dx + element.gridWidth <= 8 && dy >= 0 && dy + element.gridHeight <= 8) {
-                                if (this.checkFree(dx, dy, element.gridWidth, element.gridHeight)) {
+                            const visualW = element.gridWidth * scale;
+                            const visualH = element.gridHeight * scale;
+
+                            if (dx >= 0 && dx + visualW <= 8 && dy >= 0 && dy + visualH <= 8) {
+                                if (this.checkFree(dx, dy, visualW, visualH)) {
                                     const distractor = new BuildElement(shapeName);
                                     distractor.gridWidth = element.gridWidth;
                                     distractor.gridHeight = element.gridHeight;
