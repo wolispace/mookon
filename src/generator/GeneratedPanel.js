@@ -393,9 +393,9 @@ class GeneratedPanel {
                     const targetCol = randBetween(0, groupCols - 1);
                     const targetRow = randBetween(0, groupRows - 1);
 
-                    // Space distractors based on rounded up scaled dimensions to ensure grid slots work
-                    const spacingX = Math.ceil(element.gridWidth * scale);
-                    const spacingY = Math.ceil(element.gridHeight * scale);
+                    // Space distractors based on exact scaled dimensions for a seamless visual pattern
+                    const spacingX = element.gridWidth * scale;
+                    const spacingY = element.gridHeight * scale;
 
                     const originX = element.x - (targetCol * spacingX);
                     const originY = element.y - (targetRow * spacingY);
