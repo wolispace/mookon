@@ -176,4 +176,4 @@ class PuzzleGenerator {
         const panelsStr = this.panels.map(p => p.toString()).join('\n/\n');
         return `${message} [${reward}]\n/\n${panelsStr}`;
     }
-}
+};

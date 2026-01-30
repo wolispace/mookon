@@ -95,5 +95,4 @@ class BuildElement extends BaseElement {
 
         return false;
     }
-
-}
+};

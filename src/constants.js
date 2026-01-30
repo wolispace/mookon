@@ -113,3 +113,5 @@ let currentPuzzleIndex = 0;
 let sharedPuzzle = null;
 let randomPuzzle = null; // Generate on demand, not at module load
 let thisPuzzle = '';
+
+//end const

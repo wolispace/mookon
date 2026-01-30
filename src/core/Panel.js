@@ -183,4 +183,4 @@ class Panel {
         this.container.addEventListener('mousedown', start);
         this.container.addEventListener('touchstart', start, { passive: false });
     }
-}
+};

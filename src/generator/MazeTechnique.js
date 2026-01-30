@@ -214,4 +214,4 @@ class MazeTechnique {
 
         return { maze, entrance: { x: entranceX, y: entranceY } };
     }
-}
+};

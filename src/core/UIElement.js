@@ -812,4 +812,4 @@ class UIElement extends BaseElement {
             }
         }
     }
-}
+};

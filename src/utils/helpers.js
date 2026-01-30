@@ -74,4 +74,5 @@ function buildReward(reward) {
     return `<div class="reward" title="Reward ${reward}">
                 <i class="fa-solid fa-${reward}"></i>
             </div>`;
-}
+};
+

@@ -229,4 +229,4 @@ class PuzzleParser {
         const area = document.getElementById('puzzle-area');
         if (area) area.innerHTML = `<div style="color:#ff6b6b;padding:20px;">Error: ${msg}</div>`;
     }
-}
+};

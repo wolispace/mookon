@@ -65,4 +65,4 @@ function populatePuzzleSelect() {
 function generateRandomPuzzle() {
     generator.generate();
     return generator.toString();
-}
+};

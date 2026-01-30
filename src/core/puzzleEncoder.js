@@ -65,4 +65,4 @@ function decodePuzzle(encodedString) {
     puzzleData = puzzleData.replace(/\bi\b/g, 'move');
 
     return message + '/' + puzzleData;
-}
+};

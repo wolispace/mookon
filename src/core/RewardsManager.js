@@ -87,4 +87,4 @@ class RewardsManager {
 
         return icon;
     }
-}
+};

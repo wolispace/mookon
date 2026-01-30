@@ -612,5 +612,4 @@ class GeneratedPanel {
         });
         return `${this.color}:\n${sorted.join(',\n')}`;
     }
-
-}
+};

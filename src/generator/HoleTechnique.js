@@ -49,4 +49,4 @@ class HoleTechnique {
             generator.setPlug(plug);
         }
     }
-}
+};

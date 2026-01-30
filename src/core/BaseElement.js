@@ -36,4 +36,4 @@ class BaseElement {
     setRandomColor() {
         this.color = randBetween(0, COLOR_ARRAY.length);
     }
-}
+};

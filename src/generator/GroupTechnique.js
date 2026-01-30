@@ -95,4 +95,4 @@ class GroupTechnique {
             panel.addElement(el, false, 'Group Element');
         });
     }
-}
+};

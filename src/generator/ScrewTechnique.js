@@ -69,4 +69,4 @@ class ScrewTechnique {
             elementsAdded++;
         }
     }
-}
+};
