@@ -309,8 +309,14 @@ class UIElement extends BaseElement {
                                     targetElement.change = remoteAction.change;
                                     targetElement.targetState = remoteAction.target;
 
+                                    if (targetElement.change === CHANGE_SIZE) {
+                                        targetElement.maxState = 4;
+                                    }
+
                                     if (remoteAction.change === CHANGE_MOVE) {
                                         targetElement.state = 0;
+                                    } else {
+                                        targetElement.progressState();
                                     }
                                 } else {
                                     targetElement.change = CHANGE_NONE;
@@ -343,9 +349,16 @@ class UIElement extends BaseElement {
         const currentColor = getColor(COLOR_ARRAY[this.color]);
         this.svg.style.color = currentColor;
 
-        // Update rotation
+        // Update rotation and size
         const rotationDegrees = this.shape === 'screw' ? -this.rotation * ROTATION_DEGREES : this.rotation * ROTATION_DEGREES;
-        this.svg.style.transform = `rotate(${rotationDegrees}deg)`;
+        let transform = `rotate(${rotationDegrees}deg)`;
+
+        if (this.change === CHANGE_SIZE) {
+            const scale = 1 + (this.state * 0.25);
+            transform += ` scale(${scale})`;
+        }
+
+        this.svg.style.transform = transform;
 
         // Handle switch-specific visuals
         if (this.shape === 'switch') {

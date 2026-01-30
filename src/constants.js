@@ -63,10 +63,11 @@ const METHOD_PATTERN = new RegExp(`^(${METHOD_NAMES.join('|')})$`);
 const CHANGE_COLOR = 'color';
 const CHANGE_ROTATION = 'rotate';
 const CHANGE_STATE = 'state';
+const CHANGE_SIZE = 'size';
 const CHANGE_MOVE = 'move';
 const CHANGE_NONE = 'none';
 
-const CHANGE_NAMES = [CHANGE_COLOR, CHANGE_ROTATION, CHANGE_STATE, CHANGE_MOVE, CHANGE_NONE];
+const CHANGE_NAMES = [CHANGE_COLOR, CHANGE_ROTATION, CHANGE_STATE, CHANGE_SIZE, CHANGE_MOVE, CHANGE_NONE];
 const CHANGE_PATTERN = new RegExp(`^(${CHANGE_NAMES.filter(c => c !== CHANGE_NONE).join('|')})$`);
 
 // Size comparison constants

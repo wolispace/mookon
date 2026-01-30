@@ -143,9 +143,12 @@ class PuzzleParser {
                             vector: { x: vx, y: vy }
                         });
 
-                    } else if (i < filteredTokens.length && METHOD_PATTERN.test(filteredTokens[i])) {
-                        const remoteMethod = filteredTokens[i];
-                        i++;
+                    } else if (i < filteredTokens.length && (METHOD_PATTERN.test(filteredTokens[i]) || CHANGE_PATTERN.test(filteredTokens[i]))) {
+                        let remoteMethod = METHOD_NONE;
+                        if (METHOD_PATTERN.test(filteredTokens[i])) {
+                            remoteMethod = filteredTokens[i];
+                            i++;
+                        }
 
                         // Get remote change type and target
                         let remoteChange = CHANGE_NONE;
@@ -192,7 +195,12 @@ class PuzzleParser {
 
         // Apply logic after all tokens processed
         element.state = element.change === CHANGE_COLOR ? initialState : 0;
-        element.maxState = element.shape === 'switch' ? element.size : 8;
+
+        if (element.change === CHANGE_SIZE) {
+            element.maxState = 4;
+        } else {
+            element.maxState = element.shape === 'switch' ? element.size : 8;
+        }
 
         if (element.method === METHOD_DRAG) {
             element.draggable = true;
