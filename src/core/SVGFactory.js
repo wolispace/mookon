@@ -126,6 +126,40 @@ class SVGFactory {
                     draw('polygon', { points: pts, fill: 'currentColor' });
                 }
                 break;
+            case 'plus':
+                if (element.rectWidth !== undefined && element.rectHeight !== undefined) {
+                    const rectWidth = Math.round(base * element.rectWidth);
+                    const rectHeight = Math.round(base * element.rectHeight);
+                    svg.setAttribute('viewBox', `0 0 ${rectWidth} ${rectHeight}`);
+                    svg.style.width = `${rectWidth}px`;
+                    svg.style.height = `${rectHeight}px`;
+                    const thickness = Math.min(rectWidth, rectHeight) * 0.3;
+                    draw('rect', { x: (rectWidth - thickness) / 2, y: rectHeight * 0.1, width: thickness, height: rectHeight * 0.8, fill: 'currentColor' });
+                    draw('rect', { x: rectWidth * 0.1, y: (rectHeight - thickness) / 2, width: rectWidth * 0.8, height: thickness, fill: 'currentColor' });
+                } else {
+                    svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+                    svg.style.width = svg.style.height = `${size}px`;
+                    const thickness = size * 0.3;
+                    draw('rect', { x: (size - thickness) / 2, y: size * 0.1, width: thickness, height: size * 0.8, fill: 'currentColor' });
+                    draw('rect', { x: size * 0.1, y: (size - thickness) / 2, width: size * 0.8, height: thickness, fill: 'currentColor' });
+                }
+                break;
+            case 'diamond':
+                if (element.rectWidth !== undefined && element.rectHeight !== undefined) {
+                    const rectWidth = Math.round(base * element.rectWidth);
+                    const rectHeight = Math.round(base * element.rectHeight);
+                    svg.setAttribute('viewBox', `0 0 ${rectWidth} ${rectHeight}`);
+                    svg.style.width = `${rectWidth}px`;
+                    svg.style.height = `${rectHeight}px`;
+                    const pts = `${rectWidth / 2},${rectHeight * 0.05} ${rectWidth * 0.95},${rectHeight / 2} ${rectWidth / 2},${rectHeight * 0.95} ${rectWidth * 0.05},${rectHeight / 2}`;
+                    draw('polygon', { points: pts, fill: 'currentColor' });
+                } else {
+                    svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+                    svg.style.width = svg.style.height = `${size}px`;
+                    const pts = `${size / 2},${size * 0.05} ${size * 0.95},${size / 2} ${size / 2},${size * 0.95} ${size * 0.05},${size / 2}`;
+                    draw('polygon', { points: pts, fill: 'currentColor' });
+                }
+                break;
             case 'screw':
                 if (element.rectWidth !== undefined && element.rectHeight !== undefined) {
                     const rectWidth = Math.round(base * element.rectWidth);

@@ -1,4 +1,12 @@
 const puzzleConfigs = [
+    `New Shapes Test [grey]:
+/
+blue:
+p1 1 2x2+ 0 2 tap 2 p1 drag,
+d1 1 5x2+ 0 2 drag,
+p2 1x1 2x5- 0 1 =,
+d2 1x1 5x5- 0 1 =
+`,
     `
 Job done! [pencil]
 /

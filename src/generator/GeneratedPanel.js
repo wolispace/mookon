@@ -291,8 +291,7 @@ class GeneratedPanel {
 
             if (coverStyle === 0) {
                 // Style 0: Physical Cover
-                const shapes = ['rectangle', 'circle', 'screw'];
-                const coverShape = shapes[randBetween(0, 2)];
+                const coverShape = DRAGGABLE_SHAPES[randBetween(0, DRAGGABLE_SHAPES.length - 1)];
                 const cover = new BuildElement(coverShape);
                 cover.gridWidth = element.gridWidth + randDecimal(0.4, 1.5);
                 cover.gridHeight = element.gridHeight + randDecimal(0.4, 1.5);

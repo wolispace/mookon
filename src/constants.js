@@ -35,6 +35,8 @@ const SHAPES = {
     'rectangle': { code: 'r', draggable: true },
     'triangle': { code: 't', draggable: true },
     'screw': { code: 's', draggable: true },
+    'plus': { code: 'p', draggable: true },
+    'diamond': { code: 'd', draggable: true },
     'switch': { code: 'w', draggable: false }
 };
 
@@ -79,7 +81,7 @@ const COMPARISON_NAMES = [COMPARISON_EQUAL, COMPARISON_GREATER, COMPARISON_LESS]
 const COMPARISON_PATTERN = new RegExp(`^[${COMPARISON_NAMES.join('')}]$`);
 
 // Pattern constants
-const ELEMENT_ID_PATTERN = /^[ctswr]\d+$/;
+const ELEMENT_ID_PATTERN = /^[ctswrpd]\d+$/;
 const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
