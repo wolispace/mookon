@@ -12,7 +12,7 @@ $logPrefix = 'logs/_mookon';
 $logFile = "{$logPrefix}_log.txt";
 $summaryFile = "{$logPrefix}_summary.json";
 
-$LINES_BEFORE_SUMMARY = 5;
+$LINES_BEFORE_SUMMARY = 200;
 
 // Collect data
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
