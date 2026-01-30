@@ -228,14 +228,19 @@ class GeneratedPanel {
                 }
 
                 const [xPart, yPart] = locStr.replace(/[+\-]/g, '').split('x');
-                const elementX = Math.floor(parseFloat(xPart));
-                const elementY = Math.floor(parseFloat(yPart));
+                const elementX = parseFloat(xPart);
+                const elementY = parseFloat(yPart);
+
+                // Use scaled dimensions for overlap check
+                const shapeName = SHAPE_PREFIX_MAP[elementId[0].toLowerCase()] || 'circle';
+                const scale = SHAPES[shapeName]?.scale || 1;
+                const visualWidth = elementWidth * scale;
+                const visualHeight = gridHeight * scale;
 
                 // Check for overlap: controller at (controllerX, controllerY) is 1x1
-                // Element spans from (elementX, elementY) to (elementX + elementWidth, elementY + height)
                 if (this.rectsOverlap(
                     controllerX, controllerY, controllerSize, controllerSize,
-                    elementX, elementY, elementWidth, gridHeight
+                    elementX, elementY, visualWidth, visualHeight
                 )) {
                     return false;
                 }
@@ -594,6 +599,9 @@ class GeneratedPanel {
     }
 
     checkFree(x, y, w, h) {
+        // Enforce panel boundaries strictly
+        if (x < 0 || y < 0 || x + w > 8 || y + h > 8) return false;
+
         const startX = Math.floor(x);
         const startY = Math.floor(y);
         const endX = Math.ceil(x + w);
@@ -601,7 +609,7 @@ class GeneratedPanel {
 
         for (let iy = startY; iy < endY; iy++) {
             for (let ix = startX; ix < endX; ix++) {
-                if (!this.grid[iy] || this.grid[iy][ix]) return false;
+                if (this.grid[iy][ix]) return false;
             }
         }
         return true;
