@@ -13,6 +13,11 @@ class UIElement extends BaseElement {
     }
 
     initialize() {
+        // Store initial size for cycling logic if not already set
+        if (this.initialSize === undefined) {
+            this.initialSize = this.size;
+        }
+
         // Create SVG element using new factory
         this.element = SVGFactory.create(this);
         this.svg = this.element;
@@ -100,8 +105,11 @@ class UIElement extends BaseElement {
             target.addEventListener('click', this.boundHandleClick);
         }
 
-        window.addEventListener('mouseup', () => this.handleEnd());
-        window.addEventListener('touchend', () => this.handleEnd());
+        if (!this.windowEventsSet) {
+            this.windowEventsSet = true;
+            window.addEventListener('mouseup', () => this.handleEnd());
+            window.addEventListener('touchend', () => this.handleEnd());
+        }
     }
 
     handleClick(e) {
@@ -187,6 +195,21 @@ class UIElement extends BaseElement {
                 if (this.height < 0) this.element.classList.add('sunken');
                 if (this.unlocked) this.element.classList.add('unlocked');
             }, INTERACTION_TIMEOUT);
+        } else if (this.change === CHANGE_SIZE) {
+            const scaleFactor = 1 + (this.state * 0.25);
+            const newSize = this.initialSize * scaleFactor;
+            this.setSize(newSize);
+
+            // Re-initialize to update SVG and event listeners
+            // But we need to keep the old element's position
+            const oldElement = this.element;
+            const parent = oldElement.parentElement;
+
+            this.initialize();
+
+            if (parent) {
+                parent.replaceChild(this.element, oldElement);
+            }
         } else {
             this.updateVisuals();
         }
@@ -349,16 +372,9 @@ class UIElement extends BaseElement {
         const currentColor = getColor(COLOR_ARRAY[this.color]);
         this.svg.style.color = currentColor;
 
-        // Update rotation and size
+        // Update rotation
         const rotationDegrees = this.shape === 'screw' ? -this.rotation * ROTATION_DEGREES : this.rotation * ROTATION_DEGREES;
-        let transform = `rotate(${rotationDegrees}deg)`;
-
-        if (this.change === CHANGE_SIZE) {
-            const scale = 1 + (this.state * 0.25);
-            transform += ` scale(${scale})`;
-        }
-
-        this.svg.style.transform = transform;
+        this.svg.style.transform = `rotate(${rotationDegrees}deg)`;
 
         // Handle switch-specific visuals
         if (this.shape === 'switch') {

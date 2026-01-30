@@ -7,6 +7,7 @@ class BaseElement {
     type = 'c';
     width = 1;
     height = 1;
+    size = 1;
     color = 0;
     elevation = ''; // +|-
     elevationTarget = ''; // Target elevation to apply when dragged
@@ -28,8 +29,9 @@ class BaseElement {
             const parts = sizeStr.split('x');
             this.width = parseFloat(parts[0]);
             this.height = parseFloat(parts[1]);
+            this.size = Math.max(this.width, this.height);
         } else {
-            this.width = this.height = parseFloat(sizeStr);
+            this.width = this.height = this.size = parseFloat(sizeStr);
         }
     }
 

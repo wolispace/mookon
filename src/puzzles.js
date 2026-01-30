@@ -3,9 +3,9 @@ const puzzleConfigs = [
 Job done! [pencil]
 /
 blue:
-r1 1x1 1x1 0 2,
-w1 1x1 3x3 0 0-6-3 tap state 1 r1 size,
-c1 1x1 1x6+ 0 5 tap size 4 c1 drag,
+r1 1x1 1x1+ 0 2 drag,
+w1 1x4 3x3 0 0-6-3 tap state 2 r1 size 4,
+c1 1 1x6+ 0 5 tap size 4 c1 drag,
 `,
     `
 Congrats! [book]
