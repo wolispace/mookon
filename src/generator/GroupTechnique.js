@@ -33,7 +33,7 @@ class GroupTechnique {
         // Find space for the whole grid
         const gridWidth = cols * templateWidth;
         const gridHeight = rows * templateHeight;
-        const gridPos = panel.findFreeSpace(gridWidth, gridHeight);
+        const gridPos = panel.findFreeSpace(gridWidth, gridHeight, templateShape);
 
         if (!gridPos) {
             // Fallback: if we had a plug, put it back or try to place it alone

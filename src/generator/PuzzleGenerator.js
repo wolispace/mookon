@@ -94,7 +94,8 @@ class PuzzleGenerator {
                 if (!plug) break;
                 if (plug.placed) break;
 
-                const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight);
+                const shape = SHAPE_PREFIX_MAP[plug.type] || 'circle';
+                const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight, shape);
                 if (plugPos) {
                     plug.x = plugPos.x;
                     plug.y = plugPos.y;
@@ -146,7 +147,8 @@ class PuzzleGenerator {
                 const plug = this.getPlug();
                 if (!plug) break;
 
-                const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight);
+                const shape = SHAPE_PREFIX_MAP[plug.type] || 'circle';
+                const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight, shape);
                 if (plugPos) {
                     plug.x = plugPos.x;
                     plug.y = plugPos.y;

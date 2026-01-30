@@ -6,8 +6,9 @@ class BuildElement extends BaseElement {
 
     // Adjust width and height to fit within the 8x8 panel grid
     clampToPanel() {
-        if (this.x + this.gridWidth > 8) this.gridWidth = Math.max(0.5, 8 - this.x);
-        if (this.y + this.gridHeight > 8) this.gridHeight = Math.max(0.5, 8 - this.y);
+        const scale = SHAPES[SHAPE_PREFIX_MAP[this.type]]?.scale || 1;
+        if (this.x + (this.gridWidth * scale) > 8) this.gridWidth = Math.max(0.5, (8 - this.x) / scale);
+        if (this.y + (this.gridHeight * scale) > 8) this.gridHeight = Math.max(0.5, (8 - this.y) / scale);
     }
 
     // assign a location but make sure its not out of bounds of the panel

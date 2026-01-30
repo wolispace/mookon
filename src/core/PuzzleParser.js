@@ -63,6 +63,15 @@ class PuzzleParser {
             element.size = parseFloat(sizeStr);
         }
 
+        // Scale elements based on shape configuration for accessibility
+        const shapeData = SHAPES[element.shape];
+        const scale = shapeData?.scale || 1;
+        if (scale !== 1) {
+            element.size *= scale;
+            if (element.rectWidth !== undefined) element.rectWidth *= scale;
+            if (element.rectHeight !== undefined) element.rectHeight *= scale;
+        }
+
         const [x, y, height] = PuzzleParser.parseLocation(locationStr);
         element.x = x;
         element.y = y;

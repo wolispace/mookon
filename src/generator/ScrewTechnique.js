@@ -13,7 +13,7 @@ class ScrewTechnique {
             const screwSize = randBetween(1, 3);
             const holeSize = screwSize / 2;
 
-            const pos = panel.findFreeSpace(screwSize, screwSize);
+            const pos = panel.findFreeSpace(screwSize, screwSize, 'screw');
             if (!pos) continue;
 
             screw.x = pos.x;

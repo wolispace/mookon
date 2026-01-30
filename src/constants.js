@@ -31,13 +31,13 @@ const getColor = (name) => COLORS[name]?.hex || name || COLORS.grey.hex;
 
 // Shape constants - single source of truth
 const SHAPES = {
-    'circle': { code: 'c', draggable: true },
-    'rectangle': { code: 'r', draggable: true },
-    'triangle': { code: 't', draggable: true },
-    'screw': { code: 's', draggable: true },
-    'plus': { code: 'p', draggable: true },
-    'diamond': { code: 'd', draggable: true },
-    'switch': { code: 'w', draggable: false }
+    'circle': { code: 'c', draggable: true, scale: 1 },
+    'rectangle': { code: 'r', draggable: true, scale: 1 },
+    'triangle': { code: 't', draggable: true, scale: 1.5 },
+    'screw': { code: 's', draggable: true, scale: 1 },
+    'plus': { code: 'p', draggable: true, scale: 1.5 },
+    'diamond': { code: 'd', draggable: true, scale: 1.5 },
+    'switch': { code: 'w', draggable: false, scale: 1 }
 };
 
 // Derived shape constants

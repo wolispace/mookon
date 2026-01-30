@@ -13,7 +13,7 @@ class HoleTechnique {
             const color = randBetween(0, 6);
 
             // Find space for socket first
-            const socketPos = panel.findFreeSpace(size, size);
+            const socketPos = panel.findFreeSpace(size, size, shape);
             if (!socketPos) continue; // Skip if no space for socket
 
             // Create socket (hole - sunken shape) only if we have space

@@ -552,8 +552,11 @@ class GeneratedPanel {
                 return;
             }
 
-            const w = Math.ceil(width);
-            const h = Math.ceil(height);
+            // Factor in shape scale for grid reservation
+            const shapeName = SHAPE_PREFIX_MAP[tokens[0][0].toLowerCase()] || 'circle';
+            const scale = SHAPES[shapeName]?.scale || 1;
+            const w = Math.ceil(gridWidth * scale);
+            const h = Math.ceil(gridHeight * scale);
 
             for (let dy = 0; dy < h; dy++) {
                 for (let dx = 0; dx < w; dx++) {
@@ -567,9 +570,10 @@ class GeneratedPanel {
         }
     }
 
-    findFreeSpace(w, h) {
-        const width = Math.ceil(w);
-        const height = Math.ceil(h);
+    findFreeSpace(w, h, shape = 'circle') {
+        const scale = SHAPES[shape]?.scale || 1;
+        const width = Math.ceil(w * scale);
+        const height = Math.ceil(h * scale);
 
         for (let attempt = 0; attempt < 20; attempt++) {
             const rx = randBetween(0, 8 - width);
