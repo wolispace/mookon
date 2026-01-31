@@ -202,6 +202,19 @@ body {
         2px 3px 4px rgba(0, 0, 0, 0.35);
 }
 
+.reward-collected {
+    font-size: 24px;
+    color: #8d5a03;
+    transition: all 0.2s ease;
+    cursor: default;
+    font-weight: lighter;
+}
+
+.reward-collected:hover {
+    transform: scale(1.1);
+    color: #96630a;
+}
+
 .reward-icon {
     font-size: 48px;
     font-weight: lighter;
@@ -243,21 +256,9 @@ body {
          0 0 20px rgba(255, 215, 0, 0.8);
 }
 
-.reward-collected {
-    font-size: 24px;
-    color: #8d5a03;
-    transition: all 0.2s ease;
-    cursor: default;
-    font-weight: lighter;
-}
-
-.reward-collected:hover {
-    transform: scale(1.1);
-    color: #96630a;
-}
 
 #rewards-area .reward-collected {
-    margin: 5px 0;
+    margin: 0 0 5px 0;
 }
 
 .hidden {

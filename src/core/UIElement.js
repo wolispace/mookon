@@ -8,7 +8,7 @@ class UIElement extends BaseElement {
 
     toString() {
         if (!this.isSatisfied()) {
-            console.log(`${this.id}: method=${this.method}, change=${this.change}, targetState=${this.targetState}, state=${this.state}, remoteActions=${JSON.stringify(this.remoteActions)}`);
+           // console.log(`${this.id}: method=${this.method}, change=${this.change}, targetState=${this.targetState}, state=${this.state}, remoteActions=${JSON.stringify(this.remoteActions)}`);
         }
     }
 

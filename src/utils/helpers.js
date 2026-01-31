@@ -64,15 +64,4 @@ function decodePuzzle(encodedString) {
     return LZString.decompressFromEncodedURIComponent(encodedString);
 }
 
-// Choose random reward
-function chooseReward() {
-    return REWARDS[randBetween(0, REWARDS.length - 1)];
-}
-
-// Build reward HTML
-function buildReward(reward) {
-    return `<div class="reward" title="Reward ${reward}">
-                <i class="fa-solid fa-${reward}"></i>
-            </div>`;
-};
 

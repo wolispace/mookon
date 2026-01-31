@@ -3,30 +3,6 @@
 class RewardsManager {
     static STORAGE_KEY = 'mookon_rewards';
 
-    // Map reward names to Font Awesome icon classes
-    static ICON_MAP = {
-        'pencil': 'fa-pencil',
-        'book': 'fa-book',
-        'dice': 'fa-dice',
-        'star': 'fa-star',
-        'trophy': 'fa-trophy',
-        'key': 'fa-key',
-        'gem': 'fa-gem',
-        'crown': 'fa-crown',
-        'heart': 'fa-heart',
-        'flag': 'fa-flag',
-        'medal': 'fa-medal',
-        'award': 'fa-award',
-        'gift': 'fa-gift',
-        'lightbulb': 'fa-lightbulb',
-        'compass': 'fa-compass',
-        'map': 'fa-map',
-        'scroll': 'fa-scroll',
-        'feather': 'fa-feather',
-        'shield': 'fa-shield',
-        'wand': 'fa-wand-magic-sparkles'
-    };
-
     static loadRewards() {
         try {
             const stored = localStorage.getItem(this.STORAGE_KEY);
@@ -54,6 +30,10 @@ class RewardsManager {
         this.renderRewards();
     }
 
+    static buildRewardClass(rewardName, specific) {
+        return `fa-solid fa-${rewardName} ${specific}`;
+    }
+
     static renderRewards() {
         const rewardsArea = document.getElementById('rewards-area');
         if (!rewardsArea) return;
@@ -63,20 +43,15 @@ class RewardsManager {
 
         rewards.forEach(rewardName => {
             const icon = document.createElement('i');
-            icon.className = `fas ${this.getIconClass(rewardName)} reward-collected`;
+            icon.className = this.buildRewardClass(rewardName, `reward-collected`);
             icon.title = rewardName;
             rewardsArea.appendChild(icon);
         });
     }
 
-    static getIconClass(rewardName) {
-        const normalized = rewardName.toLowerCase().trim();
-        return this.ICON_MAP[normalized] || 'fa-star'; // Default to star if unknown
-    }
-
     static createRewardIcon(rewardName, onClickCallback) {
         const icon = document.createElement('i');
-        icon.className = `fa-solid ${this.getIconClass(rewardName)} reward-icon`;
+        icon.className = this.buildRewardClass(rewardName, `reward-icon`);
         icon.title = `Click to collect: ${rewardName}`;
         icon.style.cursor = 'pointer';
 
@@ -87,4 +62,10 @@ class RewardsManager {
 
         return icon;
     }
+    // Choose random reward
+    static chooseReward() {
+        return REWARDS[randBetween(0, REWARDS.length - 1)];
+    }
 };
+
+

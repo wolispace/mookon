@@ -166,7 +166,7 @@ class PuzzleGenerator {
 
     toString() {
         const message = VICTORY_MESSAGES[randBetween(0, VICTORY_MESSAGES.length - 1)];
-        const reward = chooseReward();
+        const reward = RewardsManager.chooseReward();
         const panelsStr = this.panels.map(p => p.toString()).join('\n/\n');
         return `${message} [${reward}]\n/\n${panelsStr}`;
     }

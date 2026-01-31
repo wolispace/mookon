@@ -1,11 +1,8 @@
 const puzzleConfigs = [
-    `New Shapes Test [grey]:
+`Simple! [star]
 /
 blue:
-p1 1 2x2+ 0 2 tap 2 p1 drag,
-d1 1 5x2+ 0 2 drag,
-p2 1x1 2x5- 0 1 =,
-d2 1x1 5x5- 0 1 =
+w1 1x1 3x3 0 0-6-3 tap state 1,
 `,
     `
 Job done! [pencil]
@@ -49,7 +46,7 @@ r11 2 2x3 0 3 tap color 6 r11 drag move,
 r12 2 4x3 0 3,
 r13 2 6x3 0 3,
 `,
-    `Great! [star]
+    `Great! [helicopter]
 /
 blue:
 r1 6x0.1 1x6+ 0 3,  
@@ -62,7 +59,7 @@ c1 .5 3.5x6.7- 0 1,
 s4 1.4 3x6.4+ 0 2 hold rotate 3 s4 drag,
 
 `,
-    `Check! [dice]
+    `Check! [cube]
 /blue:
 r10 1 0x0 0 0,
 r11 1 2x0 0 0,
@@ -107,7 +104,7 @@ r82 1 5x7 0 0,
 r83 1 7x7 0 0,
 
 `,
-    `Woo hoo!
+    `Woo hoo! [crown]
 /
 red:
 c1 1.4 1x0.5- 0 1 =,
