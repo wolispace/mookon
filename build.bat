@@ -25,7 +25,7 @@ echo. > %ALLFILES%
 echo src
 for %%f in (src\*.js) do (
     type "%%f" >> %ALLFILES%
-
+   timeout /t 1 /nobreak >nul
 )
 
 echo generators
@@ -49,3 +49,4 @@ for %%f in (src\core\*.js) do (
 terser %ALLFILES% --output %DEPLOY%/_js_files.min.js --compressed
 
 echo Done.
+pause
