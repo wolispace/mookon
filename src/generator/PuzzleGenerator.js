@@ -139,9 +139,16 @@ class PuzzleGenerator {
 
         // LAST RESORT
         let salt = 0;
+        const fallbackTechniques = this.techniquesList.filter(t => t.constructor.name !== 'MazeTechnique');
+
         while (this.availablePlugs.length > 0 && salt < 5) {
             const panel = new GeneratedPanel(this.panels.length, this.panels.length + 1);
             this.currentPanelIndex = panel.index;
+
+            // Add a technique to ensure the panel has a goal and doesn't auto-satisfy
+            const randomTech = fallbackTechniques[randBetween(0, fallbackTechniques.length - 1)];
+            randomTech.apply(panel, this);
+
             const initialPlugCount = this.availablePlugs.length;
             for (let j = 0; j < initialPlugCount; j++) {
                 const plug = this.getPlug();
@@ -156,7 +163,7 @@ class PuzzleGenerator {
                     this.setPlug(plug);
                 }
             }
-            if (this.availablePlugs.length === initialPlugCount) break;
+            if (this.availablePlugs.length === initialPlugCount && panel.elements.length === 0) break;
             this.panels.push(panel);
             salt++;
         }
