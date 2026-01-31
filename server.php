@@ -33,14 +33,15 @@ if (count(file($logFile)) >= $LINES_BEFORE_SUMMARY && $success == '1') {
 
 // Success response
 echo json_encode([
-    "status" => $logFile,
+    "status" => 'ok',
 ]);
 
 
 // summarises the log file into a summary JSON file and archives the log file
-function processLogFile($logPrefix, $logFile, $summaryFile) {
+function processLogFile($logPrefix, $logFile, $summaryFile)
+{
 
-    
+
     if (!file_exists($logFile)) {
         return; // nothing to do
     }
@@ -64,10 +65,10 @@ function processLogFile($logPrefix, $logFile, $summaryFile) {
         // Ensure IP entry exists
         if (!isset($summary[$ip])) {
             $summary[$ip] = [
-                'numberPuzzles'     => 0,
-                'completedPuzzles'  => 0,
-                'minPuzzleSeconds'  => null,
-                'maxPuzzleSeconds'  => null
+                'numberPuzzles' => 0,
+                'completedPuzzles' => 0,
+                'minPuzzleSeconds' => null,
+                'maxPuzzleSeconds' => null
             ];
         }
 
