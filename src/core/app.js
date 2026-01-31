@@ -34,29 +34,13 @@ window.addEventListener('DOMContentLoaded', () => {
 // Info dialog functionality
 document.addEventListener('DOMContentLoaded', () => {
     const infoButton = document.getElementById('info-button');
-    const infoDialog = document.getElementById('info-dialog');
-    const infoClose = document.getElementById('info-close');
     const reloadButton = document.getElementById('reload-button');
     const newButton = document.getElementById('new-button');
 
     if (infoButton) {
         infoButton.addEventListener('click', () => {
-            infoDialog.classList.remove('hidden');
+            Dialog.show(INFO_CONTENT);
             console.log("This puzzle:\n", thisPuzzle, "\n");
-        });
-    }
-
-    if (infoClose) {
-        infoClose.addEventListener('click', () => {
-            infoDialog.classList.add('hidden');
-        });
-    }
-
-    if (infoDialog) {
-        infoDialog.addEventListener('click', (e) => {
-            if (e.target === infoDialog) {
-                infoDialog.classList.add('hidden');
-            }
         });
     }
 
@@ -71,37 +55,38 @@ document.addEventListener('DOMContentLoaded', () => {
             location.reload();
         });
     }
-
 });
 
-// Share functionality
+// Global share handler
+function handleShare(buttonElement) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasSharedPuzzle = urlParams.get('p');
+
+    let currentPuzzle = '';
+    if (hasSharedPuzzle && currentPuzzleIndex === 0) {
+        currentPuzzle = sharedPuzzle;
+    } else if ((!hasSharedPuzzle && currentPuzzleIndex === 0) || (hasSharedPuzzle && currentPuzzleIndex === 1)) {
+        currentPuzzle = randomPuzzle;
+    } else {
+        const staticIndex = hasSharedPuzzle ? currentPuzzleIndex - 2 : currentPuzzleIndex - 1;
+        currentPuzzle = puzzleConfigs[staticIndex];
+    }
+
+    const encoded = encodePuzzle(currentPuzzle);
+    const shareUrl = `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(encoded)}`;
+
+    navigator.clipboard.writeText(shareUrl).then(() => {
+        if (buttonElement) buttonElement.textContent = 'Copied';
+    }).catch(() => {
+        alert('Unable to add to clipboard: ', shareUrl);
+    });
+}
+
+// Initial share button listener (for index.html/dev.html initial load if button exists)
 document.addEventListener('DOMContentLoaded', () => {
     const shareButton = document.getElementById('share-button');
-
     if (shareButton) {
-        shareButton.addEventListener('click', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const hasSharedPuzzle = urlParams.get('p');
-
-            let currentPuzzle = '';
-            if (hasSharedPuzzle && currentPuzzleIndex === 0) {
-                currentPuzzle = sharedPuzzle;
-            } else if ((!hasSharedPuzzle && currentPuzzleIndex === 0) || (hasSharedPuzzle && currentPuzzleIndex === 1)) {
-                currentPuzzle = randomPuzzle;
-            } else {
-                const staticIndex = hasSharedPuzzle ? currentPuzzleIndex - 2 : currentPuzzleIndex - 1;
-                currentPuzzle = puzzleConfigs[staticIndex];
-            }
-
-            const encoded = encodePuzzle(currentPuzzle);
-            const shareUrl = `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(encoded)}`;
-
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                shareButton.textContent = 'Copied';
-            }).catch(() => {
-                alert('Unable to add to clipboard: ', shareUrl);
-            });
-        });
+        shareButton.addEventListener('click', () => handleShare(shareButton));
     }
 });
 

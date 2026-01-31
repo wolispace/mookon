@@ -16,9 +16,6 @@ echo Building %DEPLOY%/index.html with version v=%ver%
   )
 ) > %DEPLOY%/index.html
 
-type app010.css > %DEPLOY%/app010.css
-type server.php > %DEPLOY%/server.php
-
 set ALLFILES=_js_files.js
 echo. > %ALLFILES%
 
@@ -46,7 +43,11 @@ for %%f in (src\core\*.js) do (
 
 )
 
-terser %ALLFILES% --output %DEPLOY%/_js_files.min.js --compressed
+terser %ALLFILES% --output _js_files.min.js --compressed
+
+type app010.css > %DEPLOY%/app010.css
+type server.php > %DEPLOY%/server.php
+type _js_files.min.js > %DEPLOY%/_js_files.min.js
 
 echo Done.
 pause

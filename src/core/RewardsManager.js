@@ -45,8 +45,28 @@ class RewardsManager {
             const icon = document.createElement('i');
             icon.className = this.buildRewardClass(rewardName, `reward-collected`);
             icon.title = rewardName;
+            icon.style.cursor = 'pointer';
+            icon.addEventListener('click', () => {
+                Dialog.show(this.getRewardContent(rewardName));
+            });
             rewardsArea.appendChild(icon);
         });
+    }
+
+    static getRewardContent(rewardName) {
+        return `
+            <h2>Reward Unlocked!</h2>
+            <div style="font-size: 3rem; margin: 20px 0; color: #ffd700; text-align: center;">
+                <i class="fa-solid fa-${rewardName}"></i>
+            </div>
+            <h3 style="text-align: center;">${rewardName.charAt(0).toUpperCase() + rewardName.slice(1).replace(/-/g, ' ')}</h3>
+            <p>Congratulations on unlocking this reward! This item has been added to your collection.</p>
+            <p>Rewards are earned by solving puzzles and finding hidden secrets within the Mookon Box.</p>
+            <p>Can you collect them all?</p>
+            <p>Scroll down to see more information about your collection and the box simulator.</p>
+            <p>Each reward represents a unique challenge you've overcome.</p>
+            <p>Stay tuned for more updates and new rewards to discover!</p>
+        `;
     }
 
     static createRewardIcon(rewardName, onClickCallback) {
