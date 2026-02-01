@@ -55,7 +55,8 @@ class RewardsManager {
 
     static getRewardContent(rewardName) {
         const rewards = this.loadRewards();
-        let content = '<div class="reward-dialog-content">';
+        let content = `<p>You have found ${rewards.length} of ${REWARDS.length}.<p>`;
+        content += '<div class="reward-dialog-content">';
 
         rewards.forEach(rewardName => {
             content += `<div style="font-size: 3rem; color: #ffd700; text-align: center;">
@@ -81,9 +82,12 @@ class RewardsManager {
 
         return icon;
     }
-    // Choose random reward
+    // Choose random reward they dont have yet
     static chooseReward() {
-        return REWARDS[randBetween(0, REWARDS.length - 1)];
+        const rewards = this.loadRewards();
+        // exclude rewards from REWARDS before selecting a rnadom one  
+        const availableRewards = REWARDS.filter(reward => !rewards.includes(reward));
+        return availableRewards[randBetween(0, availableRewards.length - 1)];
     }
 };
 
