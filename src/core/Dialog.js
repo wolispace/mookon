@@ -8,6 +8,9 @@ class Dialog {
         dialogOverlay.id = 'info-dialog';
         dialogOverlay.className = 'hidden';
 
+        const header = document.createElement('div');
+        header.id = 'dialog-header';
+
         const dialogBox = document.createElement('div');
         dialogBox.id = 'info-content';
 
@@ -19,6 +22,7 @@ class Dialog {
         const scrollContainer = document.createElement('div');
         scrollContainer.id = 'dialog-scroll-container';
 
+        dialogBox.appendChild(header);
         dialogBox.appendChild(closeBtn);
         dialogBox.appendChild(scrollContainer);
         dialogOverlay.appendChild(dialogBox);
@@ -32,13 +36,14 @@ class Dialog {
 
         this.instance = {
             overlay: dialogOverlay,
+            header: header,
             content: scrollContainer
         };
     }
 
-    static show(htmlContent) {
+    static show(header, htmlContent) {
         if (!this.instance) this.init();
-
+        this.instance.header.innerHTML = header;
         this.instance.content.innerHTML = htmlContent;
         this.instance.overlay.classList.remove('hidden');
 

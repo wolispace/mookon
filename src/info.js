@@ -1,6 +1,5 @@
 const INFO_CONTENT = `
-    <h2>Mookon Box</h2>
-    <h3>A sequential puzzle box simulator.</h3>
+    <p><strong>A sequential puzzle box simulator.</strong></p>
     <p>Interact with elements to unlock some of them.</p>
     <p>Unlock panels to reveal the next.</p>
     <p>Elements may be required on other panels.</p>

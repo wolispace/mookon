@@ -14,6 +14,7 @@
 
 body {
     background-color: var(--bg-color);
+    color:rgba(255,255,255,.9);
     overflow: hidden;
     height: 100vh;
     font-family: Tahoma, Verdana, Geneva, sans-serif;
@@ -75,6 +76,14 @@ body {
 
 #rewards-area::-webkit-scrollbar {
     width: 4px;
+}
+
+.reward-dialog-content {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
 }
 
 #game-container {
@@ -460,17 +469,33 @@ body {
 
 #info-content {
     background: #2a2a2a;
-    padding: 30px;
-    border-radius: 15px;
+    padding: .5rem;
+    border-radius: 5px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    width: 90%;
+    width: 95%;
     max-width: 500px;
-    height: 80vh;
+    height: 85vh;
     max-height: 600px;
     position: relative;
-    border: 1px solid #444;
+    border-left: 3px solid rgba(255, 255, 255, 0.50);
+     border-top: 3px solid rgba(255, 255, 255, 0.50);
+         border-right: 3px solid rgba(0, 0, 0, 0.50);
+     border-bottom: 3px solid rgba(0, 0, 0, 0.50);
     display: flex;
     flex-direction: column;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+#info-content p {
+    margin-top: 1rem;
+}
+
+#dialog-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding-right:1.25rem;
 }
 
 #dialog-scroll-container {
@@ -499,8 +524,8 @@ body {
 
 #info-close {
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 5px;
+    right: 5px;
     font-size: 24px;
     cursor: pointer;
     color: #ccc;
@@ -508,20 +533,6 @@ body {
 
 #info-close:hover {
     opacity: 0.75;
-}
-
-#info-content h3 {
-    margin: 0 0 15px 0;
-    color: #4ecdc4;
-}
-
-#info-content p {
-    margin: 8px 0;
-    line-height: 1.4;
-}
-
-#info-content strong {
-    color: #2df386;
 }
 
 #share-button {

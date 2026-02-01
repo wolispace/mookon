@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (infoButton) {
         infoButton.addEventListener('click', () => {
-            Dialog.show(INFO_CONTENT);
+            Dialog.show('Mookon Box', INFO_CONTENT);
             console.log("This puzzle:\n", thisPuzzle, "\n");
         });
     }
