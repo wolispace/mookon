@@ -9,12 +9,14 @@
     margin: 0;
     padding: 0;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
 }
 
 body {
     background-color: var(--bg-color);
-    color:rgba(255,255,255,.9);
+    color: rgba(255, 255, 255, .9);
     overflow: hidden;
     height: 100vh;
     font-family: Tahoma, Verdana, Geneva, sans-serif;
@@ -229,8 +231,9 @@ body {
     font-weight: lighter;
     color: #ecb00a;
     pointer-events: auto;
+    -webkit-user-drag: none;
     transition: all 0.3s ease;
-        text-shadow:
+    text-shadow:
         /* top-left highlight */
         -1px -1px 1px rgba(255, 255, 255, 0.8),
 
@@ -262,7 +265,7 @@ body {
         /* outer drop shadow */
         2px 3px 4px rgba(0, 0, 0, 0.35),
         /* glowing effect */
-         0 0 20px rgba(255, 215, 0, 0.8);
+        0 0 20px rgba(255, 215, 0, 0.8);
 }
 
 
@@ -478,9 +481,9 @@ body {
     max-height: 600px;
     position: relative;
     border-left: 3px solid rgba(255, 255, 255, 0.50);
-     border-top: 3px solid rgba(255, 255, 255, 0.50);
-         border-right: 3px solid rgba(0, 0, 0, 0.50);
-     border-bottom: 3px solid rgba(0, 0, 0, 0.50);
+    border-top: 3px solid rgba(255, 255, 255, 0.50);
+    border-right: 3px solid rgba(0, 0, 0, 0.50);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.50);
     display: flex;
     flex-direction: column;
     color: rgba(255, 255, 255, 0.85);
@@ -495,7 +498,7 @@ body {
     font-weight: bold;
     margin-bottom: 1rem;
     text-align: center;
-    padding-right:1.25rem;
+    padding-right: 1.25rem;
 }
 
 #dialog-scroll-container {
