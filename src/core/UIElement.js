@@ -8,7 +8,7 @@ class UIElement extends BaseElement {
 
     toString() {
         if (!this.isSatisfied()) {
-           // console.log(`${this.id}: method=${this.method}, change=${this.change}, targetState=${this.targetState}, state=${this.state}, remoteActions=${JSON.stringify(this.remoteActions)}`);
+            // console.log(`${this.id}: method=${this.method}, change=${this.change}, targetState=${this.targetState}, state=${this.state}, remoteActions=${JSON.stringify(this.remoteActions)}`);
         }
     }
 
@@ -706,6 +706,11 @@ class UIElement extends BaseElement {
 
                 if (sunkenElement.sizeComparison === COMPARISON_EQUAL && draggedSize !== sunkenSize) {
                     continue;
+                }
+                if (sunkenElement.sizeComparison === COMPARISON_STRICT) {
+                    if (draggedSize !== sunkenSize || this.color !== sunkenElement.color) {
+                        continue;
+                    }
                 }
                 if (sunkenElement.sizeComparison === COMPARISON_GREATER && draggedSize < sunkenSize) {
                     continue;

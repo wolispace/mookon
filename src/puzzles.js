@@ -1,9 +1,16 @@
 const puzzleConfigs = [
-`Simple! [star]
+    `Simple! [star]
 /
 blue:
 w1 1x1 3x3 0 0-6-3 tap state 1,
-`,
+`, `
+Simples! [basketball]
+/
+red:
+q1 1x1 3x3- 0 2 #,
+q2 1x1 1x3+ 0 2 drag,
+q3 1x1 5x3+ 0 3 drag,
+ `,
     `
 Job done! [pencil]
 /

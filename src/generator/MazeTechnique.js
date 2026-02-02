@@ -34,7 +34,7 @@ class MazeTechnique {
                     exit.y = y;
                     exit.color = 1;
                     exit.elevation = '-';
-                    exit.method = '='; // ALWAYS set method to '=' for Maze Exit to ensure it's a socket
+                    exit.method = randBetween(0, 1) === 0 ? '=' : '#';
                     exit.placed = true;
                     panel.addElement(exit, true, 'Maze Exit');
                     exitElement = exit;

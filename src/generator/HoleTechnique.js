@@ -22,7 +22,7 @@ class HoleTechnique {
             hole.color = color;
             hole.elevation = '-';
             hole.elevationTarget = ''; // Target elevation to apply when dragged
-            hole.method = '='; // ALWAYS set method to '=' for HoleTechnique to ensure it's a socket
+            hole.method = randBetween(0, 1) === 0 ? '=' : '#';
             hole.x = socketPos.x;
             hole.y = socketPos.y;
 
