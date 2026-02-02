@@ -22,7 +22,9 @@ class HoleTechnique {
             hole.color = color;
             hole.elevation = '-';
             hole.elevationTarget = ''; // Target elevation to apply when dragged
-            hole.method = randBetween(0, 1) === 0 ? '=' : '#';
+            // Black (1) has a high chance of '='. Others are 50/50.
+            const chanceOfStrict = (color === 1) ? 0.1 : 0.5;
+            hole.method = Math.random() < chanceOfStrict ? '#' : '=';
             hole.x = socketPos.x;
             hole.y = socketPos.y;
 

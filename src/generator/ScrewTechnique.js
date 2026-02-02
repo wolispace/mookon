@@ -43,11 +43,13 @@ class ScrewTechnique {
             if (holeSize >= 1) {
                 // If it's a plug/socket pair, force matching method
                 if (randBetween(1, 3) === 1 || generator.isFinalPanel()) {
-                    hole.method = randBetween(0, 1) === 0 ? '=' : '#';
+                    const chanceOfStrict = (hole.color === 1) ? 0.1 : 0.5;
+                    hole.method = Math.random() < chanceOfStrict ? '#' : '=';
 
                     const plug = new BuildElement('circle');
                     plug.setSize(holeSize);
-                    plug.color = 2; // blue plug
+                    // Match socket color if strict matching is used, otherwise the usual blue
+                    plug.color = (hole.method === '#') ? hole.color : 2;
                     plug.elevation = '+';
 
                     // Randomly decide: drag method or remote controllers
