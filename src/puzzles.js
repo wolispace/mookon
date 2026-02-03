@@ -1,5 +1,5 @@
 const puzzleConfigs = [
-    `Simple! [star]
+    `Simples! [star]
 /
 blue:
 w1 1x1 3x3 0 0-6-3 tap state 1,

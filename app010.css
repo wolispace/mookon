@@ -192,7 +192,20 @@ body {
 
 .victory-message {
     font-size: 2rem;
-    color: rgba(255, 255, 255, 0.85);
+    font-weight: bold;
+    color: #8d5a03;
+    text-shadow:
+        /* top-left highlight */
+        -1px -1px 1px rgba(255, 255, 255, 0.8),
+
+        /* bottom-right inner dark */
+        1px 1px 1px rgba(0, 0, 0, 0.4),
+
+        /* bottom-left softer inner dark */
+        -1px 1px 1px rgba(0, 0, 0, 0.25),
+
+        /* outer drop shadow */
+        2px 3px 4px rgba(0, 0, 0, 0.35);
 }
 
 .fas,
