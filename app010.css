@@ -288,11 +288,11 @@ body {
 
 .element.raised,
 .element.controller {
-    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(3px 3px 1px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.8));
 }
 
 .element.unlocked {
-    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.85));
+    filter: drop-shadow(-1px -1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.85));
 }
 
 .element.draggable {
