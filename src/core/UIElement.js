@@ -647,6 +647,10 @@ class UIElement extends BaseElement {
             this.element.style.top = `${PADDING + (relativeY * cellSize)}px`;
             this.element.style.zIndex = '2';
 
+            // Update grid coordinates for later re-initialization (e.g. on resize)
+            this.x = relativeX;
+            this.y = relativeY;
+
             // Re-enable transitions after a frame
             requestAnimationFrame(() => {
                 this.element.style.transition = '';
@@ -654,14 +658,21 @@ class UIElement extends BaseElement {
         } else if (!targetPanel && currentParent !== storageArea) {
             // Move to storage area
             const storageRect = storageArea.getBoundingClientRect();
+            const cellSize = getElementSize();
 
             this.element.style.transition = 'none';
             storageArea.appendChild(this.element);
+
+            const relativeX = (currentRect.left - storageRect.left) / cellSize;
+            const relativeY = (currentRect.top - storageRect.top) / cellSize;
 
             this.element.style.position = 'absolute';
             this.element.style.left = `${currentRect.left - storageRect.left}px`;
             this.element.style.top = `${currentRect.top - storageRect.top}px`;
             this.element.style.zIndex = '2';
+
+            this.x = relativeX;
+            this.y = relativeY;
 
             requestAnimationFrame(() => {
                 this.element.style.transition = '';
