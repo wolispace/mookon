@@ -96,9 +96,9 @@ const PUZZLE_CONFIG = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: false,
+    enabled: true,
     technique: 'hole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group'
-    coverStyle: 1      // forced cover style: 0=Physical, 1=Group, 2=Remote-Only, 3=Switch Release
+    coverStyle: 4      // forced cover style: 0=Physical, 1=Group, 2=Remote-Only, 3=Switch Release, 4=Size-Obscure
 };
 
 let elementIdCounter = 1;

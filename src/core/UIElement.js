@@ -200,8 +200,10 @@ class UIElement extends BaseElement {
                 if (this.unlocked) this.element.classList.add('unlocked');
             }, INTERACTION_TIMEOUT);
         } else if (this.change === CHANGE_SIZE) {
-            const scaleFactor = 1 + (this.state * 0.25);
-            const newSize = this.initialSize * scaleFactor;
+            // Fixed range: 1.0 to 2.0 in 0.25 steps, ping-pong cycle
+            const sizes = [1.0, 1.25, 1.5, 1.75, 2.0, 1.75, 1.5, 1.25];
+            const scale = SHAPES[this.shape]?.scale || 1;
+            const newSize = sizes[this.state % sizes.length] * scale;
             this.setSize(newSize);
 
             // Re-initialize to update SVG and event listeners

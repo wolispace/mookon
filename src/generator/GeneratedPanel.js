@@ -163,6 +163,32 @@ class GeneratedPanel {
         return true;
     }
 
+    addSizeController(plug) {
+        // Find a spot for a single button
+        const pos = this.findFreeSpace(1, 1);
+        if (!pos) return false;
+
+        const controller = new BuildElement('circle');
+        controller.gridWidth = controller.gridHeight = 1;
+        controller.color = randBetween(0, 8);
+        controller.elevation = '+';
+        controller.method = 'tap';
+        controller.remoteActions = [{
+            id: plug.id,
+            type: 'configure',
+            method: 'drag', // Keep it draggable
+            change: 'size', // Change size
+            target: 0 // Cycle (0 means it will progress state 0->1->2->3->0)
+        }];
+        controller.x = pos.x;
+        controller.y = pos.y;
+        controller.title = `Size controller for ${plug.id}`;
+        controller.context = `Size controller for ${plug.id}`;
+
+        this.addElement(controller);
+        return true;
+    }
+
     findControllerPosition(controllers, controllerSize) {
         // Calculate the bounding box of the controller layout
         let minX = Infinity, maxX = -Infinity;
@@ -281,7 +307,7 @@ class GeneratedPanel {
             // AND ensure the element doesn't already have remote capabilities.
             let maxStyle = 1;
             if (this.remoteSetsCount < 2 && element.elevation === '+' && !element.hasRemote) {
-                maxStyle = 3;
+                maxStyle = 4;
             }
 
             let coverStyle;
@@ -501,6 +527,59 @@ class GeneratedPanel {
                         this.addElement(sw, false, `Release for ${modified.id}`);
                         coversAdded++;
                         this.remoteSetsCount++;
+                    }
+                }
+            } else if (coverStyle === 4) {
+                // Style 4: Size Obscure
+                const idx = this.elements.findIndex(e => e.split(/\s+/)[0] === element.id);
+                if (idx !== -1 && element.elevation === '+') {
+                    // Re-parse the existing config to modify it
+                    const tokens = this.elements[idx].split(/\s+/);
+                    const sizeParts = tokens[1].split('x');
+                    const targetW = parseFloat(sizeParts[0]);
+                    const targetH = parseFloat(sizeParts[1]);
+                    const targetSize = Math.max(targetW, targetH);
+                    const aspectRatio = targetH / targetW;
+
+                    // The size cycle range is [1.0, 2.0] absolute grid units (unscaled).
+                    const pingPong = [1.0, 1.25, 1.5, 1.75, 2.0, 1.75, 1.5, 1.25];
+
+                    // Only apply if targetSize is reachable within the cycle
+                    const validStates = [];
+                    pingPong.forEach((s, i) => {
+                        if (Math.abs(s - targetSize) < 0.01) validStates.push(i);
+                    });
+
+                    if (validStates.length > 0) {
+                        // Pick a "wrong" base size for the config string (different from targetSize)
+                        const potentialSizes = [1.0, 1.25, 1.5, 1.75, 2.0];
+                        let baseSize = potentialSizes[randBetween(0, potentialSizes.length - 1)];
+                        while (Math.abs(baseSize - targetSize) < 0.01) {
+                            baseSize = potentialSizes[randBetween(0, potentialSizes.length - 1)];
+                        }
+
+                        const newW = baseSize;
+                        const newH = baseSize * aspectRatio;
+                        tokens[1] = `${Math.round(newW * 100) / 100}x${Math.round(newH * 100) / 100}`;
+
+                        // Pick an initial state that is NOT valid
+                        let initialState = randBetween(0, 7);
+                        while (validStates.includes(initialState)) {
+                            initialState = randBetween(0, 7);
+                        }
+
+                        // Insert 'state X' after color (index 4)
+                        tokens.splice(5, 0, 'state', initialState);
+                        this.elements[idx] = tokens.join(' ');
+
+                        // Add the remote controller
+                        const dummyPlug = { id: element.id };
+                        if (this.addSizeController(dummyPlug)) {
+                            coversAdded++;
+                        }
+                    } else {
+                        // Fallback to Style 0 if size matches are impossible
+                        this.addCoverings(panel, generator, 1.0); // Recurse once with high probability
                     }
                 }
             }

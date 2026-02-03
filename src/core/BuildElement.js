@@ -57,6 +57,10 @@ class BuildElement extends BaseElement {
         let configString = `${this.id} ${w}x${h} ${x}x${y}${this.elevation} 0 ${color}`;
         configString += this.method === '' ? '' : ` ${this.method}`;
 
+        if (this.state && this.state !== 0) {
+            configString += ` state ${this.state}`;
+        }
+
         // Only add change and target if meaningful
         if (this.change !== '' && this.change !== 'none') {
             configString += ` ${this.change}`;

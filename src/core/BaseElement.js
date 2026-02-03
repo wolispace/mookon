@@ -36,8 +36,12 @@ class BaseElement {
                 const ratio = newSize / this.size;
                 this.rectWidth *= ratio;
                 this.rectHeight *= ratio;
+                this.gridWidth = this.rectWidth;
+                this.gridHeight = this.rectHeight;
+            } else {
+                this.gridWidth = this.gridHeight = newSize;
             }
-            this.gridWidth = this.gridHeight = this.size = newSize;
+            this.size = newSize;
         }
     }
 

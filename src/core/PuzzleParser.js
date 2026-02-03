@@ -116,7 +116,7 @@ class PuzzleParser {
                     element.targetState = 1;
                     i++;
                 }
-                break;
+                // Allow continuation to parse other tokens like 'state'
             } else if (METHOD_PATTERN.test(token)) {
                 element.method = token;
                 i++;
@@ -194,6 +194,10 @@ class PuzzleParser {
                     console.log(`Configuration Error Element ${element.id}: Unrecognized token '${filteredTokens[i]}'. Expected change type, target state, or remote action.`, "color:red;font-weight:bold;");
                 }
                 break;
+            } else if (token === 'state') {
+                i++;
+                element.state = parseInt(filteredTokens[i]);
+                i++;
             } else if (COMPARISON_PATTERN.test(token)) {
                 element.sizeComparison = token;
                 i++;
@@ -203,10 +207,12 @@ class PuzzleParser {
         }
 
         // Apply logic after all tokens processed
-        element.state = element.change === CHANGE_COLOR ? initialState : 0;
+        if (element.state === undefined) {
+            element.state = element.change === CHANGE_COLOR ? initialState : 0;
+        }
 
         if (element.change === CHANGE_SIZE) {
-            element.maxState = 4;
+            element.maxState = 7;
         } else {
             element.maxState = element.shape === 'switch' ? element.size : 8;
         }
