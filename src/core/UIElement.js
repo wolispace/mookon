@@ -748,6 +748,7 @@ class UIElement extends BaseElement {
                 this.element.classList.remove('raised');
                 this.element.classList.remove('unlocked');
                 this.element.classList.remove('draggable');
+                this.element.classList.add('done');
 
                 // Return element to the sunken element's panel
                 sunkenPanel.container.appendChild(this.element);
