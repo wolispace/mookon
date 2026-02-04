@@ -192,7 +192,6 @@ body {
 
 .victory-message {
     font-size: 2rem;
-    font-weight: bold;
     color: #8d5a03;
     text-shadow:
         /* top-left highlight */
