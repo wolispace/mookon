@@ -17,44 +17,56 @@ class CoverManager {
      * @param {number} probability - Probability of covering each element.
      */
     addCoverings(currentPanel, targetPanel, generator, probability = 0.33) {
-        // Limit total covers per panel to prevent overcrowding
+        // Limit total cover applications per panel to prevent overcrowding
         let coversAdded = 0;
-        const MAX_COVERS = 4;
+        const MAX_COVERS = 8;
 
-        // For each coverable element, decide randomly if it should be covered
+        // Iterate through all coverable elements
         for (const element of currentPanel.coverableElements) {
             if (coversAdded >= MAX_COVERS) break;
 
-            // Debug: force covers on all elements if enabled
-            const shouldCover = (DEBUG_CONFIG.enabled)
-                ? true
-                : Math.random() > probability;
-
+            // Decision: Should we cover this element at all?
+            const shouldCover = (DEBUG_CONFIG.enabled) ? true : Math.random() > probability;
             if (!shouldCover) continue;
 
-            // Decide covering style
-            // Style 2 and 3 require raised elements and no existing remotes
-            let maxStyle = 1;
-            if (currentPanel.remoteSetsCount < 2 && element.elevation === '+' && !element.hasRemote) {
-                maxStyle = 4;
-            }
+            // Stack multiple covers on this specific element
+            const stackLimit = DEBUG_CONFIG.enabled ? 3 : randBetween(1, 2);
+            let stackCount = 0;
 
-            let styleIndex;
-            if (DEBUG_CONFIG.enabled && DEBUG_CONFIG.coverStyle !== undefined && DEBUG_CONFIG.coverStyle !== null) {
-                styleIndex = DEBUG_CONFIG.coverStyle;
-            } else {
-                styleIndex = randBetween(0, maxStyle);
-            }
+            for (let i = 0; i < stackLimit; i++) {
+                if (coversAdded >= MAX_COVERS) break;
 
-            const style = this.styles[styleIndex];
-            if (style) {
-                const success = style.apply(currentPanel, element, targetPanel, generator);
-                if (success) {
-                    coversAdded++;
-                } else if (styleIndex === 4) {
-                    // Fallback for Size Obscure if it failed
-                    this.styles[0].apply(currentPanel, element, targetPanel, generator);
-                    coversAdded++;
+                // Decide covering style index
+                // Style 2 (RemoteOnly) and 3 (SwitchRelease) require no existing remotes
+                let maxStyle = 1;
+                if (currentPanel.remoteSetsCount < 2 && element.elevation === '+' && !element.hasRemote) {
+                    maxStyle = 4;
+                }
+
+                let styleIndex;
+                if (DEBUG_CONFIG.enabled && DEBUG_CONFIG.coverStyle !== undefined && DEBUG_CONFIG.coverStyle !== null) {
+                    styleIndex = DEBUG_CONFIG.coverStyle;
+                } else {
+                    styleIndex = randBetween(0, maxStyle);
+                }
+
+                const style = this.styles[styleIndex];
+                if (style) {
+                    const success = style.apply(currentPanel, element, targetPanel, generator);
+                    if (success) {
+                        coversAdded++;
+                        stackCount++;
+
+                        // Update hasRemote to affect style selection in next loop iteration
+                        if (styleIndex === 2 || styleIndex === 3) {
+                            element.hasRemote = true;
+                        }
+                    } else if (styleIndex === 4 && stackCount === 0) {
+                        // Fallback only if it's the first cover being applied and it failed
+                        this.styles[0].apply(currentPanel, element, targetPanel, generator);
+                        coversAdded++;
+                        break; // Stop stacking if fallback was used
+                    }
                 }
             }
         }

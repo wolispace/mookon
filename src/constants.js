@@ -98,7 +98,7 @@ const PUZZLE_CONFIG = {
 const DEBUG_CONFIG = {
     enabled: false,
     technique: 'hole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group'
-    coverStyle: 4      // forced cover style: 0=Physical, 1=Group, 2=Remote-Only, 3=Switch Release, 4=Size-Obscure
+    coverStyle: null      // Set to null to allow random stacking in debug mode
 };
 
 let elementIdCounter = 1;
