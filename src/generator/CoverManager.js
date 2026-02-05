@@ -17,9 +17,11 @@ class CoverManager {
      * @param {number} probability - Probability of covering each element.
      */
     addCoverings(currentPanel, targetPanel, generator, probability = 0.33) {
+        const diff = DIFFICULTY_SETTINGS[PUZZLE_CONFIG.DIFFICULTY] || DIFFICULTY_SETTINGS[2];
+
         // Limit total cover applications per panel to prevent overcrowding
         let coversAdded = 0;
-        const MAX_COVERS = 8;
+        const MAX_COVERS = diff.maxCovers;
 
         // Iterate through all coverable elements
         for (const element of currentPanel.coverableElements) {
@@ -30,7 +32,7 @@ class CoverManager {
             if (!shouldCover) continue;
 
             // Stack multiple covers on this specific element
-            const stackLimit = DEBUG_CONFIG.enabled ? 3 : randBetween(1, 2);
+            const stackLimit = DEBUG_CONFIG.enabled ? 3 : diff.stackLimit;
             let stackCount = 0;
 
             for (let i = 0; i < stackLimit; i++) {

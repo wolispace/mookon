@@ -72,7 +72,10 @@ class PuzzleGenerator {
         }
 
         // --- Standard Random Generation ---
-        const panelCount = randBetween(PUZZLE_CONFIG.MIN_PANELS, PUZZLE_CONFIG.MAX_PANELS);
+        const diff = DIFFICULTY_SETTINGS[PUZZLE_CONFIG.DIFFICULTY] || DIFFICULTY_SETTINGS[2];
+        const panelCount = randBetween(diff.minPanels, diff.maxPanels);
+
+        const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1;
 
         for (let i = 0; i < panelCount; i++) {
             const panel = new GeneratedPanel(i, panelCount);
@@ -92,7 +95,10 @@ class PuzzleGenerator {
 
             // Standard plug placement logic
             let numPlugsToAdd;
-            if (i === panelCount - 1) {
+            if (isEasy) {
+                // In Easy mode, always try to place plugs on the same panel as their target socket
+                numPlugsToAdd = this.availablePlugs.length;
+            } else if (i === panelCount - 1) {
                 numPlugsToAdd = this.availablePlugs.length;
             } else if (i === 0) {
                 numPlugsToAdd = 0;
@@ -126,8 +132,8 @@ class PuzzleGenerator {
                 }
             }
 
-            if (randBetween(1, 4) <= 3) {
-                panel.addCoverings(panel, this, .6);
+            if (randBetween(1, 10) <= diff.coverProb * 10) {
+                panel.addCoverings(panel, this, diff.coverProb);
             }
 
             this.panels.push(panel);

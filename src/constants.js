@@ -87,11 +87,36 @@ const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
 const PUZZLE_CONFIG = {
+    DIFFICULTY: 1, // 1: Easy, 2: Medium, 3: Hard
     MIN_PANELS: 2,
     MAX_PANELS: 5,
     MIN_TECHNIQUES: 1, // Per panel
     MAX_TECHNIQUES: 1,
     FORCE_MAZE: false // Option to favor maze generation
+};
+
+const DIFFICULTY_SETTINGS = {
+    1: { // Easy
+        minPanels: 1,      // Minimum number of panels in the box
+        maxPanels: 2,      // Maximum number of panels in the box
+        coverProb: 0.2,    // Probability (0-1) that a coverable element gets covered
+        maxCovers: 2,      // Maximum total covers allowed on a single panel
+        stackLimit: 1      // Maximum number of covers that can stack on a single element
+    },
+    2: { // Medium
+        minPanels: 2,
+        maxPanels: 3,
+        coverProb: 0.5,
+        maxCovers: 4,
+        stackLimit: 2
+    },
+    3: { // Hard
+        minPanels: 3,
+        maxPanels: 5,
+        coverProb: 0.8,
+        maxCovers: 8,
+        stackLimit: 3
+    }
 };
 
 // Debug configuration - set to override random generation
