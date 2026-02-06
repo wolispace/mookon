@@ -1,25 +1,43 @@
+const generator = new PuzzleGenerator();
+
 function loadPuzzle(index) {
     clearArea('puzzle');
     clearArea('storage');
 
     const urlParams = new URLSearchParams(window.location.search);
-    const hasSharedPuzzle = urlParams.get('p');
+    const hasShared = !!urlParams.get('p');
 
-    if (hasSharedPuzzle && index === 0) {
+    // Index mapping:
+    // [0]: Shared (if hasShared)
+    // [0+hasShared]: Medium (Diff 2)
+    // [1+hasShared]: Easy   (Diff 1)
+    // [2+hasShared]: Hard   (Diff 3)
+    // [3+hasShared...]: Static Puzzles
+
+    if (hasShared && index === 0) {
         thisPuzzle = sharedPuzzle;
-    } else if ((!hasSharedPuzzle && index === 0) || (hasSharedPuzzle && index === 1)) {
-        if (!randomPuzzle) {
-            randomPuzzle = generateRandomPuzzle(panelOverrides);
-        }
+    } else if (index >= (hasShared ? 1 : 0) && index <= (hasShared ? 3 : 2)) {
+        // Difficulty selection
+        const diffIndex = hasShared ? index - 1 : index;
+        const newDifficulty = [2, 1, 3][diffIndex]; // Medium, Easy, Hard
+
+        PUZZLE_CONFIG.DIFFICULTY = newDifficulty;
+        localStorage.setItem('mookon_difficulty', newDifficulty);
+
+        randomPuzzle = generateRandomPuzzle();
         thisPuzzle = randomPuzzle;
     } else {
-        const staticIndex = hasSharedPuzzle ? index - 2 : index - 1;
+        // Static puzzles
+        const staticIndex = index - (hasShared ? 4 : 3);
         thisPuzzle = puzzleConfigs[staticIndex];
     }
 
-    // console.log("Loading\n:", thisPuzzle, "\n");
     currentGame = new Game(thisPuzzle);
     currentPuzzleIndex = index;
+
+    // Sync select dropdown
+    const selector = document.getElementById('puzzle-select');
+    if (selector) selector.value = index;
 
     // Log request to server (silent)
     fetch(`server.php?p=${currentPuzzleIndex}`).catch(() => { });
@@ -35,25 +53,37 @@ function populatePuzzleSelect() {
     select.innerHTML = "";
 
     const urlParams = new URLSearchParams(window.location.search);
-    const hasSharedPuzzle = urlParams.get('p');
+    const hasShared = !!urlParams.get('p');
 
     let optionIndex = 0;
 
-    // Add Shared option if present
-    if (hasSharedPuzzle) {
+    // 1. Shared (if present)
+    if (hasShared) {
         const option = document.createElement("option");
         option.value = optionIndex++;
         option.textContent = "Shared";
         select.appendChild(option);
     }
 
-    // Add Random option
-    const randomOption = document.createElement("option");
-    randomOption.value = optionIndex++;
-    randomOption.textContent = "Random";
-    select.appendChild(randomOption);
+    // 2. Difficulties
+    const difficulties = [
+        { name: "Medium", value: 2 },
+        { name: "Easy", value: 1 },
+        { name: "Hard", value: 3 }
+    ];
 
-    // Add static puzzles
+    difficulties.forEach(diff => {
+        const option = document.createElement("option");
+        option.value = optionIndex++;
+        option.textContent = diff.name;
+        // Mark as selected if it matches current config
+        if (PUZZLE_CONFIG.DIFFICULTY === diff.value) {
+            option.selected = true;
+        }
+        select.appendChild(option);
+    });
+
+    // 3. Static puzzles
     puzzleConfigs.forEach((config, index) => {
         const option = document.createElement("option");
         option.value = optionIndex++;
