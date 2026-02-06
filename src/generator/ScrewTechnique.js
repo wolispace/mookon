@@ -40,7 +40,8 @@ class ScrewTechnique {
 
 
             // Ensure the hole becomes a socket if it's meant to be interactable
-            if (holeSize >= 1) {
+            // No interactable elements (sockets/plugs) should be smaller than 1x1
+            if (holeSize >= 1.0) {
                 // If it's a plug/socket pair, force matching method
                 if (randBetween(1, 3) === 1 || generator.isFinalPanel()) {
                     const chanceOfStrict = (hole.color === 1) ? 0.1 : 0.5;

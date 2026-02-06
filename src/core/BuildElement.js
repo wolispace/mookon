@@ -54,15 +54,21 @@ class BuildElement extends BaseElement {
             color = this.color;
         }
 
+        // Global safeguard: No interactive elements smaller than 1x1
+        // If an element is too small, strip its interaction methods
+        const minSize = 0.95; // Allow for slight rounding errors
+        const isTooSmall = w < minSize || h < minSize;
+        const effectiveMethod = isTooSmall ? '' : this.method;
+
         let configString = `${this.id} ${w}x${h} ${x}x${y}${this.elevation} 0 ${color}`;
-        configString += this.method === '' ? '' : ` ${this.method}`;
+        configString += effectiveMethod === '' ? '' : ` ${effectiveMethod}`;
 
         if (this.state && this.state !== 0) {
             configString += ` state ${this.state}`;
         }
 
         // Only add change and target if meaningful
-        if (this.change !== '' && this.change !== 'none') {
+        if (effectiveMethod !== '' && this.change !== '' && this.change !== 'none') {
             configString += ` ${this.change}`;
             // 'move' implies target state 1, don't print it. Others need it.
             if (this.change !== 'move') {

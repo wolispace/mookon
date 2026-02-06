@@ -87,7 +87,7 @@ const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
 const PUZZLE_CONFIG = {
-    DIFFICULTY: 1, // 1: Easy, 2: Medium, 3: Hard
+    DIFFICULTY: 2, // 1: Easy, 2: Medium, 3: Hard
     MIN_PANELS: 2,
     MAX_PANELS: 5,
     MIN_TECHNIQUES: 1, // Per panel
@@ -112,7 +112,7 @@ const DIFFICULTY_SETTINGS = {
     },
     3: { // Hard
         minPanels: 3,
-        maxPanels: 5,
+        maxPanels: 6,
         coverProb: 0.8,
         maxCovers: 8,
         stackLimit: 3
