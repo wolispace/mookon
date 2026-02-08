@@ -5,7 +5,8 @@ class CoverManager {
             1: new GroupObscureCover(),
             2: new RemoteOnlyCover(),
             3: new SwitchReleaseCover(),
-            4: new SizeObscureCover()
+            4: new SizeObscureCover(),
+            5: new ResetCover()
         };
     }
 
@@ -32,7 +33,7 @@ class CoverManager {
             if (!shouldCover) continue;
 
             // Stack multiple covers on this specific element
-            const stackLimit = DEBUG_CONFIG.enabled ? 3 : diff.stackLimit;
+            const stackLimit = DEBUG_CONFIG.enabled ? randBetween(1, 3) : diff.stackLimit;
             let stackCount = 0;
 
             for (let i = 0; i < stackLimit; i++) {
@@ -42,7 +43,7 @@ class CoverManager {
                 // Style 2 (RemoteOnly) and 3 (SwitchRelease) require no existing remotes
                 let maxStyle = 1;
                 if (currentPanel.remoteSetsCount < 2 && element.elevation === '+' && !element.hasRemote) {
-                    maxStyle = 4;
+                    maxStyle = 5;
                 }
 
                 let styleIndex;

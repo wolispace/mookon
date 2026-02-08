@@ -13,6 +13,21 @@ class UIElement extends BaseElement {
     }
 
     initialize() {
+        // Store initial properties for reset capability
+        this.initialConfig = {
+            x: this.x,
+            y: this.y,
+            rotation: this.rotation,
+            state: this.state,
+            elevation: this.elevation,
+            elevationTarget: this.elevationTarget,
+            method: this.method,
+            change: this.change,
+            targetState: this.targetState,
+            draggable: this.draggable,
+            filled: this.filled
+        };
+
         // Store initial size for cycling logic if not already set
         if (this.initialSize === undefined) {
             this.initialSize = this.size;
@@ -260,7 +275,9 @@ class UIElement extends BaseElement {
                     for (const panel of this.panel.game.panels) {
                         const targetElement = panel.elements.find(el => el.id === remoteAction.id);
                         if (targetElement) {
-                            if (remoteAction.type === 'move_step') {
+                            if (remoteAction.type === 'reset') {
+                                targetElement.reset();
+                            } else if (remoteAction.type === 'move_step') {
                                 // Execute remote move
                                 const cellSize = getElementSize();
                                 // Calculate target position in VIEWPORT coordinates
@@ -873,5 +890,93 @@ class UIElement extends BaseElement {
                 }
             }
         }
+    }
+    reset() {
+        if (!this.initialConfig) return;
+
+        // 1. If we were a plug filling a socket, empty the socket and move
+        if (this.filled || (this.element.parentElement && !this.element.parentElement.classList.contains('panel'))) {
+            // Find our socket
+            for (const panel of this.panel.game.panels) {
+                const socket = panel.elements.find(el => el.filled && el.shape === (this.shape === 'screw' ? 'circle' : this.shape));
+                if (socket) {
+                    // This is crude but we check overlapping
+                    const plugRect = this.element.getBoundingClientRect();
+                    const socketRect = socket.element.getBoundingClientRect();
+                    if (Math.abs(plugRect.left - socketRect.left) < 5 && Math.abs(plugRect.top - socketRect.top) < 5) {
+                        socket.filled = false;
+                        socket.updateVisuals();
+                        break;
+                    }
+                }
+            }
+
+            // Move out of socket to a free space
+            const directions = [
+                { x: 0, y: -this.size }, // Up
+                { x: 0, y: this.size },  // Down
+                { x: -this.size, y: 0 }, // Left
+                { x: this.size, y: 0 }   // Right
+            ];
+
+            const cellSize = getElementSize();
+            let moved = false;
+            for (const dir of directions) {
+                const newX = this.x + dir.x;
+                const newY = this.y + dir.y;
+
+                if (newX >= 0 && newX + this.size <= 8 && newY >= 0 && newY + this.size <= 8) {
+                    // Check for overlap at this grid position
+                    const hasConflict = this.panel.elements.some(el => {
+                        if (el === this) return false;
+                        return !(newX + this.size <= el.x || newX >= el.x + el.size ||
+                            newY + this.size <= el.y || newY >= el.y + el.size);
+                    });
+
+                    if (!hasConflict) {
+                        this.x = newX;
+                        this.y = newY;
+                        this.element.style.left = `${PADDING + (this.x * cellSize)}px`;
+                        this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
+                        moved = true;
+                        break;
+                    }
+                }
+            }
+
+            // If no clear adjacent space, just move to starting position if possible or stay put
+            if (!moved) {
+                this.x = this.initialConfig.x;
+                this.y = this.initialConfig.y;
+                this.element.style.left = `${PADDING + (this.x * cellSize)}px`;
+                this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
+            }
+
+            // Re-parent to starting panel if it was moved to another panel or storage
+            if (this.element.parentElement !== this.panel.container) {
+                this.panel.container.appendChild(this.element);
+                this.element.style.position = 'absolute';
+            }
+        }
+
+        // 2. Restore basic properties
+        this.state = this.initialConfig.state;
+        this.rotation = this.initialConfig.rotation;
+        this.elevation = this.initialConfig.elevation;
+        this.elevationTarget = this.initialConfig.elevationTarget;
+        this.method = this.initialConfig.method;
+        this.change = this.initialConfig.change;
+        this.targetState = this.initialConfig.targetState;
+        this.draggable = this.initialConfig.draggable;
+        this.filled = false;
+
+        // 3. Update visuals and event handlers
+        this.element.classList.remove('done', 'unlocked', 'draggable', 'raised', 'sunken', 'jump');
+        if (this.elevation === '+') this.element.classList.add('raised');
+        if (this.elevation === '-') this.element.classList.add('sunken');
+        if (this.draggable) this.element.classList.add('draggable', 'unlocked');
+
+        this.updateVisuals();
+        this.setupEvents();
     }
 };

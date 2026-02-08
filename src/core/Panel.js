@@ -97,7 +97,11 @@ class Panel {
         // console.log("Panel " + this.config.color + " checkCompletion");
         this.elements.forEach(el => el.toString());
 
-        const allSatisfied = this.elements.every(el => el.isSatisfied());
+        const allSatisfied = this.elements.every(el => {
+            const sat = el.isSatisfied();
+            if (!sat) console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
+            return sat;
+        });
 
         if (allSatisfied && this.elements.length > 0 && !this.isUnlocked) {
             this.isUnlocked = true;

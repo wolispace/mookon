@@ -67,9 +67,9 @@ Covers are modifiers added to existing elements on the same panel to obscure the
 - **Behavior**: Changes the size of an element so it doesn't match its requirement (e.g., a plug that is too small for its socket).
 - **Interaction**: Adds a "Size Controller" (typically a button) that cycles the element's size until it matches the target.
 
-### [DecoyCover](generator/DecoyCover.js)
-- **Behavior**: A "Trap" cover that looks like a standard interactive element (screw or button).
-- **Effect**: Interacting with it un-sets a random other element on the same panel (e.g., toggles a switch away from its target state).
+### [ResetCover](generator/ResetCover.js)
+- **Behavior**: Places a standalone interactive element (like a switch or button) in a vacant space on the panel.
+- **Effect**: Interacting with this "trap" resets a random target element on the same panel to its initial state. If the target is a plug in a socket, it will "pop out" to a nearby free space.
 
 ---
 

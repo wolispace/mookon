@@ -25,7 +25,8 @@ class GeneratedPanel {
             const elevation = locStr.includes('+') ? '+' : '-';
 
             // Target State logic
-            if (target !== '' && parseInt(target) > 0) return true;
+            const targetVal = parseInt(target);
+            if (target !== '' && targetVal > 0 && targetVal <= 8) return true;
             if (elevation === '-' && method !== '') return true;
             if (change === 'move') return true;
 
@@ -61,6 +62,8 @@ class GeneratedPanel {
                 elementString.includes('tap state') ||
                 (elementObj && (elementObj.hasRemoteControllers || elementObj.remoteId));
 
+            const targetState = elementObj ? elementObj.targetState : 0;
+
             this.coverableElements.push({
                 id,
                 elementString,
@@ -70,6 +73,7 @@ class GeneratedPanel {
                 y,
                 elevation,
                 hasRemote,
+                targetState,
                 type: id.charAt(0).toLowerCase()
             });
         }

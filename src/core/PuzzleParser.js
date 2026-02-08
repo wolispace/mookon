@@ -152,7 +152,17 @@ class PuzzleParser {
                             vector: { x: vx, y: vy }
                         });
 
-                    } else if (i < filteredTokens.length && (METHOD_PATTERN.test(filteredTokens[i]) || CHANGE_PATTERN.test(filteredTokens[i]))) {
+                    } else if (i < filteredTokens.length && (filteredTokens[i] === 'reset' || METHOD_PATTERN.test(filteredTokens[i]) || CHANGE_PATTERN.test(filteredTokens[i]))) {
+                        // Check for reset shorthand
+                        if (filteredTokens[i] === 'reset') {
+                            element.remoteActions.push({
+                                id: remoteId,
+                                type: 'reset'
+                            });
+                            i++;
+                            continue;
+                        }
+
                         let remoteMethod = METHOD_NONE;
                         if (METHOD_PATTERN.test(filteredTokens[i])) {
                             remoteMethod = filteredTokens[i];

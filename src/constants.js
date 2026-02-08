@@ -122,8 +122,8 @@ const DIFFICULTY_SETTINGS = {
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
     enabled: false,
-    technique: 'hole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group'
-    coverStyle: null      // Set to null to allow random stacking in debug mode
+    technique: 'switch', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group'
+    coverStyle: 5      // Set to 5 for ResetCover
 };
 
 let elementIdCounter = 1;

@@ -78,7 +78,9 @@ class BuildElement extends BaseElement {
 
         this.remoteActions.forEach(action => {
             configString += ` ${action.id}`;
-            if (action.type === 'move_step') {
+            if (action.type === 'reset') {
+                configString += ` reset`;
+            } else if (action.type === 'move_step') {
                 configString += ` ${action.vector.x}x${action.vector.y}`;
             } else {
                 configString += ` ${action.method}`;
