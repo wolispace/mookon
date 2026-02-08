@@ -43,6 +43,9 @@ function initEventListeners() {
     if (shareButton) {
         shareButton.addEventListener('click', () => handleShare(shareButton));
     }
+
+    // Prevent context menu globally
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 /**

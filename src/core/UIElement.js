@@ -129,6 +129,7 @@ class UIElement extends BaseElement {
         }
 
         if (this.method === METHOD_HOLD) {
+            e.preventDefault();
             this.isHolding = true;
             this.holdTimer = setTimeout(() => this.holdStep(), 300);
         }
