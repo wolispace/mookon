@@ -68,7 +68,7 @@ class BuildElement extends BaseElement {
         }
 
         // Only add change and target if meaningful
-        if (effectiveMethod !== '' && this.change !== '' && this.change !== 'none') {
+        if (this.change !== '' && this.change !== 'none') {
             configString += ` ${this.change}`;
             // 'move' implies target state 1, don't print it. Others need it.
             if (this.change !== 'move') {

@@ -12,6 +12,8 @@ class RemoteOnlyCover extends Cover {
             modified.y = element.y;
             modified.color = tokens[4]; // Use index 4 to stay before any method/target tokens
             modified.elevation = element.elevation;
+            modified.change = element.change;
+            modified.targetState = element.targetState;
             modified.method = 'none'; // No direct interaction initially
             modified.title = `Remote-only ${element.id}`;
             modified.context = `Modified ${element.id} to be remote-only`;
