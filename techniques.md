@@ -56,7 +56,7 @@ Covers are modifiers added to existing elements on the same panel to obscure the
 - **Behavior**:
     - **For Switches**: Creates a specific cover plate over the switch.
     - **For Others**: Surrounds the target with several "distractor" elements of the same shape, making it harder to identify the interactive one.
-
+- **remote-id [reset]**: Resets the target element to its initial configuration (location, state, etc.). If the target is a plug in a socket, it will "pop out" to a nearby free space.
 ### [RemoteOnlyCover](generator/RemoteOnlyCover.js)
 - **Behavior**: Disables direct interaction with an element and forces it to be controlled via remote controllers (D-pads).
 
@@ -67,6 +67,10 @@ Covers are modifiers added to existing elements on the same panel to obscure the
 - **Behavior**: Changes the size of an element so it doesn't match its requirement (e.g., a plug that is too small for its socket).
 - **Interaction**: Adds a "Size Controller" (typically a button) that cycles the element's size until it matches the target.
 
+### [DecoyCover](generator/DecoyCover.js)
+- **Behavior**: A "Trap" cover that looks like a standard interactive element (screw or button).
+- **Effect**: Interacting with it un-sets a random other element on the same panel (e.g., toggles a switch away from its target state).
+
 ---
 
 ## [CoverManager](generator/CoverManager.js)
@@ -75,3 +79,10 @@ The `CoverManager` orchestrates the application of covers during panel generatio
 - **Probability**: Defaults to a 33% chance per element.
 - **Stacking**: Can stack multiple covers on a single element (e.g., a screw cover that is also remote-only).
 - **Difficulty Awareness**: Adjusts maximum covers and stack limits based on the `DIFFICULTY_CONFIG`.
+
+## New ideas
+
+ - key and tumbler technique
+ - decoy cover to unset an already set element.
+
+ 
