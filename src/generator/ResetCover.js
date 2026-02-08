@@ -1,7 +1,19 @@
 class ResetCover extends Cover {
     apply(currentPanel, element, targetPanel, generator) {
-        // Find a random remote target on the same panel
-        const potentialRemotes = currentPanel.coverableElements.filter(e => e.id !== element.id);
+        // Refinement: Filter out non-interactive elements (like decorative holes)
+        const potentialRemotes = currentPanel.coverableElements.filter(e => {
+            if (e.id === element.id) return false;
+
+            // Interaction Check: Must have a method OR a non-zero target state
+            const tokens = e.elementString.split(/\s+/);
+            const method = tokens[5] || '';
+            const target = tokens[7] || '';
+
+            if (method === '' && (target === '' || target === '0')) return false;
+            if (method === 'none' && (target === '' || target === '0')) return false;
+
+            return true;
+        });
         if (potentialRemotes.length === 0) return false;
 
         const remote = potentialRemotes[randBetween(0, potentialRemotes.length - 1)];
