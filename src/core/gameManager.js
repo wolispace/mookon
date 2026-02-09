@@ -1,6 +1,6 @@
 const generator = new PuzzleGenerator();
 
-function loadPuzzle(index) {
+function loadPuzzle(index, regenerate = true) {
     clearArea('puzzle');
     clearArea('storage');
 
@@ -24,7 +24,9 @@ function loadPuzzle(index) {
         PUZZLE_CONFIG.DIFFICULTY = newDifficulty;
         localStorage.setItem('mookon_difficulty', newDifficulty);
 
-        randomPuzzle = generateRandomPuzzle();
+        if (regenerate || !randomPuzzle) {
+            randomPuzzle = generateRandomPuzzle();
+        }
         thisPuzzle = randomPuzzle;
     } else {
         // Static puzzles

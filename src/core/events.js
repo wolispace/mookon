@@ -26,7 +26,7 @@ function initEventListeners() {
     const reloadButton = document.getElementById('reload-button');
     if (reloadButton) {
         reloadButton.addEventListener('click', () => {
-            loadPuzzle(currentPuzzleIndex);
+            loadPuzzle(currentPuzzleIndex, false);
         });
     }
 
@@ -34,7 +34,7 @@ function initEventListeners() {
     const newButton = document.getElementById('new-button');
     if (newButton) {
         newButton.addEventListener('click', () => {
-            location.reload();
+            loadPuzzle(currentPuzzleIndex, true);
         });
     }
 
