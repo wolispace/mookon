@@ -1,4 +1,12 @@
 const puzzleConfigs = [
+    `TEST [star]
+    /
+    red:
+    t23 2x2 0x2- 0 3 =,
+w26 1x1 1x5 0 2-6-2 tap state 9 t23 reset,
+t24 2x2 5x3+ 0 3 drag,
+w0 1x1 0x0 0 2-3-4 tap state 1,
+    `,
     `Simples! [star]
 /
 blue:

@@ -70,6 +70,19 @@ class ScrewTechnique {
 
             if (holeSize >= 1.0) {
                 if (randBetween(1, 3) === 1 || generator.isFinalPanel()) {
+                    const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1 || DEBUG_CONFIG.enabled;
+
+                    if (isEasy) {
+                        // In Easy mode, only add a plug if there's room on this panel
+                        const plugPos = panel.findFreeSpace(holeSize, holeSize, 'circle');
+                        if (!plugPos) {
+                            // Don't add a plug requirement if it won't fit
+                            panel.addElement(hole, true, 'Screw Hole (Empty)');
+                            panel.addElement(screw, true, 'Screw');
+                            return;
+                        }
+                    }
+
                     const chanceOfStrict = (hole.color === 1) ? 0.1 : 0.5;
                     hole.method = Math.random() < chanceOfStrict ? '#' : '=';
 

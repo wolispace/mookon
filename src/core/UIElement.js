@@ -4,6 +4,8 @@ class UIElement extends BaseElement {
         super(shape);
         this.panel = panel;
         this.filled = false;
+        this.filler = null; // Track who is filling us (for sockets)
+        this.socket = null; // Track which socket we are in (for plugs)
     }
 
     toString() {
@@ -13,21 +15,6 @@ class UIElement extends BaseElement {
     }
 
     initialize() {
-        // Store initial properties for reset capability
-        this.initialConfig = {
-            x: this.x,
-            y: this.y,
-            rotation: this.rotation,
-            state: this.state,
-            elevation: this.elevation,
-            elevationTarget: this.elevationTarget,
-            method: this.method,
-            change: this.change,
-            targetState: this.targetState,
-            draggable: this.draggable,
-            filled: this.filled
-        };
-
         // Store initial size for cycling logic if not already set
         if (this.initialSize === undefined) {
             this.initialSize = this.size;
@@ -50,7 +37,9 @@ class UIElement extends BaseElement {
             this.elevationTarget = '-';
         }
 
+        // Fix: Explicitly set elevation based on height if not already set
         if (this.height > 0 && this.height < 2) {
+            this.elevation = '+';
             // Apply 'controller' class instead of 'raised' for remote control buttons
             // to prevent them from blocking draggable elements.
             // A 'controller' is an element that has remote actions but isn't draggable itself.
@@ -61,7 +50,8 @@ class UIElement extends BaseElement {
                 this.element.classList.add('raised');
             }
         }
-        if (this.height < 0) {
+        if (this.height < 0 && this.height > -2) {
+            this.elevation = '-';
             this.element.classList.add('sunken');
         }
 
@@ -94,6 +84,22 @@ class UIElement extends BaseElement {
         if (this.method === METHOD_DRAG) {
             this.element.classList.add('draggable', 'raised', 'unlocked');
         }
+
+        // Store initial properties for reset capability
+        // MOVED TO END to ensure all properties (like elevation) are captured after setup
+        this.initialConfig = {
+            x: this.x,
+            y: this.y,
+            rotation: this.rotation,
+            state: this.state,
+            elevation: this.elevation,
+            elevationTarget: this.elevationTarget,
+            method: this.method,
+            change: this.change,
+            targetState: this.targetState,
+            draggable: this.draggable,
+            filled: this.filled
+        };
     }
 
     setupEvents() {
@@ -789,6 +795,8 @@ class UIElement extends BaseElement {
 
                 // Mark sunken element as filled
                 sunkenElement.filled = true;
+                sunkenElement.filler = this; // Store reference to the filler
+                this.socket = sunkenElement; // Store reference to the socket we are in
 
                 // Disable any remote controllers that were controlling this dropped element (c0)
                 this.disableRemoteControllers();
@@ -818,6 +826,13 @@ class UIElement extends BaseElement {
     }
 
     isSatisfied() {
+        // Elements that are NOT draggable but HAVE remote actions are "triggers"
+        // (like trap switches or buttons). They are satisfied by panel completion
+        // because they don't have personal goals in the puzzle sense.
+        if (!this.draggable && this.remoteActions.length > 0) {
+            return true;
+        }
+
         // Elements with no target state (no value after color) are auto-satisfied
         if (this.targetState === 0 && this.method === METHOD_NONE && !this.draggable && !this.sizeComparison) {
             return true;
@@ -831,31 +846,22 @@ class UIElement extends BaseElement {
             return true;
         }
 
-        // Non-interactive decorative elements are always satisfied
-        if (this.method === METHOD_NONE && this.height >= 0) {
-            return true;
+        if (this.elevation === '-') {
+            return this.filled;
         }
-
-        // Draggable elements that have been snapped lose draggable status but are still satisfied
-        if (this.method === METHOD_NONE && this.shape === 'switch') {
-            return true;
+        if (this.shape === 'switch' && this.method === METHOD_TAP) {
+            return this.state === this.targetState;
         }
         if (this.method === METHOD_DRAG) {
             // Elements with move requirement must reach target state
-            if (this.change === CHANGE_MOVE) {
+            if (this.change === CHANGE_MOVE && this.targetState !== 0) {
                 return this.state === this.targetState;
             }
-            // Auto-satisfied draggable elements (no move requirement)
-            return this.targetState === 0;
+            return this.filled;
         }
-        // Sunken shapes with size comparison are satisfied when filled
-        // Sunken shapes without size comparison and no method are decorative (auto-complete)
-        if (this.height < 0) {
-            if (this.sizeComparison || this.method === '=') {
-                return this.filled;
-            } else if (this.method === METHOD_NONE) {
-                return true;
-            }
+
+        if (this.method === METHOD_NONE) {
+            return true;
         }
 
         // Elements with unreachable target states (continuous controllers) are satisfied for panel completion
@@ -892,25 +898,47 @@ class UIElement extends BaseElement {
         }
     }
     reset() {
-        if (!this.initialConfig) return;
+        console.log(`[Reset-Trace] START reset for ${this.id} (elevation=${this.elevation})`);
+        if (!this.initialConfig) {
+            console.warn(`[Reset-Trace] No initialConfig for ${this.id}, cannot reset.`);
+            return;
+        }
+
+        const wasInSocket = !!this.socket;
+        const isSnapped = this.element.parentElement && this.element.parentElement !== this.panel.container;
+        console.log(`[Reset-Trace] State of ${this.id}: filled=${this.filled}, filler=${this.filler ? this.filler.id : 'null'}, socket=${this.socket ? this.socket.id : 'null'}, wasInSocket=${wasInSocket}, isSnapped=${isSnapped}`);
+
+        // If we are a socket being reset, we must also reset our filler
+        if (this.elevation === '-' && this.filled && this.filler) {
+            const fillerToReset = this.filler;
+            console.log(`[Reset-Trace] ! Socket ${this.id} is triggering reset on filler ${fillerToReset.id}`);
+            this.filler = null;
+            this.filled = false;
+            fillerToReset.reset();
+        }
+
+        // If we are a plug being reset, we must tell our socket filler we are gone
+        if (this.socket) {
+            const socket = this.socket;
+            console.log(`[Reset-Trace] ! Plug ${this.id} is disconnecting from socket ${socket.id}`);
+            socket.filled = false;
+            socket.filler = null;
+            this.socket = null; // Clear our own ref
+            socket.element.classList.remove('done');
+            socket.updateVisuals();
+            socket.panel.checkCompletion();
+        }
 
         const cellSize = getElementSize();
 
         // 1. Handle Socket Emptying and Reparenting
-        if (this.filled || (this.element.parentElement && !this.element.parentElement.classList.contains('panel'))) {
-            // Find our socket
-            for (const panel of this.panel.game.panels) {
-                const socket = panel.elements.find(el => el.filled && el.shape === (this.shape === 'screw' ? 'circle' : this.shape));
-                if (socket) {
-                    // Check overlapping
-                    const plugRect = this.element.getBoundingClientRect();
-                    const socketRect = socket.element.getBoundingClientRect();
-                    if (Math.abs(plugRect.left - socketRect.left) < 5 && Math.abs(plugRect.top - socketRect.top) < 5) {
-                        socket.filled = false;
-                        socket.updateVisuals();
-                        break;
-                    }
-                }
+        // We need to pop out if we are a plug (elevation +) and we are currently not in our home container 
+        // OR we were just in a socket (even on the same panel)
+        const needsEjection = (this.elevation === '+') && (isSnapped || wasInSocket);
+
+        if (this.filled || needsEjection) {
+            if (needsEjection) {
+                console.log(`[Reset-Trace] >> Ejecting ${this.id} to ${this.panel.color} panel container`);
             }
 
             if (this.shape !== 'screw') {
@@ -951,8 +979,12 @@ class UIElement extends BaseElement {
             }
 
             // Restore style and reparent
+            console.log(`[Reset-Trace] >> Positioning ${this.id} at ${this.x}x${this.y}`);
             this.element.style.left = `${PADDING + (this.x * cellSize)}px`;
             this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
+            this.element.style.transform = ''; // Clear any snap transforms
+            this.element.style.zIndex = '';    // Restore natural z-index
+
             if (this.element.parentElement !== this.panel.container) {
                 this.panel.container.appendChild(this.element);
                 this.element.style.position = 'absolute';
@@ -977,12 +1009,19 @@ class UIElement extends BaseElement {
         this.filled = false;
 
         // 3. Update visuals and event handlers
-        this.element.classList.remove('done', 'unlocked', 'draggable', 'raised', 'sunken', 'jump', 'flying', 'dragging');
+        this.element.classList.remove('done', 'unlocked', 'draggable', 'raised', 'sunken', 'jump', 'flying', 'dragging', 'wiggle');
+        // If we were hidden inside a socket, ensure we are visible again
+        this.element.style.opacity = '1';
+        this.element.style.display = '';
+
         if (this.elevation === '+') this.element.classList.add('raised');
         if (this.elevation === '-') this.element.classList.add('sunken');
         if (this.draggable) this.element.classList.add('draggable', 'unlocked');
 
         this.updateVisuals();
         this.setupEvents();
+
+        // Final completion check to update panel status
+        this.panel.checkCompletion();
     }
 };

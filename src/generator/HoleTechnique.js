@@ -16,7 +16,33 @@ class HoleTechnique {
             const socketPos = panel.findFreeSpace(size, size, shape);
             if (!socketPos) continue; // Skip if no space for socket
 
-            // Create socket (hole - sunken shape) only if we have space
+            const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1 || DEBUG_CONFIG.enabled;
+
+            // In Easy mode, we MUST also have space for the plug on this same panel
+            if (isEasy) {
+                // Temporarily reserve socket space to check if plug also fits
+                const tempHole = new BuildElement(shape);
+                tempHole.gridWidth = tempHole.gridHeight = size;
+                tempHole.x = socketPos.x;
+                tempHole.y = socketPos.y;
+
+                // We use reserveGridSpace then check then un-reserve (crude but effective)
+                panel.reserveGridSpace(tempHole.toString());
+                const plugPos = panel.findFreeSpace(size, size, shape);
+
+                // Back out the reservation
+                for (let dy = 0; dy < Math.ceil(size); dy++) {
+                    for (let dx = 0; dx < Math.ceil(size); dx++) {
+                        const iy = Math.floor(tempHole.y) + dy;
+                        const ix = Math.floor(tempHole.x) + dx;
+                        if (iy < 8 && ix < 8) panel.grid[iy][ix] = false;
+                    }
+                }
+
+                if (!plugPos) continue; // No room for both on one panel
+            }
+
+            // Create socket (hole - sunken shape)
             const hole = new BuildElement(shape);
             hole.gridWidth = hole.gridHeight = size;
             hole.color = color;

@@ -3,14 +3,20 @@ class ResetCover extends Cover {
         // Refinement: Filter out non-interactive elements (like decorative holes)
         const potentialRemotes = currentPanel.coverableElements.filter(e => {
             if (e.id === element.id) return false;
+            if (e.elevation !== '-') return false; // ONLY target sockets (sunken elements)
 
             // Interaction Check: Must have a method OR a non-zero target state
             const tokens = e.elementString.split(/\s+/);
             const method = tokens[5] || '';
             const target = tokens[7] || '';
 
-            if (method === '' && (target === '' || target === '0')) return false;
-            if (method === 'none' && (target === '' || target === '0')) return false;
+            if (method === '' && (target === '' || target === '0')) {
+                // Background hole, but if it's filled it becomes an interesting target
+                if (!e.filled) return false;
+            }
+            if (method === 'none' && (target === '' || target === '0')) {
+                if (!e.filled) return false;
+            }
 
             return true;
         });

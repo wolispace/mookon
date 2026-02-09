@@ -75,7 +75,7 @@ class PuzzleGenerator {
         const diff = DIFFICULTY_SETTINGS[PUZZLE_CONFIG.DIFFICULTY] || DIFFICULTY_SETTINGS[2];
         const panelCount = randBetween(diff.minPanels, diff.maxPanels);
 
-        const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1;
+        const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1 || DEBUG_CONFIG.enabled;
 
         for (let i = 0; i < panelCount; i++) {
             const panel = new GeneratedPanel(i, panelCount);
@@ -121,13 +121,17 @@ class PuzzleGenerator {
                     if (plug.hasRemoteControllers) {
                         const success = panel.addRemoteControllers(plug);
                         if (!success) {
+                            // SAFEGUARD: If controllers couldn't be added, MUST revert to drag
                             plug.method = 'drag';
                             plug.hasRemoteControllers = false;
                         }
                     }
                     panel.addPlug(plug);
+                    plug.placed = true;
                 } else {
                     this.setPlug(plug);
+                    // Don't break, try next plug maybe? Or break if panel is full.
+                    // For now, break to move to next panel.
                     break;
                 }
             }
@@ -143,35 +147,57 @@ class PuzzleGenerator {
             }
         }
 
-        // LAST RESORT
-        let salt = 0;
-        const fallbackTechniques = this.techniquesList.filter(t => t.constructor.name !== 'MazeTechnique');
+        // LAST RESORT: Keep creating panels until all plugs are placed
+        if (isEasy && this.availablePlugs.length > 0) {
+            // In Easy mode, we failed to place some plugs on the single panel.
+            // Since we can't add more panels, we just have to drop them.
+            // (The techniques should have prevented this, but this is a safety)
+            this.availablePlugs = [];
+            return;
+        }
 
-        while (this.availablePlugs.length > 0 && salt < 5) {
+        let salt = 0;
+        const fallbackTechniques = this.techniquesList.filter(t => t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'GroupTechnique');
+
+        while (this.availablePlugs.length > 0 && salt < 10) { // Increased salt limit
             const panel = new GeneratedPanel(this.panels.length, this.panels.length + 1);
             this.currentPanelIndex = panel.index;
 
-            // Add a technique to ensure the panel has a goal and doesn't auto-satisfy
-            const randomTech = fallbackTechniques[randBetween(0, fallbackTechniques.length - 1)];
-            randomTech.apply(panel, this);
+            // Add a simple technique to ensure panel has a goal
+            const tech = this.techniques.switch; // Switches are compact
+            tech.apply(panel, this);
 
-            const initialPlugCount = this.availablePlugs.length;
-            for (let j = 0; j < initialPlugCount; j++) {
-                const plug = this.getPlug();
-                if (!plug) break;
+            let placedAny = false;
+            let plugsToTry = [...this.availablePlugs];
+            this.availablePlugs = []; // Clear to repopulate if failed
+
+            for (const plug of plugsToTry) {
                 const shape = SHAPE_PREFIX_MAP[plug.type] || 'circle';
                 const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight, shape);
                 if (plugPos) {
                     plug.x = plugPos.x;
                     plug.y = plugPos.y;
+                    if (plug.hasRemoteControllers) {
+                        const success = panel.addRemoteControllers(plug);
+                        if (!success) {
+                            plug.method = 'drag';
+                            plug.hasRemoteControllers = false;
+                        }
+                    }
                     panel.addPlug(plug);
+                    plug.placed = true;
+                    placedAny = true;
                 } else {
                     this.setPlug(plug);
                 }
             }
-            if (this.availablePlugs.length === initialPlugCount && panel.elements.length === 0) break;
-            this.panels.push(panel);
-            salt++;
+
+            if (panel.elements.length > 0) {
+                this.panels.push(panel);
+            }
+            if (!placedAny && this.availablePlugs.length > 0) {
+                salt++; // Panel was too full to even fit one plug? Should be rare for empty panel.
+            }
         }
 
         this.panels.forEach(p => p.totalPanels = this.panels.length);
