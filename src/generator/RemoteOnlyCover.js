@@ -2,7 +2,7 @@ class RemoteOnlyCover extends Cover {
     apply(currentPanel, element, targetPanel, generator) {
         // Use ID-based matching for finding the element in this.elements
         const idx = currentPanel.elements.findIndex(e => e.split(/\s+/)[0] === element.id);
-        if (idx !== -1 && ['c', 'r', 't', 's'].includes(element.type)) {
+        if (idx !== -1 && ['c', 'r', 't'].includes(element.type)) {
             const tokens = element.elementString.split(/\s+/);
             const modified = new BuildElement(SHAPE_PREFIX_MAP[element.type]);
             modified.id = tokens[0];

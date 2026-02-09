@@ -179,10 +179,7 @@ class GeneratedPanel {
         controller.method = 'tap';
         controller.remoteActions = [{
             id: plug.id,
-            type: 'configure',
-            method: 'drag', // Keep it draggable
-            change: 'size', // Change size
-            target: 0 // Cycle (0 means it will progress state 0->1->2->3->0)
+            type: 'cycle'
         }];
         controller.x = pos.x;
         controller.y = pos.y;

@@ -1,7 +1,7 @@
 class SwitchReleaseCover extends Cover {
     apply(currentPanel, element, targetPanel, generator) {
         const idx = currentPanel.elements.findIndex(e => e.split(/\s+/)[0] === element.id);
-        if (idx !== -1 && ['c', 'r', 't', 's', 'w'].includes(element.type)) {
+        if (idx !== -1 && ['c', 'r', 't', 'w'].includes(element.type)) {
             const tokens = element.elementString.split(/\s+/);
             // Find space for the release switch before modifying the target
             // Account for extra width: switches need swSize + 1 space for the ball

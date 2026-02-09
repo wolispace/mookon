@@ -350,6 +350,9 @@ class UIElement extends BaseElement {
                                 // Check for dropping into holes
                                 targetElement.checkSnapping();
 
+                            } else if (remoteAction.type === 'cycle') {
+                                // Simplified Cycle Action: Just progress the target's state
+                                targetElement.progressState();
                             } else {
                                 // Existing Configure Logic
                                 targetElement.method = remoteAction.method;

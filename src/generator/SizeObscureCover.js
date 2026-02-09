@@ -1,7 +1,7 @@
 class SizeObscureCover extends Cover {
     apply(currentPanel, element, targetPanel, generator) {
         const idx = currentPanel.elements.findIndex(e => e.split(/\s+/)[0] === element.id);
-        if (idx !== -1 && element.elevation === '+') {
+        if (idx !== -1 && element.elevation === '+' && !['s', 'w'].includes(element.type)) {
             // Re-parse the existing config to modify it
             const tokens = currentPanel.elements[idx].split(/\s+/);
             const sizeParts = tokens[1].split('x');
@@ -20,6 +20,9 @@ class SizeObscureCover extends Cover {
             });
 
             if (validStates.length > 0) {
+                // Store original element string in case we need to revert
+                const originalElement = currentPanel.elements[idx];
+
                 // Pick a "wrong" base size for the config string (different from targetSize)
                 const potentialSizes = [1.0, 1.25, 1.5, 1.75, 2.0];
                 let baseSize = potentialSizes[randBetween(0, potentialSizes.length - 1)];
@@ -45,6 +48,9 @@ class SizeObscureCover extends Cover {
                 const dummyPlug = { id: element.id };
                 if (currentPanel.addSizeController(dummyPlug)) {
                     return true;
+                } else {
+                    // CRITICAL: Revert the size change if we couldn't add the controller
+                    currentPanel.elements[idx] = originalElement;
                 }
             }
         }

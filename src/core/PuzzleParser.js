@@ -163,6 +163,15 @@ class PuzzleParser {
                             continue;
                         }
 
+                        if (filteredTokens[i] === 'cycle') {
+                            element.remoteActions.push({
+                                id: remoteId,
+                                type: 'cycle'
+                            });
+                            i++;
+                            continue;
+                        }
+
                         let remoteMethod = METHOD_NONE;
                         if (METHOD_PATTERN.test(filteredTokens[i])) {
                             remoteMethod = filteredTokens[i];

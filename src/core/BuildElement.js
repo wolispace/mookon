@@ -80,6 +80,8 @@ class BuildElement extends BaseElement {
             configString += ` ${action.id}`;
             if (action.type === 'reset') {
                 configString += ` reset`;
+            } else if (action.type === 'cycle') {
+                configString += ` cycle`;
             } else if (action.type === 'move_step') {
                 configString += ` ${action.vector.x}x${action.vector.y}`;
             } else {
