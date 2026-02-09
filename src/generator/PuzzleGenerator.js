@@ -226,7 +226,7 @@ class PuzzleGenerator {
         const summary = `\n--- GENERATION SUMMARY ---\n${notes.join('\n')}\n------------------------\n`;
         const panelsStr = this.panels.map(p => p.toString()).join('\n/\n');
 
-        console.log(summary);
+        // console.log(summary);
         // We prepend the summary to the victory message so it's visible in the console/output 
         // without affecting the panel parsing logic.
         return `${message} [${reward}]\n/\n${panelsStr}`;

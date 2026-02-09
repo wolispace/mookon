@@ -99,7 +99,7 @@ class Panel {
 
         const allSatisfied = this.elements.every(el => {
             const sat = el.isSatisfied();
-            if (!sat) console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
+            // if (!sat) console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
             return sat;
         });
 

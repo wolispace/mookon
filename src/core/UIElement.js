@@ -117,7 +117,7 @@ class UIElement extends BaseElement {
         this.boundHandleStart = e => this.handleStart(e);
         this.boundHandleClick = e => this.handleClick(e);
 
-        //console.log(`[setupEvents] ${this.id} method=${this.method} remoteId=${this.remoteId || 'none'}`);
+        // console.log(`[setupEvents] ${this.id} method=${this.method} remoteId=${this.remoteId || 'none'}`);
 
         target.addEventListener('mousedown', this.boundHandleStart);
         target.addEventListener('touchstart', this.boundHandleStart, { passive: false });
@@ -898,20 +898,20 @@ class UIElement extends BaseElement {
         }
     }
     reset() {
-        console.log(`[Reset-Trace] START reset for ${this.id} (elevation=${this.elevation})`);
+        // console.log(`[Reset-Trace] START reset for ${this.id} (elevation=${this.elevation})`);
         if (!this.initialConfig) {
-            console.warn(`[Reset-Trace] No initialConfig for ${this.id}, cannot reset.`);
+            // console.warn(`[Reset-Trace] No initialConfig for ${this.id}, cannot reset.`);
             return;
         }
 
         const wasInSocket = !!this.socket;
         const isSnapped = this.element.parentElement && this.element.parentElement !== this.panel.container;
-        console.log(`[Reset-Trace] State of ${this.id}: filled=${this.filled}, filler=${this.filler ? this.filler.id : 'null'}, socket=${this.socket ? this.socket.id : 'null'}, wasInSocket=${wasInSocket}, isSnapped=${isSnapped}`);
+        // console.log(`[Reset-Trace] State of ${this.id}: filled=${this.filled}, filler=${this.filler ? this.filler.id : 'null'}, socket=${this.socket ? this.socket.id : 'null'}, wasInSocket=${wasInSocket}, isSnapped=${isSnapped}`);
 
         // If we are a socket being reset, we must also reset our filler
         if (this.elevation === '-' && this.filled && this.filler) {
             const fillerToReset = this.filler;
-            console.log(`[Reset-Trace] ! Socket ${this.id} is triggering reset on filler ${fillerToReset.id}`);
+            // console.log(`[Reset-Trace] ! Socket ${this.id} is triggering reset on filler ${fillerToReset.id}`);
             this.filler = null;
             this.filled = false;
             fillerToReset.reset();
@@ -920,7 +920,7 @@ class UIElement extends BaseElement {
         // If we are a plug being reset, we must tell our socket filler we are gone
         if (this.socket) {
             const socket = this.socket;
-            console.log(`[Reset-Trace] ! Plug ${this.id} is disconnecting from socket ${socket.id}`);
+            // console.log(`[Reset-Trace] ! Plug ${this.id} is disconnecting from socket ${socket.id}`);
             socket.filled = false;
             socket.filler = null;
             this.socket = null; // Clear our own ref
@@ -938,7 +938,7 @@ class UIElement extends BaseElement {
 
         if (this.filled || needsEjection) {
             if (needsEjection) {
-                console.log(`[Reset-Trace] >> Ejecting ${this.id} to ${this.panel.color} panel container`);
+                // console.log(`[Reset-Trace] >> Ejecting ${this.id} to ${this.panel.color} panel container`);
             }
 
             if (this.shape !== 'screw') {
@@ -979,7 +979,7 @@ class UIElement extends BaseElement {
             }
 
             // Restore style and reparent
-            console.log(`[Reset-Trace] >> Positioning ${this.id} at ${this.x}x${this.y}`);
+            // console.log(`[Reset-Trace] >> Positioning ${this.id} at ${this.x}x${this.y}`);
             this.element.style.left = `${PADDING + (this.x * cellSize)}px`;
             this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
             this.element.style.transform = ''; // Clear any snap transforms
