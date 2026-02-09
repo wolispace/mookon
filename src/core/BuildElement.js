@@ -100,12 +100,6 @@ class BuildElement extends BaseElement {
             configString = configString.replace(`${this.x}x${this.y}${this.elevation}`, `${this.x}x${this.y}_`); // Using _ for sunken target maybe? User only asked for raised.
         }
 
-        if (this.title !== '') {
-            // console.log(`${this.id} [${this.context}] ${this.title}`);
-        } else if (this.context !== '') {
-            // console.log(`${this.id} Context: ${this.context}`);
-        }
-
         return configString;
     }
 

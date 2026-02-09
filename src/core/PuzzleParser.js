@@ -41,7 +41,7 @@ class PuzzleParser {
     }
 
     static parseFormat(tokens, element) {
-        // Strip title attribute from tokens if present
+        // Strip debug attributes from tokens if present
         const filteredTokens = tokens.filter(t => !t.startsWith('title='));
         const [id, sizeStr, locationStr, rotationStr, colorStr] = filteredTokens;
 

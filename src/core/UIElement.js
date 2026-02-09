@@ -826,13 +826,6 @@ class UIElement extends BaseElement {
     }
 
     isSatisfied() {
-        // Elements that are NOT draggable but HAVE remote actions are "triggers"
-        // (like trap switches or buttons). They are satisfied by panel completion
-        // because they don't have personal goals in the puzzle sense.
-        if (!this.draggable && this.remoteActions.length > 0) {
-            return true;
-        }
-
         // Elements with no target state (no value after color) are auto-satisfied
         if (this.targetState === 0 && this.method === METHOD_NONE && !this.draggable && !this.sizeComparison) {
             return true;
@@ -850,12 +843,15 @@ class UIElement extends BaseElement {
             return this.filled;
         }
         if (this.shape === 'switch' && this.method === METHOD_TAP) {
-            return this.state === this.targetState;
+            const target = parseInt(this.targetState);
+            // unreachable target states are satisfied (trap switches)
+            if (target > this.maxState) return true;
+            return this.state == target;
         }
         if (this.method === METHOD_DRAG) {
             // Elements with move requirement must reach target state
             if (this.change === CHANGE_MOVE && this.targetState !== 0) {
-                return this.state === this.targetState;
+                return this.state == this.targetState;
             }
             return this.filled;
         }
@@ -865,11 +861,12 @@ class UIElement extends BaseElement {
         }
 
         // Elements with unreachable target states (continuous controllers) are satisfied for panel completion
-        if (typeof this.targetState === 'number' && this.targetState > this.maxState) {
+        const targetVal = parseInt(this.targetState);
+        if (!isNaN(targetVal) && targetVal > this.maxState) {
             return true;
         }
 
-        return this.state === this.targetState;
+        return this.state == this.targetState;
     }
 
     disableRemoteControllers() {

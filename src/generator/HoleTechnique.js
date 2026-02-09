@@ -63,16 +63,8 @@ class HoleTechnique {
             plug.color = color;
             plug.elevation = '+';
 
-            // Randomly decide: drag method or remote controllers
-            const useRemoteControllers = randBetween(1, 5) === 1;
-            if (useRemoteControllers) {
-                // Don't set a method - it will have remote controllers instead
-                plug.method = 'none';
-                plug.hasRemoteControllers = true;
-            } else {
-                plug.method = 'drag';
-                plug.hasRemoteControllers = false;
-            }
+            plug.method = 'drag';
+            plug.hasRemoteControllers = false;
 
             generator.setPlug(plug);
         }

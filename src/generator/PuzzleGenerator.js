@@ -206,7 +206,29 @@ class PuzzleGenerator {
     toString() {
         const message = VICTORY_MESSAGES[randBetween(0, VICTORY_MESSAGES.length - 1)];
         const reward = RewardsManager.chooseReward();
+
+        // Build a summary of what's in the puzzle for diagnostics
+        const notes = [];
+        this.panels.forEach((p, i) => {
+            notes.push(`Panel ${i} (${p.color}):`);
+            p.elements.forEach(e => {
+                const titleMatch = e.match(/title=([^\s,]+)/);
+                const contextMatch = e.match(/context=([^\s,]+)/);
+                if (titleMatch || contextMatch) {
+                    const id = e.split(/\s+/)[0];
+                    const title = titleMatch ? titleMatch[1].replace(/_/g, ' ') : '';
+                    const context = contextMatch ? contextMatch[1].replace(/_/g, ' ') : '';
+                    notes.push(`  - ${id}: ${title}${context ? ` [${context}]` : ''}`);
+                }
+            });
+        });
+
+        const summary = `\n--- GENERATION SUMMARY ---\n${notes.join('\n')}\n------------------------\n`;
         const panelsStr = this.panels.map(p => p.toString()).join('\n/\n');
+
+        console.log(summary);
+        // We prepend the summary to the victory message so it's visible in the console/output 
+        // without affecting the panel parsing logic.
         return `${message} [${reward}]\n/\n${panelsStr}`;
     }
 }

@@ -91,13 +91,7 @@ class ScrewTechnique {
                     plug.color = (hole.method === '#') ? hole.color : 2;
                     plug.elevation = '+';
 
-                    const useRemoteControllers = randBetween(1, 3) === 1;
-                    if (useRemoteControllers) {
-                        plug.method = 'none';
-                        plug.hasRemoteControllers = true;
-                    } else {
-                        plug.method = 'drag';
-                    }
+                    plug.method = 'drag';
                     generator.setPlug(plug);
                 }
             }
