@@ -1,9 +1,24 @@
 class ResetCover extends Cover {
     apply(currentPanel, element, targetPanel, generator) {
+        // Track which elements already have reset triggers on this panel
+        const existingResetTargets = new Set();
+        currentPanel.elements.forEach(el => {
+            const tokens = el.split(/\s+/);
+            // Look for "elementId reset" pattern
+            for (let i = 0; i < tokens.length - 1; i++) {
+                if (tokens[i + 1] === 'reset') {
+                    existingResetTargets.add(tokens[i]);
+                }
+            }
+        });
+
         // Refinement: Filter out non-interactive elements (like decorative holes)
         const potentialRemotes = currentPanel.coverableElements.filter(e => {
             if (e.id === element.id) return false;
             if (e.elevation !== '-') return false; // ONLY target sockets (sunken elements)
+
+            // Skip if this element already has a reset trigger
+            if (existingResetTargets.has(e.id)) return false;
 
             // Interaction Check: Must have a method OR a non-zero target state
             const tokens = e.elementString.split(/\s+/);
