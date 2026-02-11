@@ -20,7 +20,7 @@ class TumblerTechnique {
         tumbler.elevation = ''; // Flat (not raised)
         tumbler.method = 'hold';
         tumbler.change = 'rotate';
-        tumbler.targetState = randBetween(1, 3); // 1-3 rotations to unlock
+        tumbler.targetState = 4; // Target is 180 degrees
         tumbler.title = `Tumbler ${tumbler.id}`;
         tumbler.context = 'Tumbler Technique';
 

@@ -85,6 +85,11 @@ class UIElement extends BaseElement {
             this.element.classList.add('draggable', 'raised', 'unlocked');
         }
 
+        // Tumbler specific initialization
+        if (this.shape === 'tumbler') {
+            this.maxState = 4; // Limit rotation to 0-180 degrees (4 steps of 45)
+        }
+
         // Store initial properties for reset capability
         // MOVED TO END to ensure all properties (like elevation) are captured after setup
         this.initialConfig = {
@@ -174,6 +179,27 @@ class UIElement extends BaseElement {
         }
 
         this.progressState();
+
+        // Tumbler specific completion: Reach target (e.g. 180 degrees) then unwind
+        if (this.shape === 'tumbler' && this.state === this.targetState) {
+            this.isHolding = false;
+            if (this.holdTimer) {
+                clearTimeout(this.holdTimer);
+                this.holdTimer = null;
+            }
+
+            // Check target state momentarily at the peak
+            this.checkTargetState();
+            this.panel.checkCompletion();
+
+            // Unwind immediately to 0
+            this.state = 0;
+            this.rotation = 0;
+            this.updateVisuals();
+
+            // The tumbler resets and is ready to be used again
+            return;
+        }
 
         // Check for final rotation condition
         if (this.finalRotation !== null && this.change === CHANGE_ROTATION) {

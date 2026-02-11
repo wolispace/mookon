@@ -327,7 +327,7 @@ class SVGFactory {
                     y: keyholeY,
                     width: keyholeWidth,
                     height: keyholeHeight,
-                    fill: '#333',
+                    fill: '#232222ff',
                     rx: keyholeWidth * 0.2
                 });
                 keyhole.classList.add('sunken');

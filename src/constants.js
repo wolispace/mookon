@@ -123,7 +123,7 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: true,
+    enabled: false,
     technique: 'tumbler', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
     coverStyle: 5      // Set to 5 for ResetCover
 };
