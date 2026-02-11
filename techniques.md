@@ -81,8 +81,37 @@ The `CoverManager` orchestrates the application of covers during panel generatio
 - **Difficulty Awareness**: Adjusts maximum covers and stack limits based on the `DIFFICULTY_CONFIG`.
 
 ## New ideas
+### key and tumbler technique
+This consists of a tumbler 'u': 
+- It's a circle in any color, styled as raised, 
+- with a socket (wide rectangle in a dark grey and a sunken style) 
+- positioned like a minute hand pointing to 6 oclock, and starting from just above centre (midway between 12 coclock and the centre).
+- its always a perfect curcle and should always be size 2 
+- the timbler can't be draged.
 
- - key and tumbler technique
- - decoy cover to unset an already set element.
+The key 'k' :
+- is a rectangle of the same size as the dark rectangle on the tumbler
+- its styled like the timbler: same color and raise
+- the key can be dragged.
+
+The mechanic: 
+- The key is dropped on the tumbler 
+- then the key is locked into possition like a plug dropped on a socket
+- We dont need the '#' in config to enforce exact color match of key to tumbler
+
+They key differences between socket and plug logic:
+- the key should always remain styled as raised after being dropped on the tumbler
+- the tumbler is not satisfied until the key/tumbler pair has been 'held' and 'rotated' by the number af degrees specified in config like a screw.
+The tumbler can't be rorated unless it has the key locked in.
+
+When unlocked the tumbler, the rotation should return back to the default position like a screw.
+
+This is combining logic used for socket and plug with screw so share code where possible.
+
+Config examples:
+u1 1 1x1 0 2 hold rotate 2
+k1 1 3x3 0 2 drag
+
+
 
  

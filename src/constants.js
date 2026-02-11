@@ -37,7 +37,9 @@ const SHAPES = {
     'screw': { code: 's', draggable: true, scale: 1 },
     'plus': { code: 'p', draggable: true, scale: 1.5 },
     'diamond': { code: 'd', draggable: true, scale: 1.5 },
-    'switch': { code: 'w', draggable: false, scale: 1 }
+    'switch': { code: 'w', draggable: false, scale: 1 },
+    'tumbler': { code: 'u', draggable: false, scale: 1 },
+    'key': { code: 'k', draggable: true, scale: 1 }
 };
 
 // Derived shape constants
@@ -121,8 +123,8 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: false,
-    technique: 'hole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group'
+    enabled: true,
+    technique: 'tumbler', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
     coverStyle: 5      // Set to 5 for ResetCover
 };
 

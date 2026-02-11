@@ -54,10 +54,11 @@ class BuildElement extends BaseElement {
             color = this.color;
         }
 
-        // Global safeguard: No interactive elements smaller than 1x1
+        // Global safeguard: No interactive elements smaller than minimum size
         // If an element is too small, strip its interaction methods
-        const minSize = 0.95; // Allow for slight rounding errors
-        const isTooSmall = w < minSize || h < minSize;
+        const minWidth = 0.55; // Allow for keys (0.6) and slight rounding errors
+        const minHeight = 0.95; // Standard minimum height
+        const isTooSmall = w < minWidth || h < minHeight;
         const effectiveMethod = isTooSmall ? '' : this.method;
 
         let configString = `${this.id} ${w}x${h} ${x}x${y}${this.elevation} 0 ${color}`;

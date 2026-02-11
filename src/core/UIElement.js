@@ -167,6 +167,12 @@ class UIElement extends BaseElement {
     holdStep() {
         if (!this.isHolding) return;
 
+        // Tumblers can only rotate when they have a key locked in
+        if (this.shape === 'tumbler' && !this.filled) {
+            this.isHolding = false;
+            return;
+        }
+
         this.progressState();
 
         // Check for final rotation condition
@@ -176,8 +182,8 @@ class UIElement extends BaseElement {
                 (this.finalRotation > 0 && currentRotation >= this.finalRotation)) {
                 this.isHolding = false;
 
-                // For screws, stop rotation updates after unlocking
-                if (this.shape === 'screw' && this.draggable) {
+                // For screws and tumblers, stop rotation updates after unlocking
+                if ((this.shape === 'screw' || this.shape === 'tumbler') && this.draggable) {
                     this.change = CHANGE_NONE; // Prevent further rotation updates
                 }
 
@@ -709,7 +715,11 @@ class UIElement extends BaseElement {
 
     checkSnapping() {
         const dragRect = this.element.getBoundingClientRect();
+        // Include both sunken elements AND flat tumblers as potential snap targets
         const sunkenElements = document.querySelectorAll('.element:not(.raised)');
+
+        console.log(`[Snap] Checking snap for ${this.shape} ${this.id}`);
+        console.log(`[Snap] Found ${sunkenElements.length} potential targets`);
 
         for (const sunken of sunkenElements) {
             if (sunken === this.element) continue;
@@ -725,17 +735,37 @@ class UIElement extends BaseElement {
                 }
             }
 
-            if (!sunkenElement || sunkenElement.filled) continue;
+            if (!sunkenElement) {
+                console.log(`[Snap] Skipping - no element object found`);
+                continue;
+            }
+
+            console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, filled=${sunkenElement.filled}, sizeComparison=${sunkenElement.sizeComparison}`);
+
+            if (sunkenElement.filled) {
+                console.log(`[Snap] Skipping ${sunkenElement.id} - already filled`);
+                continue;
+            }
 
             // Skip sunken elements without size comparison (they don't accept drops)
-            if (!sunkenElement.sizeComparison) continue;
+            // EXCEPT for tumblers which accept keys
+            if (!sunkenElement.sizeComparison && sunkenElement.shape !== 'tumbler') {
+                console.log(`[Snap] Skipping ${sunkenElement.id} - no size comparison and not a tumbler`);
+                continue;
+            }
 
             const sunkenRect = sunken.getBoundingClientRect();
 
             // Check if shapes match and size comparison
-            if (sunkenElement.shape === 'circle' && this.shape === 'screw') {
+            let isTumblerKeyPair = false;
+            if (sunkenElement.shape === 'tumbler' && this.shape === 'key') {
+                // Keys can snap into tumblers (special case)
+                console.log(`[Snap] Found tumbler/key pair!`);
+                isTumblerKeyPair = true;
+            } else if (sunkenElement.shape === 'circle' && this.shape === 'screw') {
                 // Screws can fill circle holes
             } else if (sunkenElement.shape !== this.shape) {
+                console.log(`[Snap] Skipping ${sunkenElement.id} - shape mismatch`);
                 continue;
             }
 
@@ -773,28 +803,78 @@ class UIElement extends BaseElement {
 
                 // Calculate proper position within the sunken element's panel
                 const cellSize = getElementSize();
-                const sunkenCenterX = PADDING + (sunkenElement.x * cellSize) + (sunkenElement.size * cellSize / 2);
-                const sunkenCenterY = PADDING + (sunkenElement.y * cellSize) + (sunkenElement.size * cellSize / 2);
-                const draggedCenterX = this.size * cellSize / 2;
-                const draggedCenterY = this.size * cellSize / 2;
-                const targetX = sunkenCenterX - draggedCenterX;
-                const targetY = sunkenCenterY - draggedCenterY;
+
+                let targetX, targetY;
+
+                if (isTumblerKeyPair) {
+                    // For tumbler/key pairs, align key with the keyhole position
+                    // Keyhole is at 20% from top, centered horizontally
+                    const tumblerLeft = PADDING + (sunkenElement.x * cellSize);
+                    const tumblerTop = PADDING + (sunkenElement.y * cellSize);
+                    const tumblerSize = sunkenElement.size * cellSize;
+
+                    // Keyhole is centered horizontally and starts at 20% from top
+                    const keyholeOffsetY = tumblerSize * 0.2;
+                    const keyholeHeight = tumblerSize * 0.8;
+
+                    // Center the key in the keyhole
+                    const keyWidth = this.gridWidth * cellSize;
+                    const keyHeight = this.gridHeight * cellSize;
+
+                    targetX = tumblerLeft + (tumblerSize - keyWidth) / 2;
+                    targetY = tumblerTop + keyholeOffsetY + (keyholeHeight - keyHeight) / 2;
+                } else {
+                    // Standard centering for other snap pairs
+                    const sunkenCenterX = PADDING + (sunkenElement.x * cellSize) + (sunkenElement.size * cellSize / 2);
+                    const sunkenCenterY = PADDING + (sunkenElement.y * cellSize) + (sunkenElement.size * cellSize / 2);
+                    const draggedCenterX = this.size * cellSize / 2;
+                    const draggedCenterY = this.size * cellSize / 2;
+                    targetX = sunkenCenterX - draggedCenterX;
+                    targetY = sunkenCenterY - draggedCenterY;
+                }
 
                 // Snap to position
                 this.element.style.left = `${targetX}px`;
                 this.element.style.top = `${targetY}px`;
 
                 // Remove drag styling and disable interaction
-                this.element.classList.remove('raised');
-                this.element.classList.remove('unlocked');
-                this.element.classList.remove('draggable');
-                this.element.classList.add('done');
+                if (isTumblerKeyPair) {
+                    // Start transformation immediately
+                    this.element.style.display = 'none'; // Hide the key
 
-                // Return element to the sunken element's panel
-                sunkenPanel.container.appendChild(this.element);
-                this.element.style.position = 'absolute';
-                this.element.style.left = `${targetX}px`;
-                this.element.style.top = `${targetY}px`;
+                    // Transform the keyhole
+                    const keyhole = sunkenElement.element.querySelector('.tumbler-keyhole');
+                    if (keyhole) {
+                        keyhole.classList.remove('sunken');
+                        keyhole.classList.add('raised');
+                        keyhole.style.filter = 'url(#raised-filter)';
+                        // Apply key color to keyhole
+                        const keyColor = this.element.querySelector('rect').getAttribute('fill'); // Get key color
+                        if (keyColor) {
+                            keyhole.setAttribute('fill', keyColor);
+                        }
+                    }
+
+                    // Standard snap cleanup still needed for logic
+                    this.element.classList.remove('unlocked');
+                    this.element.classList.remove('draggable');
+                    this.element.classList.add('done');
+
+                    // Return element to container but keep hidden
+                    sunkenPanel.container.appendChild(this.element);
+                } else {
+                    // Standard snap behavior for everything else
+                    this.element.classList.remove('raised');
+                    this.element.classList.remove('unlocked');
+                    this.element.classList.remove('draggable');
+                    this.element.classList.add('done');
+
+                    // Return element to the sunken element's panel
+                    sunkenPanel.container.appendChild(this.element);
+                    this.element.style.position = 'absolute';
+                    this.element.style.left = `${targetX}px`;
+                    this.element.style.top = `${targetY}px`;
+                }
 
                 // Mark sunken element as filled
                 sunkenElement.filled = true;
