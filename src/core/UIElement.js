@@ -90,6 +90,18 @@ class UIElement extends BaseElement {
             this.maxState = 4; // Limit rotation to 0-180 degrees (4 steps of 45)
         }
 
+        // Fix: Ensure maxState is defined for other interaction types
+        if (this.maxState === undefined) {
+            if (this.change === CHANGE_COLOR) {
+                this.maxState = COLOR_ARRAY.length - 1;
+            } else if (this.change === CHANGE_SIZE) {
+                // Size cycle has 8 steps [1.0, 1.25, 1.5, 1.75, 2.0, 1.75, 1.5, 1.25]
+                this.maxState = 7;
+            } else {
+                this.maxState = 7; // Default fallback (e.g. 8 rotation directions)
+            }
+        }
+
         // Store initial properties for reset capability
         // MOVED TO END to ensure all properties (like elevation) are captured after setup
         this.initialConfig = {

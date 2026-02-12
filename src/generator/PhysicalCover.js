@@ -7,8 +7,12 @@ class PhysicalCover extends Cover {
 
         // Ensure cover is visualy larger than target.
         // We calculate unscaled size needed to achieve covering visualy.
-        cover.gridWidth = (element.gridWidth * targetScale / coverScale) + randDecimal(0.5, 1.0);
-        cover.gridHeight = (element.gridHeight * targetScale / coverScale) + randDecimal(0.5, 1.0);
+        const w = (element.gridWidth * targetScale / coverScale) + randDecimal(0.5, 1.0);
+        const h = (element.gridHeight * targetScale / coverScale) + randDecimal(0.5, 1.0);
+
+        // Enforce minimum interaction size as per user request (1.0)
+        cover.gridWidth = Math.max(1.0, w);
+        cover.gridHeight = Math.max(1.0, h);
 
         if (coverShape === 'screw') {
             const size = Math.max(cover.gridWidth, cover.gridHeight);
