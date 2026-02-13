@@ -41,21 +41,34 @@ function generateTechniqueTest() {
         // Add one cover using fixed order
         if (panel.coverableElements.length > 0) {
             const coverStyle = coverOrder[index];
-            const elementIndex = randBetween(0, panel.coverableElements.length - 1);
-            const element = panel.coverableElements[elementIndex];
             
-            console.log(`Panel ${index} (${techName}):`);
-            console.log('  Covering element:', element.elementString);
-            console.log('  Cover type:', coverStyle, '-', ['Physical', 'GroupObscure', 'RemoteOnly', 'SwitchRelease', 'SizeObscure', 'Reset'][coverStyle]);
-            console.log('  Panel has', panel.elements.length, 'elements,', panel.coverableElements.length, 'coverable');
+            // Filter elements that are compatible with the cover type
+            let compatibleElements = panel.coverableElements;
             
-            const coverManager = new CoverManager();
-            const style = coverManager.styles[coverStyle];
-            if (style) {
-                const success = style.apply(panel, element, panel, generator);
-                console.log('  Cover applied:', success);
-                if (!success && coverStyle === 4) {
-                    console.log('  SizeObscure failed - likely no space for controller');
+            // SizeObscure (index 4) only works on raised elements
+            if (coverStyle === 4) {
+                compatibleElements = panel.coverableElements.filter(el => el.elevation === '+');
+            }
+            
+            if (compatibleElements.length === 0) {
+                console.log(`Panel ${index} (${techName}): No compatible elements for cover type ${coverStyle}`);
+            } else {
+                const elementIndex = randBetween(0, compatibleElements.length - 1);
+                const element = compatibleElements[elementIndex];
+                
+                console.log(`Panel ${index} (${techName}):`);
+                console.log('  Covering element:', element.elementString);
+                console.log('  Cover type:', coverStyle, '-', ['Physical', 'GroupObscure', 'RemoteOnly', 'SwitchRelease', 'SizeObscure', 'Reset'][coverStyle]);
+                console.log('  Panel has', panel.elements.length, 'elements,', panel.coverableElements.length, 'coverable');
+                
+                const coverManager = new CoverManager();
+                const style = coverManager.styles[coverStyle];
+                if (style) {
+                    const success = style.apply(panel, element, panel, generator);
+                    console.log('  Cover applied:', success);
+                    if (!success && coverStyle === 4) {
+                        console.log('  SizeObscure failed - likely no space for controller');
+                    }
                 }
             }
         }

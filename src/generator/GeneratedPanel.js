@@ -168,8 +168,12 @@ class GeneratedPanel {
     }
 
     addSizeController(plug) {
-        // Find a spot for a single button
-        const pos = this.findFreeSpace(1, 1);
+        console.log(`[SIZE-CTRL] Looking for space for ${plug.id}`);
+        console.log(`[SIZE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
+        
+        const pos = this.findFreeSpace(1, 1, 'circle');
+        console.log(`[SIZE-CTRL] findFreeSpace returned:`, pos);
+        
         if (!pos) return false;
 
         const controller = new BuildElement('circle');
@@ -341,19 +345,19 @@ class GeneratedPanel {
 
     findFreeSpace(w, h, shape = 'circle') {
         const scale = SHAPES[shape]?.scale || 1;
-        const width = Math.ceil(w * scale);
-        const height = Math.ceil(h * scale);
+        const width = w * scale;
+        const height = h * scale;
 
         for (let attempt = 0; attempt < 20; attempt++) {
-            const rx = randBetween(0, 8 - width);
-            const ry = randBetween(0, 8 - height);
+            const rx = randBetween(0, Math.floor(8 - width));
+            const ry = randBetween(0, Math.floor(8 - height));
             if (this.checkFree(rx, ry, width, height)) {
                 return { x: rx, y: ry };
             }
         }
 
-        for (let y = 0; y <= PANEL_GRID_SIZE - height; y++) {
-            for (let x = 0; x <= PANEL_GRID_SIZE - width; x++) {
+        for (let y = 0; y <= 8 - Math.ceil(height); y++) {
+            for (let x = 0; x <= 8 - Math.ceil(width); x++) {
                 if (this.checkFree(x, y, width, height)) {
                     return { x, y };
                 }
