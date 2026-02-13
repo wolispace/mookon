@@ -1,11 +1,11 @@
 class RemoteOnlyCover extends Cover {
     apply(currentPanel, element, targetPanel, generator) {
-        console.log('[REMOTE-COVER] apply called with element:', element);
+       // console.log('[REMOTE-COVER] apply called with element:', element);
         // Use ID-based matching for finding the element in this.elements
         const idx = currentPanel.elements.findIndex(e => e.split(/\s+/)[0] === element.id);
-        console.log('[REMOTE-COVER] Found element at index:', idx);
+       // console.log('[REMOTE-COVER] Found element at index:', idx);
         if (idx !== -1 && ['c', 'r', 't'].includes(element.type)) {
-            console.log('[REMOTE-COVER] Element type matches, creating modified element');
+           // console.log('[REMOTE-COVER] Element type matches, creating modified element');
             const tokens = element.elementString.split(/\s+/);
             const modified = new BuildElement(SHAPE_PREFIX_MAP[element.type]);
             modified.id = tokens[0];
@@ -21,14 +21,14 @@ class RemoteOnlyCover extends Cover {
 
             // Only apply modification if controllers are successfully added
             if (targetPanel && targetPanel.addRemoteControllers(modified)) {
-                console.log('[REMOTE-COVER] Controllers added successfully');
+               // console.log('[REMOTE-COVER] Controllers added successfully');
                 currentPanel.elements[idx] = modified.toString();
                 return true;
             } else {
-                console.log('[REMOTE-COVER] Failed to add controllers, targetPanel:', !!targetPanel);
+               // console.log('[REMOTE-COVER] Failed to add controllers, targetPanel:', !!targetPanel);
             }
         } else {
-            console.log('[REMOTE-COVER] Condition failed - idx:', idx, 'type:', element.type, 'type matches:', ['c', 'r', 't'].includes(element.type));
+           // console.log('[REMOTE-COVER] Condition failed - idx:', idx, 'type:', element.type, 'type matches:', ['c', 'r', 't'].includes(element.type));
         }
         return false;
     }

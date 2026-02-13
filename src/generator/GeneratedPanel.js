@@ -86,10 +86,10 @@ class GeneratedPanel {
     }
 
     addRemoteControllers(plug) {
-        console.log(`[REMOTE-CTRL] Looking for space for ${plug.id}`);
+       // console.log(`[REMOTE-CTRL] Looking for space for ${plug.id}`);
         
         if (this.remoteSetsCount >= 2) {
-            console.log(`[REMOTE-CTRL] Rejected: already have 2 remote sets`);
+           // console.log(`[REMOTE-CTRL] Rejected: already have 2 remote sets`);
             return false;
         }
 
@@ -130,11 +130,11 @@ class GeneratedPanel {
         ];
 
         const controllers = controller1Sets[randBetween(0, controller1Sets.length - 1)];
-        console.log(`[REMOTE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
+       // console.log(`[REMOTE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
 
         // Try to find a position where the entire controller layout fits without overlapping
         const basePos = this.findControllerPosition(controllers, controllerSize);
-        console.log(`[REMOTE-CTRL] findControllerPosition returned:`, basePos);
+       // console.log(`[REMOTE-CTRL] findControllerPosition returned:`, basePos);
 
         // If no valid position found, don't add controllers
         if (!basePos) return false;
@@ -175,11 +175,11 @@ class GeneratedPanel {
     }
 
     addSizeController(plug) {
-        console.log(`[SIZE-CTRL] Looking for space for ${plug.id}`);
-        console.log(`[SIZE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
+       // console.log(`[SIZE-CTRL] Looking for space for ${plug.id}`);
+       // console.log(`[SIZE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
         
         const pos = this.findFreeSpace(1, 1, 'circle');
-        console.log(`[SIZE-CTRL] findFreeSpace returned:`, pos);
+       // console.log(`[SIZE-CTRL] findFreeSpace returned:`, pos);
         
         if (!pos) return false;
 

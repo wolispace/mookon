@@ -15,7 +15,7 @@ class UIElement extends BaseElement {
     }
 
     initialize() {
-        console.log(`[INIT] ${this.id}: size=${this.size}, state=${this.state}, method=${this.method}, draggable=${this.draggable}`);
+        // console.log(`[INIT] ${this.id}: size=${this.size}, state=${this.state}, method=${this.method}, draggable=${this.draggable}`);
         
         // Store initial size for cycling logic if not already set
         if (this.initialSize === undefined) {
@@ -242,7 +242,7 @@ class UIElement extends BaseElement {
         if (this.change !== CHANGE_NONE) {
             this.state = (this.state + 1) % (this.maxState + 1);
         }
-        console.log(`[PROGRESS] ${this.id}: state ${oldState} -> ${this.state}, method=${this.method}`);
+        // console.log(`[PROGRESS] ${this.id}: state ${oldState} -> ${this.state}, method=${this.method}`);
         this.applyState();
         this.checkTargetState();
     }
@@ -275,7 +275,7 @@ class UIElement extends BaseElement {
             const scale = SHAPES[this.shape]?.scale || 1;
             const newSize = sizes[this.state % sizes.length] * scale;
             
-            console.log(`[SIZE] ${this.id}: state=${this.state}, newSize=${newSize}, method=${this.method}, change=${this.change}`);
+           // console.log(`[SIZE] ${this.id}: state=${this.state}, newSize=${newSize}, method=${this.method}, change=${this.change}`);
             
             this.setSize(newSize);
 
@@ -309,7 +309,7 @@ class UIElement extends BaseElement {
             this.updateVisuals();
             this.setupEvents();
             
-            console.log(`[SIZE-AFTER] ${this.id}: method=${this.method}, hasDragClass=${this.element.classList.contains('draggable')}`);
+           // console.log(`[SIZE-AFTER] ${this.id}: method=${this.method}, hasDragClass=${this.element.classList.contains('draggable')}`);
         } else {
             this.updateVisuals();
         }
@@ -353,7 +353,7 @@ class UIElement extends BaseElement {
 
                 // console.log(`${this.id} executing ${this.remoteActions.length} remote actions`);
                 for (const remoteAction of this.remoteActions) {
-                    console.log(`[REMOTE-ACTION] type=${remoteAction.type}, id=${remoteAction.id}`);
+                   // console.log(`[REMOTE-ACTION] type=${remoteAction.type}, id=${remoteAction.id}`);
                     for (const panel of this.panel.game.panels) {
                         const targetElement = panel.elements.find(el => el.id === remoteAction.id);
                         if (targetElement) {
@@ -428,7 +428,7 @@ class UIElement extends BaseElement {
 
                             } else if (remoteAction.type === 'size') {
                                 // Size change: Just progress the target's state without changing method/change
-                                console.log(`[REMOTE-SIZE] Before: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
+                               // console.log(`[REMOTE-SIZE] Before: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
                                 
                                 // Ensure the element has size change capability
                                 if (targetElement.change !== CHANGE_SIZE) {
@@ -437,7 +437,7 @@ class UIElement extends BaseElement {
                                 }
                                 
                                 targetElement.progressState();
-                                console.log(`[REMOTE-SIZE] After: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
+                               // console.log(`[REMOTE-SIZE] After: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
                             } else if (remoteAction.type === 'cycle') {
                                 // Simplified Cycle Action: Just progress the target's state
                                 targetElement.progressState();
