@@ -45,9 +45,11 @@ function generateTechniqueTest() {
             // Filter elements that are compatible with the cover type
             let compatibleElements = panel.coverableElements;
             
-            // SizeObscure (index 4) only works on raised elements
+            // SizeObscure (index 4) only works on raised elements, not screws or switches
             if (coverStyle === 4) {
-                compatibleElements = panel.coverableElements.filter(el => el.elevation === '+');
+                compatibleElements = panel.coverableElements.filter(el => 
+                    el.elevation === '+' && !['s', 'w'].includes(el.type)
+                );
             }
             
             if (compatibleElements.length === 0) {

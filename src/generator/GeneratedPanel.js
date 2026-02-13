@@ -86,7 +86,12 @@ class GeneratedPanel {
     }
 
     addRemoteControllers(plug) {
-        if (this.remoteSetsCount >= 2) return false; // Hard limit
+        console.log(`[REMOTE-CTRL] Looking for space for ${plug.id}`);
+        
+        if (this.remoteSetsCount >= 2) {
+            console.log(`[REMOTE-CTRL] Rejected: already have 2 remote sets`);
+            return false;
+        }
 
         // Create T-shaped directional controllers (like WASD layout)
         // Layout:     U
@@ -125,9 +130,11 @@ class GeneratedPanel {
         ];
 
         const controllers = controller1Sets[randBetween(0, controller1Sets.length - 1)];
+        console.log(`[REMOTE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
 
         // Try to find a position where the entire controller layout fits without overlapping
         const basePos = this.findControllerPosition(controllers, controllerSize);
+        console.log(`[REMOTE-CTRL] findControllerPosition returned:`, basePos);
 
         // If no valid position found, don't add controllers
         if (!basePos) return false;
