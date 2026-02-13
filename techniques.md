@@ -65,7 +65,7 @@ Covers are modifiers added to existing elements on the same panel to obscure the
 
 ### [SizeObscureCover](generator/SizeObscureCover.js)
 - **Behavior**: Changes the size of an element so it doesn't match its requirement (e.g., a plug that is too small for its socket).
-- **Interaction**: Adds a "Size Controller" (typically a button) that cycles the element's size until it matches the target.
+- **Interaction**: Adds a "Size Controller" (typically a button) that cycles the element's size.
 
 ### [ResetCover](generator/ResetCover.js)
 - **Behavior**: Places a standalone interactive element (like a switch or button) in a vacant space on the panel.

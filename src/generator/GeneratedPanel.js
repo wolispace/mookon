@@ -179,7 +179,7 @@ class GeneratedPanel {
         controller.method = 'tap';
         controller.remoteActions = [{
             id: plug.id,
-            type: 'cycle'
+            type: 'size'
         }];
         controller.x = pos.x;
         controller.y = pos.y;
