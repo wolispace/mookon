@@ -2,11 +2,10 @@ const puzzleConfigs = [
 `Generated test puzzle: Great job! [university]
 /
 white:
-p1 1x1 2x1- 0 5 =,
-k3 1x1 6x1- 0 3 #,
-p2 1.25x1.25 4x0+ 0 5 drag,
-c5 1x1 6x6+ 0 4 tap p2 size,
-k4 1x1 3x3+ 0 3 drag,
+t1 2x2 4x3- 0 5 =,
+t2 1x1 0x3+ 0 5 state 1 drag,
+c3 1x1 7x5+ 0 2 tap t2 size,
+s17 1.54x1.19 1x6.19 0 5 tap color 0 s17 drag move,
 
 `,
     `Simples! [star]

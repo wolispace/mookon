@@ -219,9 +219,7 @@ class PuzzleParser {
                     }
                 }
 
-                if (i < filteredTokens.length) {
-                    console.log(`Configuration Error Element ${element.id}: Unrecognized token '${filteredTokens[i]}'. Expected change type, target state, or remote action.`, "color:red;font-weight:bold;");
-                }
+                // Break after processing method and remote actions
                 break;
             } else if (token === 'state') {
                 i++;
