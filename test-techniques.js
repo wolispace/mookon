@@ -5,8 +5,8 @@ function generateTechniqueTest() {
     
     // Fixed order: techniques that create holes/plugs first
     const techniqueOrder = ['hole', 'screw', 'group', 'maze', 'switch'];
-    // Fixed order: covers that work best with each
-    const coverOrder = [4, 0, 1, 2, 3]; // SizeObscure for hole, Physical for screw, etc.
+    // Fixed order: Physical for switch, Remote for maze
+    const coverOrder = [4, 4, 4, 2, 0]; // SizeObscure for hole/screw/group, Remote for maze, Physical for switch
     
     elementIdCounter = 1;
     generator.availablePlugs = [];

@@ -1,4 +1,67 @@
 const puzzleConfigs = [
+    `
+    Generated test puzzle: Puzzle Solved! [shower]
+/
+grey:
+c1 2x2 3x0- 0 6 #,
+p3 2x2 4x5- 0 4 =,
+p5 2x2 1x3- 0 3 =,
+p6 2x2 5x2+ 0 3 drag,
+p4 1.5x1.5 0x0+ 0 4 state 2 drag,
+c2 2x2 0x6+ 0 6 drag,
+c7 1x1 7x0+ 0 7 tap p4 size
+/
+green:
+c9 0.5x0.5 0.25x0.25- 0 1,
+c11 0.5x0.5 0.25x7.25- 0 1,
+s8 1x1 0x0+ 0 0 hold rotate 3 s8 drag move,
+s10 1x1 0x7+ 0 0 hold rotate 3 s10 drag move,
+s12 1.83x1.42 0x6.59+ 0 0 hold rotate 2 s12 drag
+/
+grey:
+s13 1.64x1.2 1x0^ 0 0 none,
+s14 1.64x1.2 2.64x0 0 0 none,
+s15 1.64x1.2 4.28x0 0 0 none,
+s16 1.64x1.2 5.92x0^ 0 0 none,
+s17 1.64x1.2 1x1.2^ 0 0 none,
+s18 1.64x1.2 2.64x1.2 0 0 none,
+s19 1.64x1.2 4.28x1.2 0 0 none,
+s20 1.64x1.2 5.92x1.2^ 0 0 none,
+s21 1.64x1.2 1x2.4^ 0 0 tap color 6 s21 drag move,
+s22 1.64x1.2 2.64x2.4 0 0 tap color 6 s22 drag move,
+s23 1.64x1.2 4.28x2.4 0 0 none,
+s24 1.64x1.2 5.92x2.4^ 0 0 none
+/
+red:
+c31 1x1 1x1- 0 1 =,
+r25 1x1 0x0+ 0 2,
+r26 1x1 1x0+ 0 2,
+r27 1x1 2x0+ 0 2,
+r28 1x1 3x0+ 0 2,
+r29 1x1 4x0+ 0 2,
+r30 1x1 0x1+ 0 2,
+r32 1x1 2x1+ 0 2,
+r33 1x1 4x1+ 0 2,
+r34 1x1 0x2+ 0 2,
+r35 1x1 2x2+ 0 2,
+r36 1x1 4x2+ 0 2,
+r37 1x1 0x3+ 0 2,
+r38 1x1 4x3+ 0 2,
+r39 1x1 0x4+ 0 2,
+r40 1x1 1x4+ 0 2,
+r42 1x1 3x4+ 0 2,
+r43 1x1 4x4+ 0 2,
+c41 1x1 7x2+ 0 2 none undefined ,
+r45 1x1 6x6+ 0 5 tap c41 0x-0.5,
+r46 1x1 5x7+ 0 5 tap c41 -0.5x0,
+r47 1x1 6x7+ 0 5 tap c41 0x0.5,
+r48 1x1 7x7+ 0 5 tap c41 0.5x0
+/
+white:
+w49 1x1 0x1 0 1-4-5 tap state 1,
+w50 1x1 0x2- 0 1-4-5 none,
+w52 1x1 1x4 0 3-8-1 tap state 1 w50 drag
+    `,
 `Generated test puzzle: Great job! [university]
 /
 white:
