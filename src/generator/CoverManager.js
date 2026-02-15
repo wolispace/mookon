@@ -39,6 +39,11 @@ class CoverManager {
             for (let i = 0; i < stackLimit; i++) {
                 if (coversAdded >= MAX_COVERS) break;
 
+                // Stacking probability based on difficulty
+                if (stackCount > 0 && Math.random() > (diff.stackProb || 0)) {
+                    break;
+                }
+
                 // Decide covering style index
                 // Style 2 (RemoteOnly) and 3 (SwitchRelease) require no existing remotes
                 let maxStyle = 1;

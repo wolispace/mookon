@@ -93,25 +93,28 @@ const PUZZLE_CONFIG = {
 
 const DIFFICULTY_SETTINGS = {
     1: { // Easy
-        minPanels: 1,      // Minimum number of panels in the box
-        maxPanels: 2,      // Maximum number of panels in the box
-        coverProb: 0.2,    // Probability (0-1) that a coverable element gets covered
-        maxCovers: 2,      // Maximum total covers allowed on a single panel
-        stackLimit: 1      // Maximum number of covers that can stack on a single element
+        minPanels: 1,
+        maxPanels: 2,
+        coverProb: 0.2,
+        maxCovers: 2,
+        stackLimit: 1,
+        stackProb: 0
     },
     2: { // Medium
         minPanels: 2,
         maxPanels: 3,
         coverProb: 0.5,
         maxCovers: 4,
-        stackLimit: 2
+        stackLimit: 2,
+        stackProb: 0.3
     },
     3: { // Hard
         minPanels: 3,
         maxPanels: 6,
         coverProb: 0.8,
         maxCovers: 8,
-        stackLimit: 3
+        stackLimit: 4,
+        stackProb: 0.9
     }
 };
 

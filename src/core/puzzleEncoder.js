@@ -47,12 +47,6 @@ function decodePuzzle(encodedString) {
         return '';
     }
 
-    // Check if it's the new format (with delimiter) or legacy
-    if (!decompressed.includes(MESSAGE_DELIMITER)) {
-        // Legacy format: just the raw puzzle string
-        return decompressed;
-    }
-
     const [encodedMessage, encodedPuzzleData] = decompressed.split(MESSAGE_DELIMITER);
     if (!encodedPuzzleData) return encodedMessage; // Should not happen if delimiter exists but safe fallback
 
