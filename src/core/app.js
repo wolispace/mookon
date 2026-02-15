@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (puzzleParam) {
         try {
-            sharedPuzzle = decodePuzzle(decodeURIComponent(puzzleParam));
+            sharedPuzzle = decodePuzzle(puzzleParam);
             loadInitialPuzzle(true);
         } catch (e) {
             console.error("Failed to load shared puzzle:", e);

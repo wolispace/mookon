@@ -37,8 +37,24 @@ function encodePuzzle(puzzleString) {
 }
 
 function decodePuzzle(encodedString) {
+    if (!encodedString) return '';
+
     const decompressed = LZString.decompressFromEncodedURIComponent(encodedString);
+    if (!decompressed) {
+        // Fallback: If decompression fails, maybe it's not compressed at all?
+        // Or it's a very old format. Return as is if it looks like a puzzle.
+        if (encodedString.includes('/')) return encodedString;
+        return '';
+    }
+
+    // Check if it's the new format (with delimiter) or legacy
+    if (!decompressed.includes(MESSAGE_DELIMITER)) {
+        // Legacy format: just the raw puzzle string
+        return decompressed;
+    }
+
     const [encodedMessage, encodedPuzzleData] = decompressed.split(MESSAGE_DELIMITER);
+    if (!encodedPuzzleData) return encodedMessage; // Should not happen if delimiter exists but safe fallback
 
     // Decode message (no word decompression)
     const message = encodedMessage.split('').map(char => {

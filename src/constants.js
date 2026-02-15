@@ -47,9 +47,6 @@ const SHAPE_NAMES = Object.keys(SHAPES);
 const SHAPE_PREFIX_MAP = Object.fromEntries(
     Object.entries(SHAPES).map(([name, props]) => [props.code, name])
 );
-const SHAPE_TO_PREFIX = Object.fromEntries(
-    Object.entries(SHAPES).map(([name, props]) => [name, props.code])
-);
 const DRAGGABLE_SHAPES = Object.entries(SHAPES)
     .filter(([_, props]) => props.draggable)
     .map(([name, _]) => name);
@@ -90,11 +87,8 @@ const NUMERIC_PATTERN = /^\d+$/;
 // Puzzle generation configuration
 const PUZZLE_CONFIG = {
     DIFFICULTY: 1, // 1: Easy, 2: Medium, 3: Hard
-    MIN_PANELS: 2,
-    MAX_PANELS: 5,
     MIN_TECHNIQUES: 1, // Per panel
-    MAX_TECHNIQUES: 1,
-    FORCE_MAZE: false // Option to favor maze generation
+    MAX_TECHNIQUES: 1
 };
 
 const DIFFICULTY_SETTINGS = {
@@ -135,7 +129,6 @@ let globalZIndex = 1000;
 
 
 
-const panelOverrides = []; // ['screw', 'switch', 'hunt'
 let currentGame = null;
 let currentPuzzleIndex = 0;
 let sharedPuzzle = null;

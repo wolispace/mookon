@@ -55,13 +55,4 @@ function confettiBurst() {
     }
 }
 
-// Puzzle encoding/decoding utilities
-function encodePuzzle(puzzleString) {
-    return LZString.compressToEncodedURIComponent(puzzleString);
-}
-
-function decodePuzzle(encodedString) {
-    return LZString.decompressFromEncodedURIComponent(encodedString);
-}
-
 

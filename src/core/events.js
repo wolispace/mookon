@@ -58,14 +58,23 @@ function handleShare(buttonElement) {
 
     let currentPuzzle = '';
 
-    // Logic to determine which puzzle string to share
-    if (hasSharedPuzzle && currentPuzzleIndex === 0) {
-        currentPuzzle = sharedPuzzle;
-    } else if ((!hasSharedPuzzle && currentPuzzleIndex === 0) || (hasSharedPuzzle && currentPuzzleIndex === 1)) {
-        currentPuzzle = randomPuzzle;
+    // Corrected logic to determine which puzzle string to share
+    if (hasSharedPuzzle) {
+        if (currentPuzzleIndex === 0) {
+            currentPuzzle = sharedPuzzle;
+        } else if (currentPuzzleIndex >= 1 && currentPuzzleIndex <= 3) {
+            currentPuzzle = randomPuzzle;
+        } else {
+            // Static puzzles start at index 4 when shared is present
+            currentPuzzle = puzzleConfigs[currentPuzzleIndex - 4];
+        }
     } else {
-        const staticIndex = hasSharedPuzzle ? currentPuzzleIndex - 2 : currentPuzzleIndex - 1;
-        currentPuzzle = puzzleConfigs[staticIndex];
+        if (currentPuzzleIndex >= 0 && currentPuzzleIndex <= 2) {
+            currentPuzzle = randomPuzzle;
+        } else {
+            // Static puzzles start at index 3 when no shared is present
+            currentPuzzle = puzzleConfigs[currentPuzzleIndex - 3];
+        }
     }
 
     if (!currentPuzzle) {

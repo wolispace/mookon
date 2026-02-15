@@ -1,5 +1,4 @@
 const puzzleConfigs = [
-
     `Simples! [star]
 /
 blue:
@@ -40,96 +39,73 @@ c0 1 3x1+ 0 3,
 r9 8x0.1 0x0+ 0 0,
 c1 1 7x7- 0 1 =,
 `,
-
-];
-
-const testConfigs = [
-
-    ,
-
-    `Confetti!!:
+    ` Well done! [subway]
 /
-red:
-w1 1 4x2 0 0-2-0 tap state 1,
+orange:
+c2 1x1 0.5x0.5- 0 1 =,
+c5 1x1 6.5x6.5- 0 1 =,
+s1 2x2 0x0+ 0 0 hold rotate 3 s1 drag move,
+s4 2x2 6x6+ 0 0 hold rotate 3 s4 drag move
 /
 blue:
-w4 1 1x1 0 0-2-0 tap state 1,
-r1 1 1x2 0 2,
-c1 1 1x3 0 2,
-s1 1 1x4 0 2,
-t1 1 1x5 0 2,
-r2 0.1x1 1x6 0 2,
-w4 1 3x1- 0 0-2-0 tap state 1,
-r3 1 3x2- 0 2,
-c2 1 3x3- 0 2,
-s2 1 3x4- 0 2,
-t2 1 3x5- 0 2,
-r4 0.1x1 3x6- 0 2,
-w5 1 5x1+ 0 0-2-0 tap state 1,
-r5 1 5x2+ 0 2,
-c3 1 5x3+ 0 2,
-s3 1 5x4+ 0 2,
-t3 1 5x5+ 0 2,
-r6 0.1x1 5x6+ 0 2,
-/
-`,
-    `
-Loading
-: hunt + maze
-/
-green:
-c32 1 6x6- 0 3 =,
-c30 1 1x4+ 0 1,
-c31 1 2x3+ 0 1 tap color 3 c31 drag move
+c7 1x1 2x1^ 0 8 none,
+c8 1x1 3x1^ 0 8 tap color 2 c8 drag move,
+c9 1x1 4x1^ 0 8 none,
+c10 1x1 5x1^ 0 8 none,
+c11 1x1 2x2^ 0 8 none,
+c12 1x1 3x2^ 0 8 none,
+c13 1x1 4x2^ 0 8 none,
+c14 1x1 5x2^ 0 8 none
 /
 red:
-c48 1 6x5- 0 1,
-c2 1 0x0+ 0 3,
-c3 1 1x0+ 0 3,
-c4 1 2x0+ 0 3,
-c5 1 3x0+ 0 3,
-c6 1 4x0+ 0 3,
-c8 1 6x0+ 0 3,
-c9 1 7x0+ 0 3,
-c10 1 0x1+ 0 3,
-c14 1 4x1+ 0 3,
-c16 1 6x1+ 0 3,
-c17 1 7x1+ 0 3,
-c18 1 0x2+ 0 3,
-c20 1 2x2+ 0 3,
-c22 1 4x2+ 0 3,
-c24 1 6x2+ 0 3,
-c25 1 7x2+ 0 3,
-c26 1 0x3+ 0 3,
-c28 1 2x3+ 0 3,
-c32 1 6x3+ 0 3,
-c33 1 7x3+ 0 3,
-c34 1 0x4+ 0 3,
-c36 1 2x4+ 0 3,
-c37 1 3x4+ 0 3,
-c38 1 4x4+ 0 3,
-c39 1 5x4+ 0 3,
-c40 1 6x4+ 0 3,
-c41 1 7x4+ 0 3,
-c42 1 0x5+ 0 3,
-c50 1 0x6+ 0 3,
-c51 1 1x6+ 0 3,
-c52 1 2x6+ 0 3,
-c53 1 3x6+ 0 3,
-c54 1 4x6+ 0 3,
-c55 1 5x6+ 0 3,
-c56 1 6x6+ 0 3,
-c57 1 7x6+ 0 3,
-c58 1 0x7+ 0 3,
-c59 1 1x7+ 0 3,
-c60 1 2x7+ 0 3,
-c61 1 3x7+ 0 3,
-c62 1 4x7+ 0 3,
-c63 1 5x7+ 0 3,
-c64 1 6x7+ 0 3,
-c65 1 7x7+ 0 3 
-`,
-
+c16 0.5x0.5 0.25x0.25- 0 1,
+c18 0.5x0.5 0.25x7.25- 0 1,
+s15 1x1 0x0+ 0 0 hold rotate 3 s15 drag move,
+s17 1x1 0x7+ 0 0 hold rotate 3 s17 drag move,
+c3 2x2 7x0+ 0 2 state 0 state 1 drag,
+r20 1x1 3x6+ 0 0 tap p19 0x-0.5,
+r21 1x1 4x7+ 0 0 tap p19 -0.5x0,
+r22 1x1 5x6+ 0 0 tap p19 0x0.5,
+r23 1x1 6x7+ 0 0 tap p19 0.5x0,
+p19 1.21x1.2 0x0+ 0 8 none,
+t24 1.09x1 0x0+ 0 1 tap color 4 t24 drag,
+r25 1.28x1.14 0x0+ 0 5 tap color 4 r25 drag,
+s26 1.42x1.21 0x6.79+ 0 1 hold rotate 1 s26 drag,
+c27 1x1 5x0+ 0 6 drag,
+c28 1x1 6x0+ 0 0 drag,
+c29 1x1 5x1+ 0 8 drag,
+c30 1x1 6x1+ 0 7 drag,
+c31 1x1 7x1+ 0 7 drag,
+c32 1x1 2x5+ 0 2 tap c3 size,
+c33 1x1 2x3+ 0 3 tap c3 size
+/
+black:
+p34 2x2 3x2- 0 0 =,
+c36 2x2 0x5- 0 5 #,
+r38 2.98x2.93 0x4.54+ 0 0 tap color 0 r38 drag,
+d39 1.88x2.18 0x4.36+ 0 6 drag
+/
+white:
+w40 1x1 1x1 0 4-5-8 tap state 1,
+w41 4x1 1x2 0 4-5-8 tap state 1,
+w42 5x1 1x3 0 4-5-8 tap state 5,
+w43 1x1 1x4 0 4-5-8 tap state 1
+/
+yellow:
+t44 1x1 6x3- 0 2 #,
+d46 1x1 2x0- 0 6 #,
+r48 2x2 2x2- 0 0 #,
+r49 2x2 0x1+ 0 0 drag,
+t45 1x1 4x6+ 0 2 drag,
+d47 1x1 2x4+ 0 6 drag,
+c37 2x2 5x1+ 0 5 drag
+/
+black:
+w50 5x1 0x4 0 3-7-4 tap state 3,
+w51 1x1 0x5 0 3-7-4 tap state 1,
+w52 3x1 0x6 0 3-7-4 tap state 3,
+w53 1x1 0x7 0 3-7-4 tap state 1,
+p35 2x2 4x5+ 0 0 drag `,
 ];
 
 /*

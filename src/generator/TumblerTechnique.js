@@ -24,6 +24,8 @@ class TumblerTechnique {
         tumbler.title = `Tumbler ${tumbler.id}`;
         tumbler.context = 'Tumbler Technique';
 
+        tumbler.color = tumbler.color === 1 ? 0 : tumbler.color;
+
         panel.addElement(tumbler, false, 'Tumbler');
 
         // Create the matching key
