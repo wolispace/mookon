@@ -30,13 +30,9 @@ class TumblerTechnique {
         panel.addElement(tumbler, false, 'Tumbler');
 
         // Create the matching key
-        // Key is double the original keyhole size (0.15*2 x 0.4*2 of tumbler size 2)
-        const keyWidth = tumblerSize * 0.15 * 2;  // 0.6
-        const keyHeight = tumblerSize * 0.4 * 2;  // 1.6
-
         const key = new BuildElement('key');
-        key.gridWidth = keyWidth;
-        key.gridHeight = keyHeight;
+        key.gridWidth = KEY_WIDTH;
+        key.gridHeight = KEY_HEIGHT;
         key.color = tumbler.color; // Match tumbler color
         key.elevation = '+'; // Raised
         key.method = 'drag'; // Explicitly draggable

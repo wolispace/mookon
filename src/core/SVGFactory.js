@@ -342,7 +342,7 @@ class SVGFactory {
                     svg.setAttribute('viewBox', `0 0 ${keyWidth} ${keyHeight}`);
                     svg.style.width = `${keyWidth}px`;
                     svg.style.height = `${keyHeight}px`;
-                    draw('rect', { x: 0, y: 0, width: keyWidth, height: keyHeight, fill: 'currentColor', rx: keyWidth * 0.1 });
+                    draw('rect', { x: 0, y: 0, width: keyWidth, height: keyHeight, fill: 'currentColor', rx: Math.min(keyWidth, keyHeight) * 0.2 });
                 } else {
                     svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
                     svg.style.width = svg.style.height = `${size}px`;

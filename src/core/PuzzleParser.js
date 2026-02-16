@@ -49,8 +49,11 @@ class PuzzleParser {
         element.id = id;
         element.shape = SHAPE_PREFIX_MAP[id[0].toLowerCase()] || 'circle';
 
-        // Parse size - check for WIDTHxHEIGHT format for all shapes
-        if (sizeStr.includes('x')) {
+        if (element.shape === 'key') {
+            element.rectWidth = KEY_WIDTH;
+            element.rectHeight = KEY_HEIGHT;
+            element.size = Math.max(element.rectWidth, element.rectHeight);
+        } else if (sizeStr.includes('x')) {
             const sizeParts = sizeStr.split('x');
             if (sizeParts.length === 2) {
                 element.rectWidth = parseFloat(sizeParts[0]);
@@ -244,7 +247,7 @@ class PuzzleParser {
             element.maxState = element.shape === 'switch' ? element.size : 8;
         }
 
-        if (element.method === METHOD_DRAG) {
+        if (element.method === METHOD_DRAG || element.shape === 'key') {
             element.draggable = true;
         }
     }

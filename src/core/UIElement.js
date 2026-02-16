@@ -6,6 +6,8 @@ class UIElement extends BaseElement {
         this.filled = false;
         this.filler = null; // Track who is filling us (for sockets)
         this.socket = null; // Track which socket we are in (for plugs)
+        this.unlocked = false;
+        this.draggable = false;
     }
 
     toString() {
@@ -84,6 +86,8 @@ class UIElement extends BaseElement {
 
         // Auto-unlock all draggable elements
         if (this.method === METHOD_DRAG) {
+            this.unlocked = true;
+            this.draggable = true;
             this.element.classList.add('draggable', 'raised', 'unlocked');
         }
 
@@ -322,6 +326,10 @@ class UIElement extends BaseElement {
         // Check if we should trigger remote actions
         // console.log(`${this.id} checking target state: current=${this.state}, target=${this.targetState}, method=${this.method}, change=${this.change}`);
 
+        if (DEBUG_CONFIG.showPanelSatisfaction) {
+            console.log(`${this.id}`);
+        }
+
         let shouldTrigger = false;
 
         // Standard trigger: state matches target
@@ -357,6 +365,9 @@ class UIElement extends BaseElement {
                 // console.log(`${this.id} executing ${this.remoteActions.length} remote actions`);
                 for (const remoteAction of this.remoteActions) {
                     // console.log(`[REMOTE-ACTION] type=${remoteAction.type}, id=${remoteAction.id}`);
+                    if (DEBUG_CONFIG.showPanelSatisfaction) {
+                        console.log(`[REMOTE] ${this.id} -> ${remoteAction.id} : type=${remoteAction.type}, method=${remoteAction.method || 'none'}`);
+                    }
                     for (const panel of this.panel.game.panels) {
                         const targetElement = panel.elements.find(el => el.id === remoteAction.id);
                         if (targetElement) {
@@ -473,7 +484,14 @@ class UIElement extends BaseElement {
                                     targetElement.targetState = 0;
                                 }
                                 if (remoteAction.method === METHOD_DRAG) {
+                                    targetElement.unlocked = true;
+                                    targetElement.draggable = true;
                                     targetElement.element.classList.add('draggable', 'raised', 'unlocked', 'jump');
+
+                                    if (DEBUG_CONFIG.showPanelSatisfaction) {
+                                        console.log(`Unlocked: ${targetElement.id}`);
+                                    }
+
                                     if (targetElement.shape === 'screw') {
                                         targetElement.rotation = 0;
                                         targetElement.updateVisuals();
@@ -486,7 +504,7 @@ class UIElement extends BaseElement {
                 }
             }
 
-            this.panel.checkCompletion();
+            this.panel.checkCompletion(this.id);
         }
     }
 

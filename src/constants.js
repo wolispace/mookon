@@ -4,6 +4,8 @@
 const PANEL_GRID_SIZE = 8;
 const PADDING = 12;
 const BORDER = 3;
+const KEY_WIDTH = 0.6;
+const KEY_HEIGHT = 1.6;
 
 // Timing constants
 const ROTATION_DEGREES = 45; // Degrees per rotation step

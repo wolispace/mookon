@@ -91,10 +91,12 @@ class Panel {
         }
     }
 
-    checkCompletion() {
+    checkCompletion(triggerId = null) {
         if (this.config.color === 'victory' || this.isConstructing) return;
 
-        // console.log("Panel " + this.config.color + " checkCompletion");
+        if (triggerId && DEBUG_CONFIG.showPanelSatisfaction) {
+            console.log(`Interacted: ${triggerId} (satisfied)`);
+        }
 
         const allSatisfied = this.elements.every(el => {
             const sat = el.isSatisfied();

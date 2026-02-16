@@ -13,8 +13,13 @@ class GroupTechnique {
         }
 
         const templateShape = plug ? SHAPE_PREFIX_MAP[plug.type] || 'rectangle' : DRAGGABLE_SHAPES[randBetween(0, DRAGGABLE_SHAPES.length - 1)];
-        const templateWidth = plug ? plug.gridWidth : randDecimal(1, 2);
-        const templateHeight = plug ? plug.gridHeight : randDecimal(1, 2);
+        let templateWidth = plug ? plug.gridWidth : randDecimal(1, 2);
+        let templateHeight = plug ? plug.gridHeight : randDecimal(1, 2);
+
+        if (templateShape === 'key') {
+            templateWidth = KEY_WIDTH;
+            templateHeight = KEY_HEIGHT;
+        }
 
         const keyColor = plug ? plug.color : randBetween(0, COLOR_ARRAY.length - 1);
         let baseColor = randBetween(0, COLOR_ARRAY.length - 1);

@@ -38,10 +38,16 @@ class BuildElement extends BaseElement {
         this.clampToPanel(); // Guarantee valid configuration before stringifying
 
         const round = (val) => Math.round(val * 100) / 100;
-        const w = round(this.gridWidth);
-        const h = round(this.gridHeight);
         const x = round(this.x);
         const y = round(this.y);
+
+        // Final safeguard: Keys must always be fixed size
+        let w = round(this.gridWidth);
+        let h = round(this.gridHeight);
+        if (this.type === 'k') {
+            w = KEY_WIDTH;
+            h = KEY_HEIGHT;
+        }
 
         // For switches, preserve color string format (e.g., "1-2-5")
         // For other elements, ensure color is a number
