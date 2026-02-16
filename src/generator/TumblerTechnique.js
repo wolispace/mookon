@@ -1,6 +1,6 @@
 class TumblerTechnique {
     constructor() {
-        this.hasPlugAndSocket = false;
+        this.hasPlugAndSocket = true;
         this.priority = 50;
     }
 
@@ -34,19 +34,9 @@ class TumblerTechnique {
         const keyWidth = tumblerSize * 0.15 * 2;  // 0.6
         const keyHeight = tumblerSize * 0.4 * 2;  // 1.6
 
-        const keyPos = panel.findFreeSpace(keyWidth, keyHeight, 'key');
-        if (!keyPos) {
-            // Remove tumbler if we can't place the key
-            const idx = panel.elements.findIndex(e => e.split(/\\s+/)[0] === tumbler.id);
-            if (idx !== -1) panel.elements.splice(idx, 1);
-            return;
-        }
-
         const key = new BuildElement('key');
         key.gridWidth = keyWidth;
         key.gridHeight = keyHeight;
-        key.x = keyPos.x;
-        key.y = keyPos.y;
         key.color = tumbler.color; // Match tumbler color
         key.elevation = '+'; // Raised
         key.method = 'drag'; // Explicitly draggable
@@ -55,6 +45,7 @@ class TumblerTechnique {
         key.title = `Key for ${tumbler.id}`;
         key.context = 'Tumbler Technique';
 
-        panel.addElement(key, true, 'Key'); // Mark as plug so it can be tracked
+        // Register the key in the global plug pool for distribution
+        generator.setPlug(key);
     }
 }
