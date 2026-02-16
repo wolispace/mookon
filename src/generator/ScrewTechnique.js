@@ -1,6 +1,7 @@
 class ScrewTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
+        this.priority = 50;
     }
     apply(panel, generator) {
         // Decide whether to use a pattern or random placement

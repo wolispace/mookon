@@ -1,6 +1,7 @@
 class GroupTechnique {
     constructor() {
         this.hasPlugAndSocket = false;
+        this.priority = 50;
     }
     apply(panel, generator) {
         // Try to get a plug to use as a template

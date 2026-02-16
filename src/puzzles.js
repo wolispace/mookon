@@ -1,4 +1,11 @@
 const puzzleConfigs = [
+    `NO go [star]
+    / white:
+u39 2x2 6x4 0 8 hold rotate 4,
+u41 2x2 4x1 0 0 hold rotate 4,
+k40 0.6x1.6 5x3+ 0 8 drag,
+k42 0.6x1.6 1x1+ 0 0 drag,
+d43 1.07x1.86 0.5x0.41+ 0 6 tap color 3 d43 drag `,
     `Simples! [star]
 /
 blue:

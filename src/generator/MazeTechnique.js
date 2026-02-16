@@ -1,6 +1,7 @@
 class MazeTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
+        this.priority = 100; // Mazes should go first as they are space-intensive
     }
     apply(panel, generator) {
         let GRID_X = randBetween(5, 7);
@@ -11,6 +12,13 @@ class MazeTechnique {
         const { maze, entrance } = this.generateMaze(GRID_X, GRID_Y);
         const mazeColor = randBetween(0, COLOR_NAMES.length - 1);
         const size = 1;
+
+        // Reserve the entire maze area in the grid to prevent other techs from spawning in gaps
+        for (let gy = 0; gy < GRID_Y; gy++) {
+            for (let gx = 0; gx < GRID_X; gx++) {
+                panel.grid[gy][gx] = true;
+            }
+        }
 
         const mazeElements = [];
         let exitElement = null;

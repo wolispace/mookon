@@ -82,16 +82,32 @@ class PuzzleGenerator {
             const panel = new GeneratedPanel(i, panelCount);
             this.currentPanelIndex = i;
 
-            let techCount = randBetween(PUZZLE_CONFIG.MIN_TECHNIQUES, PUZZLE_CONFIG.MAX_TECHNIQUES);
+            let techCount = randBetween(diff.minTechs, diff.maxTechs);
 
             if (i === 0) {
+                // Final panel always needs at least one plug-and-socket technique
                 const tech = this.plugAndSocketTechniques[randBetween(0, this.plugAndSocketTechniques.length - 1)];
-                tech.apply(panel, this);
-            } else {
-                for (let j = 0; j < techCount; j++) {
-                    const randomTech = this.techniquesList[randBetween(0, this.techniquesList.length - 1)];
-                    randomTech.apply(panel, this);
+                const otherTechsCount = techCount - 1;
+                const techsToApply = [tech];
+
+                for (let j = 0; j < otherTechsCount; j++) {
+                    techsToApply.push(this.techniquesList[randBetween(0, this.techniquesList.length - 1)]);
                 }
+
+                // Sort by priority (descending)
+                techsToApply.sort((a, b) => (b.priority || 50) - (a.priority || 50));
+
+                techsToApply.forEach(t => t.apply(panel, this));
+            } else {
+                const techsToApply = [];
+                for (let j = 0; j < techCount; j++) {
+                    techsToApply.push(this.techniquesList[randBetween(0, this.techniquesList.length - 1)]);
+                }
+
+                // Sort by priority (descending)
+                techsToApply.sort((a, b) => (b.priority || 50) - (a.priority || 50));
+
+                techsToApply.forEach(t => t.apply(panel, this));
             }
 
             // Standard plug placement logic
@@ -104,9 +120,11 @@ class PuzzleGenerator {
             } else if (i === 0) {
                 numPlugsToAdd = 0;
             } else {
+                // Middle panels: More aggressive in Hard mode
+                const basePlugs = PUZZLE_CONFIG.DIFFICULTY === 3 ? 2 : 1;
                 numPlugsToAdd = Math.min(
-                    randBetween(0, Math.max(1, this.availablePlugs.length)),
-                    panel.findFreeSpace(1, 1) ? randBetween(0, 2) : 0
+                    this.availablePlugs.length,
+                    randBetween(basePlugs, basePlugs + 1)
                 );
             }
 

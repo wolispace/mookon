@@ -86,9 +86,7 @@ const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
 const PUZZLE_CONFIG = {
-    DIFFICULTY: 1, // 1: Easy, 2: Medium, 3: Hard
-    MIN_TECHNIQUES: 1, // Per panel
-    MAX_TECHNIQUES: 1
+    DIFFICULTY: 1 // 1: Easy, 2: Medium, 3: Hard
 };
 
 const DIFFICULTY_SETTINGS = {
@@ -98,7 +96,9 @@ const DIFFICULTY_SETTINGS = {
         coverProb: 0.2,
         maxCovers: 2,
         stackLimit: 1,
-        stackProb: 0
+        stackProb: 0,
+        minTechs: 1,
+        maxTechs: 1
     },
     2: { // Medium
         minPanels: 2,
@@ -106,7 +106,9 @@ const DIFFICULTY_SETTINGS = {
         coverProb: 0.5,
         maxCovers: 4,
         stackLimit: 2,
-        stackProb: 0.3
+        stackProb: 0.3,
+        minTechs: 1,
+        maxTechs: 2
     },
     3: { // Hard
         minPanels: 3,
@@ -114,7 +116,9 @@ const DIFFICULTY_SETTINGS = {
         coverProb: 0.8,
         maxCovers: 8,
         stackLimit: 4,
-        stackProb: 0.9
+        stackProb: 0.9,
+        minTechs: 2,
+        maxTechs: 3
     }
 };
 

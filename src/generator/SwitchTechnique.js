@@ -2,6 +2,7 @@
 class SwitchTechnique {
     constructor() {
         this.hasPlugAndSocket = false;
+        this.priority = 50;
     }
     apply(panel, generator) {
         const baseColor = randBetween(1, 6);
@@ -19,13 +20,15 @@ class SwitchTechnique {
             });
         }
 
-        // Determine valid startX based on max width
-        const maxX = 7 - maxSwitchSize;
-        const startX = randBetween(0, maxX);
+        // Find space for the entire vertical stack
+        const stackWidth = maxSwitchSize + 1; // Switches are 1 unit wider visually
+        const stackHeight = numSwitches;
+        const stackPos = panel.findFreeSpace(stackWidth, stackHeight, 'switch');
 
-        // Ensure switches fit vertically
-        const maxStartY = 8 - numSwitches;
-        const startY = randBetween(1, Math.max(1, maxStartY));
+        if (!stackPos) return;
+
+        const startX = stackPos.x;
+        const startY = stackPos.y;
 
         // Consistent colors for the entire set of switches
         const setBallColor = randBetween(1, 8); // All switches use the same ball color
