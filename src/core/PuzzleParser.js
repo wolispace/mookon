@@ -142,7 +142,7 @@ class PuzzleParser {
                     i++;
 
                     // Check for vector pattern (remote move)
-                    const vectorMatch = filteredTokens[i].match(/^([+\-]?(:?\d+(?:\.\d+)?|\.\d+))x([+\-]?(:?\d+(?:\.\d+)?|\.\d+))$/);
+                    const vectorMatch = filteredTokens[i].match(/^([+\-]?(?:\d+(?:\.\d+)?|\.\d+))x([+\-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
 
                     if (vectorMatch) {
                         const vx = parseFloat(vectorMatch[1]);

@@ -83,7 +83,7 @@ const COMPARISON_NAMES = [COMPARISON_EQUAL, COMPARISON_STRICT, COMPARISON_GREATE
 const COMPARISON_PATTERN = new RegExp(`^[${COMPARISON_NAMES.join('')}]$`);
 
 // Pattern constants
-const ELEMENT_ID_PATTERN = /^[ctswrpd]\d+$/;
+const ELEMENT_ID_PATTERN = /^[ctswrpduk]\d+$/;
 const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
@@ -127,7 +127,7 @@ const DIFFICULTY_SETTINGS = {
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
     enabled: false,
-    showPanelSatisfaction: true, // Show first unsatisfied element in console
+    showPanelSatisfaction: false, // Show first unsatisfied element in console
     technique: 'tumbler', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
     coverStyle: 5      // Set to 5 for ResetCover
 };
