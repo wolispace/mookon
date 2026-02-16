@@ -228,6 +228,9 @@ class PuzzleParser {
                 i++;
                 element.state = parseInt(filteredTokens[i]);
                 i++;
+            } else if (token === 'decoy') {
+                element.targetState = 9;
+                i++;
             } else if (COMPARISON_PATTERN.test(token)) {
                 element.sizeComparison = token;
                 i++;

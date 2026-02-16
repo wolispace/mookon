@@ -83,6 +83,10 @@ class BuildElement extends BaseElement {
             }
         }
 
+        if (this.targetState === 9) {
+            configString += ' decoy';
+        }
+
         this.remoteActions.forEach(action => {
             configString += ` ${action.id}`;
             if (action.type === 'reset') {

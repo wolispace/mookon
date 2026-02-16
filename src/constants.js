@@ -100,7 +100,8 @@ const DIFFICULTY_SETTINGS = {
         stackLimit: 1,
         stackProb: 0,
         minTechs: 1,
-        maxTechs: 1
+        maxTechs: 1,
+        maxMazeSockets: 1
     },
     2: { // Medium
         minPanels: 2,
@@ -110,7 +111,8 @@ const DIFFICULTY_SETTINGS = {
         stackLimit: 2,
         stackProb: 0.3,
         minTechs: 1,
-        maxTechs: 2
+        maxTechs: 2,
+        maxMazeSockets: 2
     },
     3: { // Hard
         minPanels: 3,
@@ -120,7 +122,8 @@ const DIFFICULTY_SETTINGS = {
         stackLimit: 3,
         stackProb: 0.9,
         minTechs: 2,
-        maxTechs: 3
+        maxTechs: 3,
+        maxMazeSockets: 4
     }
 };
 
@@ -128,7 +131,7 @@ const DIFFICULTY_SETTINGS = {
 const DEBUG_CONFIG = {
     enabled: false,
     showPanelSatisfaction: false, // Show first unsatisfied element in console
-    technique: 'tumbler', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
+    technique: 'maze', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
     coverStyle: 5      // Set to 5 for ResetCover
 };
 

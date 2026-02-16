@@ -76,7 +76,20 @@ class PuzzleGenerator {
         const diff = DIFFICULTY_SETTINGS[PUZZLE_CONFIG.DIFFICULTY] || DIFFICULTY_SETTINGS[2];
         const panelCount = randBetween(diff.minPanels, diff.maxPanels);
 
-        const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1 || DEBUG_CONFIG.enabled;
+        const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1;
+
+        // Filter techniques for Easy mode (exclude Maze and Group)
+        let localTechniquesList = [...this.techniquesList];
+        let localPlugAndSocketTechniques = [...this.plugAndSocketTechniques];
+
+        if (isEasy && !DEBUG_CONFIG.enabled) {
+            localTechniquesList = localTechniquesList.filter(t =>
+                t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'GroupTechnique'
+            );
+            localPlugAndSocketTechniques = localPlugAndSocketTechniques.filter(t =>
+                t.constructor.name !== 'MazeTechnique'
+            );
+        }
 
         for (let i = 0; i < panelCount; i++) {
             const panel = new GeneratedPanel(i, panelCount);
@@ -86,12 +99,12 @@ class PuzzleGenerator {
 
             if (i === 0) {
                 // Final panel always needs at least one plug-and-socket technique
-                const tech = this.plugAndSocketTechniques[randBetween(0, this.plugAndSocketTechniques.length - 1)];
+                const tech = localPlugAndSocketTechniques[randBetween(0, localPlugAndSocketTechniques.length - 1)];
                 const otherTechsCount = techCount - 1;
                 const techsToApply = [tech];
 
                 for (let j = 0; j < otherTechsCount; j++) {
-                    techsToApply.push(this.techniquesList[randBetween(0, this.techniquesList.length - 1)]);
+                    techsToApply.push(localTechniquesList[randBetween(0, localTechniquesList.length - 1)]);
                 }
 
                 // Sort by priority (descending)
@@ -101,7 +114,7 @@ class PuzzleGenerator {
             } else {
                 const techsToApply = [];
                 for (let j = 0; j < techCount; j++) {
-                    techsToApply.push(this.techniquesList[randBetween(0, this.techniquesList.length - 1)]);
+                    techsToApply.push(localTechniquesList[randBetween(0, localTechniquesList.length - 1)]);
                 }
 
                 // Sort by priority (descending)

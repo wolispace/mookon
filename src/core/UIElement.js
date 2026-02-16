@@ -1026,6 +1026,8 @@ class UIElement extends BaseElement {
         }
 
         if (this.elevation === '-') {
+            // targetState 9 is the internal flag for an optional decoy (visually sunken but elective)
+            if (this.targetState === 9) return true;
             return this.filled;
         }
         if (this.shape === 'switch' && this.method === METHOD_TAP) {
