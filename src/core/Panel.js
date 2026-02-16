@@ -95,11 +95,12 @@ class Panel {
         if (this.config.color === 'victory' || this.isConstructing) return;
 
         // console.log("Panel " + this.config.color + " checkCompletion");
-        this.elements.forEach(el => el.toString());
 
         const allSatisfied = this.elements.every(el => {
             const sat = el.isSatisfied();
-            // if (!sat) console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
+            if (!sat && DEBUG_CONFIG.showPanelSatisfaction) {
+                console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
+            }
             return sat;
         });
 

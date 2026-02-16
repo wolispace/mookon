@@ -115,7 +115,7 @@ const DIFFICULTY_SETTINGS = {
         maxPanels: 6,
         coverProb: 0.8,
         maxCovers: 8,
-        stackLimit: 4,
+        stackLimit: 3,
         stackProb: 0.9,
         minTechs: 2,
         maxTechs: 3
@@ -125,6 +125,7 @@ const DIFFICULTY_SETTINGS = {
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
     enabled: false,
+    showPanelSatisfaction: true, // Show first unsatisfied element in console
     technique: 'tumbler', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
     coverStyle: 5      // Set to 5 for ResetCover
 };

@@ -16,7 +16,7 @@ class UIElement extends BaseElement {
 
     initialize() {
         // console.log(`[INIT] ${this.id}: size=${this.size}, state=${this.state}, method=${this.method}, draggable=${this.draggable}`);
-        
+
         // Store initial size for cycling logic if not already set
         if (this.initialSize === undefined) {
             this.initialSize = this.size;
@@ -119,6 +119,8 @@ class UIElement extends BaseElement {
             draggable: this.draggable,
             filled: this.filled
         };
+
+        this.persistentSatisfaction = false;
     }
 
     setupEvents() {
@@ -212,6 +214,7 @@ class UIElement extends BaseElement {
             this.updateVisuals();
 
             // The tumbler resets and is ready to be used again
+            this.persistentSatisfaction = true;
             return;
         }
 
@@ -274,20 +277,20 @@ class UIElement extends BaseElement {
             const sizes = [1.0, 1.25, 1.5, 1.75, 2.0, 1.75, 1.5, 1.25];
             const scale = SHAPES[this.shape]?.scale || 1;
             const newSize = sizes[this.state % sizes.length] * scale;
-            
-           // console.log(`[SIZE] ${this.id}: state=${this.state}, newSize=${newSize}, method=${this.method}, change=${this.change}`);
-            
+
+            // console.log(`[SIZE] ${this.id}: state=${this.state}, newSize=${newSize}, method=${this.method}, change=${this.change}`);
+
             this.setSize(newSize);
 
             // Re-create SVG without full reinitialization
             const oldElement = this.element;
             const parent = oldElement.parentElement;
-            
+
             this.element = SVGFactory.create(this);
             this.svg = this.element;
             this.element.id = this.id;
             this.element.classList.add('element');
-            
+
             // Restore position and styling
             const cellSize = getElementSize();
             this.element.style.position = 'absolute';
@@ -295,21 +298,21 @@ class UIElement extends BaseElement {
             this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
             this.element.style.cursor = 'pointer';
             this.element.style.zIndex = oldElement.style.zIndex || '2';
-            
+
             if (this.elevation === '+') this.element.classList.add('raised');
             if (this.elevation === '-') this.element.classList.add('sunken');
             if (this.method === METHOD_DRAG) {
                 this.element.classList.add('draggable', 'unlocked');
             }
-            
+
             if (parent) {
                 parent.replaceChild(this.element, oldElement);
             }
-            
+
             this.updateVisuals();
             this.setupEvents();
-            
-           // console.log(`[SIZE-AFTER] ${this.id}: method=${this.method}, hasDragClass=${this.element.classList.contains('draggable')}`);
+
+            // console.log(`[SIZE-AFTER] ${this.id}: method=${this.method}, hasDragClass=${this.element.classList.contains('draggable')}`);
         } else {
             this.updateVisuals();
         }
@@ -353,7 +356,7 @@ class UIElement extends BaseElement {
 
                 // console.log(`${this.id} executing ${this.remoteActions.length} remote actions`);
                 for (const remoteAction of this.remoteActions) {
-                   // console.log(`[REMOTE-ACTION] type=${remoteAction.type}, id=${remoteAction.id}`);
+                    // console.log(`[REMOTE-ACTION] type=${remoteAction.type}, id=${remoteAction.id}`);
                     for (const panel of this.panel.game.panels) {
                         const targetElement = panel.elements.find(el => el.id === remoteAction.id);
                         if (targetElement) {
@@ -428,16 +431,16 @@ class UIElement extends BaseElement {
 
                             } else if (remoteAction.type === 'size') {
                                 // Size change: Just progress the target's state without changing method/change
-                               // console.log(`[REMOTE-SIZE] Before: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
-                                
+                                // console.log(`[REMOTE-SIZE] Before: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
+
                                 // Ensure the element has size change capability
                                 if (targetElement.change !== CHANGE_SIZE) {
                                     targetElement.change = CHANGE_SIZE;
                                     targetElement.maxState = 7;
                                 }
-                                
+
                                 targetElement.progressState();
-                               // console.log(`[REMOTE-SIZE] After: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
+                                // console.log(`[REMOTE-SIZE] After: ${targetElement.id} method=${targetElement.method}, change=${targetElement.change}`);
                             } else if (remoteAction.type === 'cycle') {
                                 // Simplified Cycle Action: Just progress the target's state
                                 targetElement.progressState();
@@ -825,14 +828,14 @@ class UIElement extends BaseElement {
             // console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, filled=${sunkenElement.filled}, sizeComparison=${sunkenElement.sizeComparison}`);
 
             if (sunkenElement.filled) {
-               //  console.log(`[Snap] Skipping ${sunkenElement.id} - already filled`);
+                //  console.log(`[Snap] Skipping ${sunkenElement.id} - already filled`);
                 continue;
             }
 
             // Skip sunken elements without size comparison (they don't accept drops)
             // EXCEPT for tumblers which accept keys
             if (!sunkenElement.sizeComparison && sunkenElement.shape !== 'tumbler') {
-               //  console.log(`[Snap] Skipping ${sunkenElement.id} - no size comparison and not a tumbler`);
+                //  console.log(`[Snap] Skipping ${sunkenElement.id} - no size comparison and not a tumbler`);
                 continue;
             }
 
@@ -1031,6 +1034,10 @@ class UIElement extends BaseElement {
             return true;
         }
 
+        if (this.shape === 'tumbler' && this.persistentSatisfaction) {
+            return true;
+        }
+
         return this.state == this.targetState;
     }
 
@@ -1169,6 +1176,7 @@ class UIElement extends BaseElement {
         this.targetState = this.initialConfig.targetState;
         this.draggable = this.initialConfig.draggable;
         this.filled = false;
+        this.persistentSatisfaction = false;
 
         // 3. Update visuals and event handlers
         this.element.classList.remove('done', 'unlocked', 'draggable', 'raised', 'sunken', 'jump', 'flying', 'dragging', 'wiggle');
