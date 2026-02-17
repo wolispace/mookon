@@ -1,102 +1,100 @@
-// Test: Generate one panel per technique with one random cover per panel
+// Generate 25 test puzzles covering all techniques and covers
 
-function generateTechniqueTest() {
+const testDefinitions = [
+    { name: 'Hole: Basic', tech: 'hole', cover: null },
+    { name: 'Hole: Color Match', tech: 'hole', cover: null },
+    { name: 'Screw: Corners', tech: 'screw', cover: null },
+    { name: 'Switch: States', tech: 'switch', cover: null },
+    { name: 'Maze: Navigate', tech: 'maze', cover: null },
+    { name: 'Group: Find Key', tech: 'group', cover: null },
+    { name: 'Tumbler: Unlock', tech: 'tumbler', cover: null },
+    { name: 'Cover: Physical', tech: 'hole', cover: 0 },
+    { name: 'Cover: Group Obscure', tech: 'switch', cover: 1 },
+    { name: 'Cover: Remote Only', tech: 'hole', cover: 2 },
+    { name: 'Cover: Switch Release', tech: 'screw', cover: 3 },
+    { name: 'Cover: Size Obscure', tech: 'hole', cover: 4 },
+    { name: 'Cover: Reset Trap', tech: 'hole', cover: 5 },
+    { name: 'Multi: Hole + Screw', tech: ['hole', 'screw'], cover: null },
+    { name: 'Multi: Switch + Maze', tech: ['switch', 'maze'], cover: null },
+    { name: 'Stack: Physical + Remote', tech: 'hole', cover: [0, 2] },
+    { name: 'Shapes: All Types', tech: 'hole', cover: null },
+    { name: 'Multi-panel 1', tech: 'hole', cover: null },
+    { name: 'Multi-panel 2', tech: 'hole', cover: null },
+    { name: 'Group: All Fill', tech: 'group', cover: null },
+    { name: 'Maze: Multi-Socket', tech: 'maze', cover: null },
+    { name: 'Screw: Hide Holes', tech: 'screw', cover: null },
+    { name: 'Switch + Tumbler', tech: ['switch', 'tumbler'], cover: null },
+    { name: 'Size: Multiple', tech: 'hole', cover: 4 },
+    { name: 'Reset: Maze Ball', tech: 'maze', cover: 5 }
+];
+
+function generateTestPuzzle(def) {
     const generator = new PuzzleGenerator();
-    
-    // Fixed order: techniques that create holes/plugs first
-    const techniqueOrder = ['hole', 'screw', 'group', 'maze', 'switch'];
-    // Fixed order: Physical for switch, Remote for maze
-    const coverOrder = [4, 4, 4, 2, 0]; // SizeObscure for hole/screw/group, Remote for maze, Physical for switch
-    
     elementIdCounter = 1;
     generator.availablePlugs = [];
     generator.panels = [];
     
-    techniqueOrder.forEach((techName, index) => {
-        const panel = new GeneratedPanel(index, techniqueOrder.length);
-        generator.currentPanelIndex = index;
-        
-        // Apply the technique
+    const panel = new GeneratedPanel(0, 1);
+    generator.currentPanelIndex = 0;
+    
+    const techs = Array.isArray(def.tech) ? def.tech : [def.tech];
+    techs.forEach(techName => {
         const technique = generator.techniques[techName];
-        if (!technique) {
-            console.error(`Technique '${techName}' not found!`);
-            console.log('Available techniques:', Object.keys(generator.techniques));
-            return;
+        if (technique) technique.apply(panel, generator);
+    });
+    
+    while (generator.availablePlugs.length > 0) {
+        const plug = generator.getPlug();
+        if (!plug) break;
+        const shape = SHAPE_PREFIX_MAP[plug.type] || 'circle';
+        const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight, shape);
+        if (plugPos) {
+            plug.x = plugPos.x;
+            plug.y = plugPos.y;
+            panel.addPlug(plug);
         }
-        technique.apply(panel, generator);
-        
-        // Place any plugs generated on the same panel
-        while (generator.availablePlugs.length > 0) {
-            const plug = generator.getPlug();
-            if (!plug) break;
-            const shape = SHAPE_PREFIX_MAP[plug.type] || 'circle';
-            const plugPos = panel.findFreeSpace(plug.gridWidth, plug.gridHeight, shape);
-            if (plugPos) {
-                plug.x = plugPos.x;
-                plug.y = plugPos.y;
-                panel.addPlug(plug);
-            }
-        }
-        
-        // Add one cover using fixed order
-        if (panel.coverableElements.length > 0) {
-            const coverStyle = coverOrder[index];
-            
-            // Filter elements that are compatible with the cover type
-            let compatibleElements = panel.coverableElements;
-            
-            // SizeObscure (index 4) only works on raised elements, not screws or switches
+    }
+    
+    if (def.cover !== null && panel.coverableElements.length > 0) {
+        const covers = Array.isArray(def.cover) ? def.cover : [def.cover];
+        covers.forEach(coverStyle => {
+            let compatibleElements = panel.coverableElements.filter(el => !el.hasRemote);
             if (coverStyle === 4) {
-                compatibleElements = panel.coverableElements.filter(el => 
+                compatibleElements = compatibleElements.filter(el => 
                     el.elevation === '+' && !['s', 'w'].includes(el.type)
                 );
             }
-            
-            if (compatibleElements.length === 0) {
-                console.log(`Panel ${index} (${techName}): No compatible elements for cover type ${coverStyle}`);
-            } else {
-                const elementIndex = randBetween(0, compatibleElements.length - 1);
-                const element = compatibleElements[elementIndex];
-                
-                console.log(`Panel ${index} (${techName}):`);
-                console.log('  Covering element:', element.elementString);
-                console.log('  Cover type:', coverStyle, '-', ['Physical', 'GroupObscure', 'RemoteOnly', 'SwitchRelease', 'SizeObscure', 'Reset'][coverStyle]);
-                console.log('  Panel has', panel.elements.length, 'elements,', panel.coverableElements.length, 'coverable');
-                
+            if (compatibleElements.length > 0) {
+                const element = compatibleElements[0];
                 const coverManager = new CoverManager();
                 const style = coverManager.styles[coverStyle];
-                if (style) {
-                    const success = style.apply(panel, element, panel, generator);
-                    console.log('  Cover applied:', success);
-                    if (!success && coverStyle === 4) {
-                        console.log('  SizeObscure failed - likely no space for controller');
-                    }
-                }
+                if (style) style.apply(panel, element, panel, generator);
             }
-        }
-        
-        generator.panels.push(panel);
-    });
+        });
+    }
     
+    generator.panels.push(panel);
     return generator.toString();
 }
 
-// Initialize game with test puzzle
-function initTest() {
-    const testPuzzle = generateTechniqueTest();
-    console.log('Generated test puzzle:', testPuzzle);
-    
-    if (currentGame) {
-        currentGame.destroy();
-    }
-    
-    currentGame = new Game(testPuzzle);
+function generateAllTests() {
+    const output = ['const debugPuzzleConfigs = ['];
+    testDefinitions.forEach((def, i) => {
+        const puzzle = generateTestPuzzle(def);
+        output.push(`    // ${i + 1}. ${def.name}`);
+        output.push(`    \`${puzzle}\`,`);
+        output.push('');
+    });
+    output.push('];');
+    console.log(output.join('\n'));
 }
 
-// Reload button handler
+function initTest() {
+    generateAllTests();
+}
+
 document.getElementById('reload-button').addEventListener('click', () => {
     initTest();
 });
 
-// Start test on load
 initTest();

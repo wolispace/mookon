@@ -31,7 +31,8 @@ function loadPuzzle(index, regenerate = true) {
     } else {
         // Static puzzles
         const staticIndex = index - (hasShared ? 4 : 3);
-        thisPuzzle = puzzleConfigs[staticIndex];
+        const puzzleSource = DEBUG_CONFIG.enabled ? debugPuzzleConfigs : puzzleConfigs;
+        thisPuzzle = puzzleSource[staticIndex];
     }
 
     currentGame = new Game(thisPuzzle);
@@ -86,7 +87,8 @@ function populatePuzzleSelect() {
     });
 
     // 3. Static puzzles
-    puzzleConfigs.forEach((config, index) => {
+    const puzzleSource = DEBUG_CONFIG.enabled ? debugPuzzleConfigs : puzzleConfigs;
+    puzzleSource.forEach((config, index) => {
         const option = document.createElement("option");
         option.value = optionIndex++;
         option.textContent = `Puzzle ${index + 1}`;
