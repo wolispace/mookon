@@ -1,4 +1,13 @@
 const debugPuzzleConfigs = [
+    `
+     You did it! [shower]
+/
+orange:
+c18 1x1 3x1- 0 1 =,
+w20 1x1 4x6 0 3-7-6 tap state 9 c18 reset,
+c19 1x1 6x6+ 0 2 drag, 
+w1 1x1 1x7 0 3-7-6 tap state 1,
+`,
     // 1. Hole: Basic
     `Puzzle Solved! [heart]
 /

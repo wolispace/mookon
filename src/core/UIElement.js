@@ -69,7 +69,7 @@ class UIElement extends BaseElement {
         this.element.style.position = 'absolute';
         this.element.style.left = `${PADDING + (this.x * cellSize)}px`;
         this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
-        this.element.style.cursor = 'pointer';
+        this.element.style.cursor = (this.elevation === '-' && this.sizeComparison) ? 'pointer' : 'pointer';
         this.element.style.zIndex = '2';
 
         // Handle switch width spanning
@@ -89,6 +89,12 @@ class UIElement extends BaseElement {
             this.unlocked = true;
             this.draggable = true;
             this.element.classList.add('draggable', 'raised', 'unlocked');
+        }
+
+        // Enable self-reset for all sockets
+        if (this.elevation === '-' && this.sizeComparison) {
+            this.method = METHOD_HOLD;
+            this.remoteActions.push({ id: this.id, type: 'reset' });
         }
 
         // Tumbler specific initialization
@@ -983,6 +989,15 @@ class UIElement extends BaseElement {
                 sunkenElement.filled = true;
                 sunkenElement.filler = this; // Store reference to the filler
                 this.socket = sunkenElement; // Store reference to the socket we are in
+
+                // Enable hold-to-reset on the plug that fills the socket
+                if (sunkenElement.sizeComparison) {
+                    this.method = METHOD_HOLD;
+                    this.change = CHANGE_NONE;
+                    this.remoteActions = [{ id: sunkenElement.id, type: 'reset' }];
+                    this.element.style.cursor = 'pointer';
+                    this.setupEvents();
+                }
 
                 // Disable any remote controllers that were controlling this dropped element (c0)
                 this.disableRemoteControllers();

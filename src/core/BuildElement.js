@@ -83,7 +83,8 @@ class BuildElement extends BaseElement {
             }
         }
 
-        if (this.targetState === 9) {
+        // Add 'decoy' keyword only for optional maze sockets (targetState 9 without remote actions)
+        if (this.targetState === 9 && this.remoteActions.length === 0) {
             configString += ' decoy';
         }
 

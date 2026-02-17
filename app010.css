@@ -339,8 +339,8 @@ body {
 .element.done {
     /* Reuse the sunken look and add darkness */
     filter: url(#sunken-filter) drop-shadow(-1px -1px 1px rgba(0, 0, 0, 1)) drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5)) brightness(0.7) !important;
-    cursor: default !important;
-    pointer-events: none;
+    cursor: pointer !important;
+    pointer-events: auto;
 }
 
 
