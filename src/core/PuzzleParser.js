@@ -146,7 +146,7 @@ class PuzzleParser {
 
                     if (vectorMatch) {
                         const vx = parseFloat(vectorMatch[1]);
-                        const vy = parseFloat(vectorMatch[3]);
+                        const vy = parseFloat(vectorMatch[2]);
                         i++;
 
                         element.remoteActions.push({
