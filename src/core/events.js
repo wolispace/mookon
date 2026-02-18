@@ -17,7 +17,7 @@ function initEventListeners() {
     const infoButton = document.getElementById('info-button');
     if (infoButton) {
         infoButton.addEventListener('click', () => {
-            Dialog.show('Mookon Box', INFO_CONTENT);
+            Dialog.show('<div class="title-text">M<i class="fas fa-circle title-sunken title-circle"></i><i class="fas fa-circle title-raised title-circle"></i>kon Box</div>', INFO_CONTENT);
             console.log("This puzzle:\n", thisPuzzle, "\n");
         });
     }

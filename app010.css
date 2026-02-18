@@ -456,6 +456,18 @@ body {
     }
 }
 
+@keyframes satisfaction-flash {
+    0% {
+        background-color: inherit;
+    }
+    30% {
+        background-color: #26263b;
+    }
+    100% {
+        background-color: inherit;
+    }
+}
+
 .button {
     background: none;
     border: none;
@@ -580,4 +592,68 @@ body {
 /* Switch pill sunken effect */
 .switch-pill.sunken {
     filter: url(#sunken-filter) drop-shadow(-1px -1px 1px rgba(0, 0, 0, 1)) drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5));
+}
+
+.title-text {
+    font-size: 2rem;
+    letter-spacing: 0.1rem;
+    font-weight: lighter;
+    color: #ecb00a;
+    text-shadow:
+        /* top-left highlight */
+        -1px -1px 1px rgba(255, 255, 255, 0.8),
+
+        /* bottom-right inner dark */
+        1px 1px 1px rgba(0, 0, 0, 0.4),
+
+        /* bottom-left softer inner dark */
+        -1px 1px 1px rgba(0, 0, 0, 0.25),
+
+        /* outer drop shadow */
+        2px 3px 4px rgba(0, 0, 0, 0.35),
+        /* glowing effect */
+        0 0 0 rgba(242, 245, 55, 0.5);
+
+}
+
+.settings-toggle {
+    cursor: pointer;
+    color: rgb(212, 212, 91);
+    text-shadow: black 2px 2px 2px;
+}
+.title-circle {
+    letter-spacing: 0.2rem;
+    font-size: 60%;
+}
+
+.title-raised {
+    color: #5958a2ff;
+    text-shadow:
+        /* top-left highlight */
+        -1px -1px 1px rgba(255, 255, 255, 0.8),
+
+        /* bottom-right inner dark */
+        1px 1px 1px rgba(0, 0, 0, 0.4),
+
+        /* bottom-left softer inner dark */
+        -1px 1px 1px rgba(0, 0, 0, 0.25),
+
+        /* outer drop shadow */
+        2px 3px 4px rgba(0, 0, 0, 0.35),
+}
+
+.title-sunken {
+    color: #121111;
+    text-shadow:
+        /* top-left highlight */
+        -1px -1px 1px black,
+
+        /* bottom-right inner dark */
+        1px 1px 1px rgba(255, 255, 255, 0.4),
+
+        /* bottom-left softer inner dark */
+        -1px 1px 1px rgba(255, 255, 255, 0.25),
+
+        /* glowing effect */
+        0 0 10px rgba(0, 0, 0, 0.5);
 }

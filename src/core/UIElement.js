@@ -356,6 +356,9 @@ class UIElement extends BaseElement {
         }
 
         if (shouldTrigger) {
+            // Flash body background on satisfaction
+            triggerBackgroundFlash();
+
             // console.log(`${this.id} reached target state or triggered!`);
 
             // Stop current method only if there are remote actions to execute
@@ -493,6 +496,9 @@ class UIElement extends BaseElement {
                                     targetElement.unlocked = true;
                                     targetElement.draggable = true;
                                     targetElement.element.classList.add('draggable', 'raised', 'unlocked', 'jump');
+
+                                    // Flash body background on unlock
+                                    triggerBackgroundFlash();
 
                                     if (DEBUG_CONFIG.showPanelSatisfaction) {
                                         console.log(`Unlocked: ${targetElement.id}`);
@@ -731,6 +737,8 @@ class UIElement extends BaseElement {
         // Update state for move change type
         if (this.change === CHANGE_MOVE) {
             this.state = 1;
+            // Flash body background on successful move
+            triggerBackgroundFlash();
         }
 
         // Reparent element to topmost container at drop location
@@ -909,6 +917,9 @@ class UIElement extends BaseElement {
                 if (isCovered) {
                     continue;
                 }
+
+                // Flash body background on snap
+                triggerBackgroundFlash();
 
                 // Calculate proper position within the sunken element's panel
                 const cellSize = getElementSize();

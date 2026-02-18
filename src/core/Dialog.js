@@ -47,6 +47,12 @@ class Dialog {
         this.instance.content.innerHTML = htmlContent;
         this.instance.overlay.classList.remove('hidden');
 
+        // Update background flash state
+        const bgState = document.getElementById('background-state');
+        if (bgState && typeof backgroundFlashEnabled !== 'undefined') {
+            bgState.textContent = backgroundFlashEnabled ? 'ON' : 'OFF';
+        }
+
         // Re-attach share button listener if it exists in the content
         const shareBtn = document.getElementById('share-button');
         if (shareBtn) {

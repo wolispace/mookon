@@ -108,6 +108,10 @@ class Panel {
 
         if (allSatisfied && this.elements.length > 0 && !this.isUnlocked) {
             this.isUnlocked = true;
+            
+            // Flash body background on panel satisfaction
+            triggerBackgroundFlash();
+            
             this.container.classList.add('wiggle');
 
             // Decrement incomplete panels counter
