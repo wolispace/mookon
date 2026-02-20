@@ -131,6 +131,7 @@ class UIElement extends BaseElement {
         };
 
         this.persistentSatisfaction = false;
+        this.wasSatisfiedOnce = false;
     }
 
     setupEvents() {
@@ -356,8 +357,12 @@ class UIElement extends BaseElement {
         }
 
         if (shouldTrigger) {
-            // Flash body background on satisfaction
-            triggerBackgroundFlash();
+            // Flash body background only on first-time satisfaction if not a pure controller
+            const isPureController = this.remoteActions && this.remoteActions.length > 0 && this.change === CHANGE_NONE;
+            if (!this.wasSatisfiedOnce && !isPureController) {
+                this.wasSatisfiedOnce = true;
+                triggerBackgroundFlash();
+            }
 
             // console.log(`${this.id} reached target state or triggered!`);
 
@@ -497,8 +502,16 @@ class UIElement extends BaseElement {
                                     targetElement.draggable = true;
                                     targetElement.element.classList.add('draggable', 'raised', 'unlocked', 'jump');
 
-                                    // Flash body background on unlock
-                                    triggerBackgroundFlash();
+                                    if (!targetElement.wasSatisfiedOnce) {
+                                        targetElement.wasSatisfiedOnce = true;
+                                        triggerBackgroundFlash();
+                                    }
+
+                                    // If this transition adds a MOVE requirement, reset flash state 
+                                    // so it can flash again when the move is finally completed.
+                                    if (targetElement.change === CHANGE_MOVE) {
+                                        targetElement.wasSatisfiedOnce = false;
+                                    }
 
                                     if (DEBUG_CONFIG.showPanelSatisfaction) {
                                         console.log(`Unlocked: ${targetElement.id}`);
@@ -737,8 +750,11 @@ class UIElement extends BaseElement {
         // Update state for move change type
         if (this.change === CHANGE_MOVE) {
             this.state = 1;
-            // Flash body background on successful move
-            triggerBackgroundFlash();
+            if (!this.wasSatisfiedOnce) {
+                this.wasSatisfiedOnce = true;
+                // Flash body background on successful move
+                triggerBackgroundFlash();
+            }
         }
 
         // Reparent element to topmost container at drop location
@@ -918,8 +934,11 @@ class UIElement extends BaseElement {
                     continue;
                 }
 
-                // Flash body background on snap
-                triggerBackgroundFlash();
+                if (!this.wasSatisfiedOnce) {
+                    this.wasSatisfiedOnce = true;
+                    // Flash body background on snap
+                    triggerBackgroundFlash();
+                }
 
                 // Calculate proper position within the sunken element's panel
                 const cellSize = getElementSize();
@@ -1223,6 +1242,7 @@ class UIElement extends BaseElement {
         this.draggable = this.initialConfig.draggable;
         this.filled = false;
         this.persistentSatisfaction = false;
+        this.wasSatisfiedOnce = false;
 
         // 3. Update visuals and event handlers
         this.element.classList.remove('done', 'unlocked', 'draggable', 'raised', 'sunken', 'jump', 'flying', 'dragging', 'wiggle');
