@@ -4,9 +4,8 @@ class SwitchReleaseCover extends Cover {
         if (idx !== -1 && ['c', 'r', 't', 'w'].includes(element.type)) {
             const tokens = element.elementString.split(/\s+/);
             // Find space for the release switch before modifying the target
-            // Account for extra width: switches need swSize + 1 space for the ball
             const swSize = 1;
-            const swPos = currentPanel.findFreeSpace(swSize + 1, 1);
+            const swPos = currentPanel.findFreeSpace(swSize, 1, 'switch');
             if (swPos) {
                 const modified = new BuildElement(SHAPE_PREFIX_MAP[element.type] || 'circle');
                 modified.id = tokens[0];

@@ -45,8 +45,7 @@ class ResetCover extends Cover {
         if (trapType === 0) {
             // Option A: Random Switch Trap with varying length
             const swSize = randBetween(1, 3);
-            // Switches need swSize + 1 space for the ball
-            const swPos = currentPanel.findFreeSpace(swSize + 1, 1);
+            const swPos = currentPanel.findFreeSpace(swSize, 1, 'switch');
 
             if (swPos) {
                 const sw = new BuildElement('switch');

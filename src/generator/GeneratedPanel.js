@@ -353,7 +353,8 @@ class GeneratedPanel {
 
     findFreeSpace(w, h, shape = 'circle') {
         const scale = SHAPES[shape]?.scale || 1;
-        const width = w * scale;
+        let width = w * scale;
+        if (shape === 'switch') width += 1;
         const height = h * scale;
 
         for (let attempt = 0; attempt < 20; attempt++) {

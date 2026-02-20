@@ -13,8 +13,11 @@ class BuildElement extends BaseElement {
         if (this.y < 0) this.y = 0;
 
         // Clamp width/height based on visual scale
-        if (this.x + (this.gridWidth * scale) > 8) {
-            this.gridWidth = Math.max(0.2, (8 - this.x) / scale);
+        let effectiveWidth = this.gridWidth * scale;
+        if (this.type === 'w') effectiveWidth += 1;
+
+        if (this.x + effectiveWidth > 8) {
+            this.gridWidth = Math.max(0.2, (8 - this.x - (this.type === 'w' ? 1 : 0)) / scale);
         }
         if (this.y + (this.gridHeight * scale) > 8) {
             this.gridHeight = Math.max(0.2, (8 - this.y) / scale);
@@ -23,12 +26,17 @@ class BuildElement extends BaseElement {
 
     // assign a location but make sure its not out of bounds of the panel
     keepInBounds() {
+        // Account for switch visual width
+        const extraWidth = this.type === 'w' ? 1 : 0;
+        const maxW = Math.max(0, 8 - this.gridWidth - extraWidth);
+        const maxH = Math.max(0, 8 - this.gridHeight);
+
         if (randBetween(1, 3) < 2) {
-            this.x = randBetween(0, 1) === 0 ? 0 : Math.max(0, 8 - this.gridWidth);
-            this.y = randBetween(0, 1) === 0 ? 0 : Math.max(0, 8 - this.gridHeight);
+            this.x = randBetween(0, 1) === 0 ? 0 : maxW;
+            this.y = randBetween(0, 1) === 0 ? 0 : maxH;
         } else {
-            this.x = randBetween(0, Math.max(0, 8 - this.gridWidth));
-            this.y = randBetween(0, Math.max(0, 8 - this.gridHeight));
+            this.x = randBetween(0, maxW);
+            this.y = randBetween(0, maxH);
         }
 
         this.clampToPanel();

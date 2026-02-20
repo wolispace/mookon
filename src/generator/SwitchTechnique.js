@@ -21,7 +21,7 @@ class SwitchTechnique {
         }
 
         // Find space for the entire vertical stack
-        const stackWidth = maxSwitchSize + 1; // Switches are 1 unit wider visually
+        const stackWidth = maxSwitchSize;
         const stackHeight = numSwitches;
         const stackPos = panel.findFreeSpace(stackWidth, stackHeight, 'switch');
 
