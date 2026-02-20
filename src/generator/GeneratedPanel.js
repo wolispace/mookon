@@ -1,8 +1,9 @@
 class GeneratedPanel {
-    constructor(index, totalPanels) {
+    constructor(index, totalPanels, generator) {
         this.index = index;
         this.totalPanels = totalPanels;
-        this.color = COLOR_NAMES[randBetween(0, COLOR_NAMES.length - 1)];
+        // 50% chance for panel background to be themed
+        this.color = COLOR_NAMES[generator ? generator.getRandomColor(0.5) : randBetween(0, COLOR_NAMES.length - 1)];
         this.elements = [];
         this.coverableElements = []; // Track elements that can be covered
         this.remoteSetsCount = 0; // Track how many sets of WASD controllers we have
@@ -86,10 +87,10 @@ class GeneratedPanel {
     }
 
     addRemoteControllers(plug) {
-       // console.log(`[REMOTE-CTRL] Looking for space for ${plug.id}`);
-        
+        // console.log(`[REMOTE-CTRL] Looking for space for ${plug.id}`);
+
         if (this.remoteSetsCount >= 2) {
-           // console.log(`[REMOTE-CTRL] Rejected: already have 2 remote sets`);
+            // console.log(`[REMOTE-CTRL] Rejected: already have 2 remote sets`);
             return false;
         }
 
@@ -99,7 +100,7 @@ class GeneratedPanel {
         //             D
         // Occupies a 3x3 area
         const controllerSize = 1;
-        const controllerColor = randBetween(0, 6);
+        const controllerColor = generator.getRandomColor(0.5);
 
         // Define T-shape positions: [direction, baseX_offset, baseY_offset, remoteAction]
         const controller1Sets = [
@@ -130,11 +131,11 @@ class GeneratedPanel {
         ];
 
         const controllers = controller1Sets[randBetween(0, controller1Sets.length - 1)];
-       // console.log(`[REMOTE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
+        // console.log(`[REMOTE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
 
         // Try to find a position where the entire controller layout fits without overlapping
         const basePos = this.findControllerPosition(controllers, controllerSize);
-       // console.log(`[REMOTE-CTRL] findControllerPosition returned:`, basePos);
+        // console.log(`[REMOTE-CTRL] findControllerPosition returned:`, basePos);
 
         // If no valid position found, don't add controllers
         if (!basePos) return false;
@@ -175,17 +176,17 @@ class GeneratedPanel {
     }
 
     addSizeController(plug) {
-       // console.log(`[SIZE-CTRL] Looking for space for ${plug.id}`);
-       // console.log(`[SIZE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
-        
+        // console.log(`[SIZE-CTRL] Looking for space for ${plug.id}`);
+        // console.log(`[SIZE-CTRL] Grid state:`, this.grid.map((row, y) => `Row ${y}: ${row.map((v, x) => v ? 'X' : '.').join('')}`).join('\n'));
+
         const pos = this.findFreeSpace(1, 1, 'circle');
-       // console.log(`[SIZE-CTRL] findFreeSpace returned:`, pos);
-        
+        // console.log(`[SIZE-CTRL] findFreeSpace returned:`, pos);
+
         if (!pos) return false;
 
         const controller = new BuildElement('circle');
         controller.gridWidth = controller.gridHeight = 1;
-        controller.color = randBetween(0, 8);
+        controller.color = generator.getRandomColor(0.5);
         controller.elevation = '+';
         controller.method = 'tap';
         controller.remoteActions = [{

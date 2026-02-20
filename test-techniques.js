@@ -33,16 +33,16 @@ function generateTestPuzzle(def) {
     elementIdCounter = 1;
     generator.availablePlugs = [];
     generator.panels = [];
-    
-    const panel = new GeneratedPanel(0, 1);
+
+    const panel = new GeneratedPanel(0, 1, generator);
     generator.currentPanelIndex = 0;
-    
+
     const techs = Array.isArray(def.tech) ? def.tech : [def.tech];
     techs.forEach(techName => {
         const technique = generator.techniques[techName];
         if (technique) technique.apply(panel, generator);
     });
-    
+
     while (generator.availablePlugs.length > 0) {
         const plug = generator.getPlug();
         if (!plug) break;
@@ -54,13 +54,15 @@ function generateTestPuzzle(def) {
             panel.addPlug(plug);
         }
     }
-    
+
     if (def.cover !== null && panel.coverableElements.length > 0) {
         const covers = Array.isArray(def.cover) ? def.cover : [def.cover];
         covers.forEach(coverStyle => {
             let compatibleElements = panel.coverableElements.filter(el => !el.hasRemote);
+
+            // Assuming the intent was to continue the filter for coverStyle 4:
             if (coverStyle === 4) {
-                compatibleElements = compatibleElements.filter(el => 
+                compatibleElements = compatibleElements.filter(el =>
                     el.elevation === '+' && !['s', 'w'].includes(el.type)
                 );
             }
@@ -72,7 +74,7 @@ function generateTestPuzzle(def) {
             }
         });
     }
-    
+
     generator.panels.push(panel);
     return generator.toString();
 }

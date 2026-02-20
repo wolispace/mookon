@@ -16,6 +16,7 @@ class PuzzleGenerator {
         this.availablePlugs = []; // Pool of plugs available for placement
         this.panels = []; // Generated panels
         this.currentPanelIndex = 0; // Track the index of the panel currently being generated
+        this.significantColor = 2; // Default theme color
     }
 
     getTechnique(name) {
@@ -43,9 +44,12 @@ class PuzzleGenerator {
         this.availablePlugs = [];
         this.panels = [];
 
+        // Pick a "significant color" for this puzzle theme (1-8, excluding Grey 0 for the theme)
+        this.significantColor = randBetween(1, COLOR_ARRAY.length - 1);
+
         // STRICT DEBUG MODE: Force a single panel with specific tech/cover
         if (DEBUG_CONFIG.enabled) {
-            const panel = new GeneratedPanel(0, 1);
+            const panel = new GeneratedPanel(0, 1, this);
             this.currentPanelIndex = 0;
 
             // Apply forced technique
@@ -92,7 +96,7 @@ class PuzzleGenerator {
         }
 
         for (let i = 0; i < panelCount; i++) {
-            const panel = new GeneratedPanel(i, panelCount);
+            const panel = new GeneratedPanel(i, panelCount, this);
             this.currentPanelIndex = i;
 
             let techCount = randBetween(diff.minTechs, diff.maxTechs);
@@ -192,7 +196,7 @@ class PuzzleGenerator {
         const fallbackTechniques = this.techniquesList.filter(t => t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'GroupTechnique');
 
         while (this.availablePlugs.length > 0 && salt < 10) { // Increased salt limit
-            const panel = new GeneratedPanel(this.panels.length, this.panels.length + 1);
+            const panel = new GeneratedPanel(this.panels.length, this.panels.length + 1, this);
             this.currentPanelIndex = panel.index;
 
             // Add a simple technique to ensure panel has a goal
@@ -233,6 +237,13 @@ class PuzzleGenerator {
         }
 
         this.panels.forEach(p => p.totalPanels = this.panels.length);
+    }
+
+    getRandomColor(themeProbability = 0.5) {
+        if (Math.random() < themeProbability) {
+            return this.significantColor;
+        }
+        return randBetween(0, COLOR_ARRAY.length - 1);
     }
 
     toString() {

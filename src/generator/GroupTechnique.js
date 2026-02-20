@@ -21,10 +21,10 @@ class GroupTechnique {
             templateHeight = KEY_HEIGHT;
         }
 
-        const keyColor = plug ? plug.color : randBetween(0, COLOR_ARRAY.length - 1);
-        let baseColor = randBetween(0, COLOR_ARRAY.length - 1);
+        const keyColor = plug ? plug.color : generator.getRandomColor(0.5);
+        let baseColor = generator.getRandomColor(0.5);
         while (baseColor === keyColor) {
-            baseColor = randBetween(0, COLOR_ARRAY.length - 1);
+            baseColor = generator.getRandomColor(0.5);
         }
 
         const pendingPlugsCount = generator.availablePlugs.length;

@@ -5,7 +5,7 @@ class SwitchTechnique {
         this.priority = 50;
     }
     apply(panel, generator) {
-        const baseColor = randBetween(1, 6);
+        const baseColor = generator.getRandomColor(0.5);
         const numSwitches = randBetween(1, 4);
 
         // generate sizes first to determine valid X range
@@ -31,11 +31,11 @@ class SwitchTechnique {
         const startY = stackPos.y;
 
         // Consistent colors for the entire set of switches
-        const setBallColor = randBetween(1, 8); // All switches use the same ball color
+        const setBallColor = generator.getRandomColor(0.5); // All switches use the same ball color
         const setUnsatisfiedColor = baseColor; // Base unsatisfied color
         let setSatisfiedColor = baseColor; // Satisfied color must differ from unsatisfied
         while (setSatisfiedColor === setUnsatisfiedColor) {
-            setSatisfiedColor = randBetween(1, 8);
+            setSatisfiedColor = generator.getRandomColor(0.5);
         }
 
         // Randomly decide if all switches get same unsatisfied background or random ones
@@ -62,9 +62,9 @@ class SwitchTechnique {
                 unsatisfiedPillColor = setUnsatisfiedColor;
             } else {
                 // Random color but ensure it's different from satisfied color
-                unsatisfiedPillColor = randBetween(1, 8);
+                unsatisfiedPillColor = generator.getRandomColor(0.5);
                 while (unsatisfiedPillColor === setSatisfiedColor) {
-                    unsatisfiedPillColor = randBetween(1, 8);
+                    unsatisfiedPillColor = generator.getRandomColor(0.5);
                 }
             }
 
@@ -76,7 +76,7 @@ class SwitchTechnique {
             sw.change = 'state';
             sw.targetState = targetState;
             sw.remoteActions = [];
-
+            switchElements.push(sw);
             panel.addElement(sw, true, 'Switch');
         }
 

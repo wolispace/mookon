@@ -10,7 +10,7 @@ class MazeTechnique {
         if (GRID_Y % 2 === 0) GRID_Y--;
 
         const { maze, entrance, deadEnds } = this.generateMaze(GRID_X, GRID_Y);
-        const mazeColor = randBetween(0, COLOR_NAMES.length - 1);
+        const mazeColor = generator.getRandomColor(0.5);
         const size = 1;
 
         // Reserve the entire maze area in the grid to prevent other techs from spawning in gaps
@@ -86,9 +86,9 @@ class MazeTechnique {
             socket.method = useColorMatch ? '#' : '=';
 
             if (useColorMatch) {
-                socket.color = randBetween(1, COLOR_NAMES.length - 1); // Avoid grey 0 if possible
+                socket.color = generator.getRandomColor(0.7); // High chance of theme color for sockets
             } else {
-                socket.color = 1; // Default red for sockets
+                socket.color = generator.getRandomColor(0.5); // 50% chance of theme color
             }
 
             if (!isRequired) {

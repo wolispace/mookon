@@ -10,7 +10,8 @@ class ScrewTechnique {
         const selectedPattern = usePattern ? patterns[randBetween(0, patterns.length - 1)] : 'random';
 
         const screwSize = randBetween(1, 2); // Favoring 1x1 or 2x2 screws for patterns
-        const colorIndex = (randBetween(1, 10) <= 7) ? 0 : randBetween(0, COLOR_ARRAY.length - 1); // 70% chance of Grey 0
+        // 70% chance of Grey 0, but of the remaining 30%, 50% chance of theme color
+        const colorIndex = (randBetween(1, 10) <= 7) ? 0 : generator.getRandomColor(0.5);
 
         let screwPositions = [];
         if (selectedPattern === 'corners_4') {
@@ -64,7 +65,7 @@ class ScrewTechnique {
             screw.elevation = '+';
 
             hole.setSize(holeSize);
-            hole.color = 1; // whiteish-grey for hole
+            hole.color = generator.getRandomColor(0.2); // Low theme chance for specific hole color, usually grey/black
             hole.elevation = '-';
             hole.x = screw.x + (screwSize - holeSize) / 2;
             hole.y = screw.y + (screwSize - holeSize) / 2;
@@ -89,7 +90,7 @@ class ScrewTechnique {
 
                     const plug = new BuildElement('circle');
                     plug.setSize(holeSize);
-                    plug.color = (hole.method === '#') ? hole.color : 2;
+                    plug.color = (hole.method === '#') ? hole.color : generator.getRandomColor(0.5);
                     plug.elevation = '+';
 
                     plug.method = 'drag';

@@ -17,7 +17,7 @@ class TumblerTechnique {
         tumbler.gridWidth = tumbler.gridHeight = tumblerSize;
         tumbler.x = tumblerPos.x;
         tumbler.y = tumblerPos.y;
-        tumbler.color = randBetween(0, COLOR_ARRAY.length - 1);
+        tumbler.color = generator.getRandomColor(0.5);
         tumbler.elevation = ''; // Flat (not raised)
         tumbler.method = 'hold';
         tumbler.change = 'rotate';
