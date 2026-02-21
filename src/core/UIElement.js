@@ -5,6 +5,7 @@ class UIElement extends BaseElement {
         this.panel = panel;
         this.filled = false;
         this.filler = null; // Track who is filling us (for sockets)
+        this.fillers = []; // Track multiple plugs (for multipart semicircles)
         this.socket = null; // Track which socket we are in (for plugs)
         this.unlocked = false;
         this.draggable = false;
@@ -875,8 +876,17 @@ class UIElement extends BaseElement {
 
             // console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, filled=${sunkenElement.filled}, sizeComparison=${sunkenElement.sizeComparison}`);
 
+            // Handle bipartite sockets (can accept multiple pieces)
+            const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
+            const isBipartite = bipartiteTypes.includes(sunkenElement.sizeComparison);
+
             if (sunkenElement.filled) {
                 //  console.log(`[Snap] Skipping ${sunkenElement.id} - already filled`);
+                continue;
+            }
+
+            // For bipartite sockets, check if we already have this specific piece
+            if (isBipartite && sunkenElement.fillers.some(f => f.shape === this.shape)) {
                 continue;
             }
 
@@ -891,7 +901,16 @@ class UIElement extends BaseElement {
 
             // Check if shapes match and size comparison
             let isTumblerKeyPair = false;
-            if (sunkenElement.shape === 'tumbler' && this.shape === 'key') {
+            let isBipartiteMatch = false;
+
+            if (isBipartite) {
+                if (sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X || sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X_STRICT) {
+                    if (this.shape === 'semicircle_left' || this.shape === 'semicircle_right') isBipartiteMatch = true;
+                } else if (sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y || sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y_STRICT) {
+                    if (this.shape === 'semicircle_down' || this.shape === 'semicircle_up') isBipartiteMatch = true;
+                }
+                if (!isBipartiteMatch) continue;
+            } else if (sunkenElement.shape === 'tumbler' && this.shape === 'key') {
                 // Keys can snap into tumblers (special case)
                 // console.log(`[Snap] Found tumbler/key pair!`);
                 isTumblerKeyPair = true;
@@ -910,7 +929,9 @@ class UIElement extends BaseElement {
                 if (sunkenElement.sizeComparison === COMPARISON_EQUAL && draggedSize !== sunkenSize) {
                     continue;
                 }
-                if (sunkenElement.sizeComparison === COMPARISON_STRICT) {
+                if (sunkenElement.sizeComparison === COMPARISON_STRICT ||
+                    sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X_STRICT ||
+                    sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y_STRICT) {
                     if (draggedSize !== sunkenSize || this.color !== sunkenElement.color) {
                         continue;
                     }
@@ -962,12 +983,31 @@ class UIElement extends BaseElement {
 
                     targetX = tumblerLeft + (tumblerSize - keyWidth) / 2;
                     targetY = tumblerTop + keyholeOffsetY + (keyholeHeight - keyHeight) / 2;
+                } else if (isBipartiteMatch) {
+                    // Semicircle snapping: align half-size plugs with correct side of circle socket
+                    const socketLeft = PADDING + (sunkenElement.x * cellSize);
+                    const socketTop = PADDING + (sunkenElement.y * cellSize);
+                    const socketSize = sunkenElement.size * cellSize;
+
+                    if (this.shape === 'semicircle_left') {
+                        targetX = socketLeft;
+                        targetY = socketTop;
+                    } else if (this.shape === 'semicircle_right') {
+                        targetX = socketLeft + socketSize / 2;
+                        targetY = socketTop;
+                    } else if (this.shape === 'semicircle_down') {
+                        targetX = socketLeft;
+                        targetY = socketTop + socketSize / 2;
+                    } else if (this.shape === 'semicircle_up') {
+                        targetX = socketLeft;
+                        targetY = socketTop;
+                    }
                 } else {
                     // Standard centering for other snap pairs
                     const sunkenCenterX = PADDING + (sunkenElement.x * cellSize) + (sunkenElement.size * cellSize / 2);
                     const sunkenCenterY = PADDING + (sunkenElement.y * cellSize) + (sunkenElement.size * cellSize / 2);
-                    const draggedCenterX = this.size * cellSize / 2;
-                    const draggedCenterY = this.size * cellSize / 2;
+                    const draggedCenterX = this.gridWidth * cellSize / 2;
+                    const draggedCenterY = this.gridHeight * cellSize / 2;
                     targetX = sunkenCenterX - draggedCenterX;
                     targetY = sunkenCenterY - draggedCenterY;
                 }
@@ -976,7 +1016,7 @@ class UIElement extends BaseElement {
                 this.element.style.left = `${targetX}px`;
                 this.element.style.top = `${targetY}px`;
 
-                // Remove drag styling and disable interaction
+                // Snap behavior
                 if (isTumblerKeyPair) {
                     // Start transformation immediately
                     this.element.style.display = 'none'; // Hide the key
@@ -1015,9 +1055,17 @@ class UIElement extends BaseElement {
                     this.element.style.top = `${targetY}px`;
                 }
 
-                // Mark sunken element as filled
-                sunkenElement.filled = true;
-                sunkenElement.filler = this; // Store reference to the filler
+                if (isBipartite) {
+                    sunkenElement.fillers.push(this);
+                    if (sunkenElement.fillers.length >= 2) {
+                        sunkenElement.filled = true;
+                    }
+                } else {
+                    // Mark sunken element as filled
+                    sunkenElement.filled = true;
+                    sunkenElement.filler = this; // Store reference to the filler
+                }
+
                 this.socket = sunkenElement; // Store reference to the socket we are in
 
                 // Enable hold-to-reset on the plug that fills the socket
@@ -1142,13 +1190,22 @@ class UIElement extends BaseElement {
         const isSnapped = this.element.parentElement && this.element.parentElement !== this.panel.container;
         // console.log(`[Reset-Trace] State of ${this.id}: filled=${this.filled}, filler=${this.filler ? this.filler.id : 'null'}, socket=${this.socket ? this.socket.id : 'null'}, wasInSocket=${wasInSocket}, isSnapped=${isSnapped}`);
 
-        // If we are a socket being reset, we must also reset our filler
-        if (this.elevation === '-' && this.filled && this.filler) {
-            const fillerToReset = this.filler;
-            // console.log(`[Reset-Trace] ! Socket ${this.id} is triggering reset on filler ${fillerToReset.id}`);
-            this.filler = null;
-            this.filled = false;
-            fillerToReset.reset();
+        // If we are a socket being reset, we must also reset our filler(s)
+        if (this.elevation === '-') {
+            if (this.filled || this.fillers.length > 0) {
+                if (this.filler) {
+                    const fillerToReset = this.filler;
+                    this.filler = null;
+                    this.filled = false;
+                    fillerToReset.reset();
+                }
+                if (this.fillers.length > 0) {
+                    const fillersToReset = [...this.fillers];
+                    this.fillers = [];
+                    this.filled = false;
+                    fillersToReset.forEach(f => f.reset());
+                }
+            }
         }
 
         // If we are a plug being reset, we must tell our socket filler we are gone
@@ -1157,6 +1214,8 @@ class UIElement extends BaseElement {
             // console.log(`[Reset-Trace] ! Plug ${this.id} is disconnecting from socket ${socket.id}`);
             socket.filled = false;
             socket.filler = null;
+            // Also remove from fillers array
+            socket.fillers = socket.fillers.filter(f => f !== this);
             this.socket = null; // Clear our own ref
             socket.element.classList.remove('done');
             socket.updateVisuals();

@@ -80,9 +80,8 @@ The `CoverManager` orchestrates the application of covers during panel generatio
 - **Stacking**: Can stack multiple covers on a single element (e.g., a screw cover that is also remote-only).
 - **Difficulty Awareness**: Adjusts maximum covers and stack limits based on the `DIFFICULTY_CONFIG`.
 
-## New ideas
-### key and tumbler technique
-This consists of a tumbler 'u': 
+### tumbler and technique
+This consists of a tumbler 't': 
 - It's a circle in any color, styled as raised, 
 - with a socket (wide rectangle in a dark grey and a sunken style) 
 - positioned like a minute hand pointing to 6 oclock, and starting from just above centre (midway between 12 coclock and the centre).
@@ -109,9 +108,60 @@ When unlocked the tumbler, the rotation should return back to the default positi
 This is combining logic used for socket and plug with screw so share code where possible.
 
 Config examples:
-u1 1 1x1 0 2 hold rotate 2
+t1 1 1x1 0 2 hold rotate 2
 k1 1 3x3 0 2 drag
 
 
+## New ideas
 
+
+### Semicircles technique
+We need a new shape being a semicircle 
+
+Defined in config as "q", "p", "u", "n" (or whatever letters are free)
+
+Same in every way to a circle, just laf the width or eight based on the orientation.
  
+The 4 rotations are 
+"q" left half, 
+"p" right half, 
+"u" buttom half, 
+"n" top half.
+
+A circular socket can have a new matching state "q" or "u" 
+- "q" means it must be filled with matching size (any color) "q" left and "p" right semicircle
+- "u" means it must be filled with matching size (any color) "u" up and "n" down semicircle
+
+The uppercase version of "C" and "U" are for exact size and color semicircle match.
+
+When a semicricle is dropped on a suitable socket, it will snap to the cercumferance leaving room for the second in the pair to complete the match.
+
+The socket circle needs to keep track of how many pieces are in it so it not just a simple matter of drop one piece in and the socket is satisfied.
+
+This meanes every socket could have the potential of 1 or more plugs needed to satisfy them so they need to keep track of how many plugs are in them and compare that to their requirements:
+= 1 plug
+# 1 plug
+c 2 plugs
+u 2 plugs
+C 2 plugs
+U 2 plugs
+
+In the future there may be sockets that require 3 or more plugs so lets plan the logic around that, but we only need 2 for now.
+
+Config example:
+c1 1 1x1- 0 0 c,
+q1 1 3x3+ 0 2 tap drag,
+p2 1 6x3+ 0 2 tap drag,
+
+
+### Switch patterns technique (incomplete spec - don not implement yet)
+A set of switches that must be moved to each switches target state then a master switch can to be switched to satisfy itself - only when all linked switcheds are in their target state.
+
+This means two new switch types:
+- a switch that cycles colours each step ensuring their target state is a specific color all switches in this set share. Then do not count towards panel completeness, only the master switch does.
+
+- a master switch that is always size 1 target 1 and if all of the linked switches are in their target state the master switch stays in place and is staisfied. if not it resets back to state 0.
+
+i1 3x1 1x1 0 x-2-5 tap state 2,
+i2 2x1 1x2 0 3-2-2 tap state 2,
+

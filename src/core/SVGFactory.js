@@ -349,6 +349,30 @@ class SVGFactory {
                     draw('rect', { x: 0, y: 0, width: size, height: size, fill: 'currentColor', rx: size * 0.1 });
                 }
                 break;
+            case 'semicircle_left':
+                svg.setAttribute('viewBox', `0 0 ${size / 2} ${size}`);
+                svg.style.width = `${size / 2}px`;
+                svg.style.height = `${size}px`;
+                draw('path', { d: `M ${size / 2},0 A ${size / 2},${size / 2} 0 0 0 ${size / 2},${size} Z`, fill: 'currentColor' });
+                break;
+            case 'semicircle_right':
+                svg.setAttribute('viewBox', `0 0 ${size / 2} ${size}`);
+                svg.style.width = `${size / 2}px`;
+                svg.style.height = `${size}px`;
+                draw('path', { d: `M 0,0 A ${size / 2},${size / 2} 0 0 1 0,${size} Z`, fill: 'currentColor' });
+                break;
+            case 'semicircle_down':
+                svg.setAttribute('viewBox', `0 0 ${size} ${size / 2}`);
+                svg.style.width = `${size}px`;
+                svg.style.height = `${size / 2}px`;
+                draw('path', { d: `M 0,0 A ${size / 2},${size / 2} 0 0 1 ${size},0 Z`, fill: 'currentColor' });
+                break;
+            case 'semicircle_up':
+                svg.setAttribute('viewBox', `0 0 ${size} ${size / 2}`);
+                svg.style.width = `${size}px`;
+                svg.style.height = `${size / 2}px`;
+                draw('path', { d: `M 0,${size / 2} A ${size / 2},${size / 2} 0 0 0 ${size},${size / 2} Z`, fill: 'currentColor' });
+                break;
         }
         return svg;
     }

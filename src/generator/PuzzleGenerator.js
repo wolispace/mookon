@@ -7,7 +7,8 @@ class PuzzleGenerator {
             'switch': new SwitchTechnique(),
             'maze': new MazeTechnique(),
             'group': new GroupTechnique(),
-            'tumbler': new TumblerTechnique()
+            'tumbler': new TumblerTechnique(),
+            'semicircle': new SemicircleTechnique()
         };
         this.techniquesList = Object.values(this.techniques);
         this.plugAndSocketTechniques = this.techniquesList.filter(t => t.hasPlugAndSocket);
@@ -88,10 +89,10 @@ class PuzzleGenerator {
 
         if (isEasy && !DEBUG_CONFIG.enabled) {
             localTechniquesList = localTechniquesList.filter(t =>
-                t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'GroupTechnique'
+                t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'GroupTechnique' && t.constructor.name !== 'SemicircleTechnique'
             );
             localPlugAndSocketTechniques = localPlugAndSocketTechniques.filter(t =>
-                t.constructor.name !== 'MazeTechnique'
+                t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'SemicircleTechnique'
             );
         }
 

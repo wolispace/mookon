@@ -35,13 +35,17 @@ const getColor = (name) => COLORS[name]?.hex || name || COLORS.grey.hex;
 const SHAPES = {
     'circle': { code: 'c', draggable: true, scale: 1 },
     'rectangle': { code: 'r', draggable: true, scale: 1 },
-    'triangle': { code: 't', draggable: true, scale: 1.5 },
+    'triangle': { code: 'v', draggable: true, scale: 1.5 },
     'screw': { code: 's', draggable: true, scale: 1 },
-    'plus': { code: 'p', draggable: true, scale: 1.5 },
+    'plus': { code: 'z', draggable: true, scale: 1.5 },
     'diamond': { code: 'd', draggable: true, scale: 1.5 },
     'switch': { code: 'w', draggable: false, scale: 1 },
-    'tumbler': { code: 'u', draggable: false, scale: 1 },
-    'key': { code: 'k', draggable: true, scale: 1 }
+    'tumbler': { code: 't', draggable: false, scale: 1 },
+    'key': { code: 'k', draggable: true, scale: 1 },
+    'semicircle_left': { code: 'q', draggable: true, scale: 1 },
+    'semicircle_right': { code: 'p', draggable: true, scale: 1 },
+    'semicircle_down': { code: 'u', draggable: true, scale: 1 },
+    'semicircle_up': { code: 'n', draggable: true, scale: 1 }
 };
 
 // Derived shape constants
@@ -78,12 +82,16 @@ const COMPARISON_EQUAL = '=';
 const COMPARISON_STRICT = '#';
 const COMPARISON_GREATER = '>';
 const COMPARISON_LESS = '<';
+const COMPARISON_BIPARTITE_X = 'c';
+const COMPARISON_BIPARTITE_Y = 'u';
+const COMPARISON_BIPARTITE_X_STRICT = 'C';
+const COMPARISON_BIPARTITE_Y_STRICT = 'U';
 
-const COMPARISON_NAMES = [COMPARISON_EQUAL, COMPARISON_STRICT, COMPARISON_GREATER, COMPARISON_LESS];
+const COMPARISON_NAMES = [COMPARISON_EQUAL, COMPARISON_STRICT, COMPARISON_GREATER, COMPARISON_LESS, COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
 const COMPARISON_PATTERN = new RegExp(`^[${COMPARISON_NAMES.join('')}]$`);
 
 // Pattern constants
-const ELEMENT_ID_PATTERN = /^[ctswrpduk]\d+$/;
+const ELEMENT_ID_PATTERN = /^[ctswrpdukxyzvqn]\d+$/;
 const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
@@ -129,9 +137,9 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: false,
+    enabled: true,
     showPanelSatisfaction: false, // Show first unsatisfied element in console
-    technique: 'maze', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
+    technique: 'semicircle', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
     coverStyle: 5      // Set to 5 for ResetCover
 };
 

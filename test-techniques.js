@@ -24,6 +24,8 @@ const testDefinitions = [
     { name: 'Maze: Multi-Socket', tech: 'maze', cover: null },
     { name: 'Screw: Hide Holes', tech: 'screw', cover: null },
     { name: 'Switch + Tumbler', tech: ['switch', 'tumbler'], cover: null },
+    { name: 'Semicircle: Split', tech: 'semicircle', cover: null },
+    { name: 'Semicircle: Strict', tech: 'semicircle', cover: null },
     { name: 'Size: Multiple', tech: 'hole', cover: 4 },
     { name: 'Reset: Maze Ball', tech: 'maze', cover: 5 }
 ];
