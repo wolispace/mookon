@@ -1,12 +1,13 @@
 const debugPuzzleConfigs = [
    `
-     You're a wiz! [comment]
+This puzzle:
+ Congratulations! [video]
 /
-white:
-c1 1.5x1.5 0x4- 0 5 c,
-w4 2x1 4x6 0 7-8-2 tap state 9 c1 reset,
-q2 0.75x1.5 7x1+ 0 5 drag,
-p3 0.75x1.5 2x3+ 0 5 drag 
+yellow:
+c17 2x2 1x2- 0 6 u,
+w20 3x1 2x7 0 5-3-6 tap state 9 c17 reset,
+u18 2x1 5x1+ 0 6 drag,
+n19 2x1 6x4+ 0 6 drag 
 `,
    
     `
