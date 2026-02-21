@@ -1,4 +1,14 @@
 const debugPuzzleConfigs = [
+   `
+     You're a wiz! [comment]
+/
+white:
+c1 1.5x1.5 0x4- 0 5 c,
+w4 2x1 4x6 0 7-8-2 tap state 9 c1 reset,
+q2 0.75x1.5 7x1+ 0 5 drag,
+p3 0.75x1.5 2x3+ 0 5 drag 
+`,
+   
     `
      You did it! [shower]
 /

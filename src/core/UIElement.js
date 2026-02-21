@@ -3,7 +3,8 @@ class UIElement extends BaseElement {
     constructor(panel, shape) {
         super(shape);
         this.panel = panel;
-        this.filled = false;
+        this.filled = 0;
+        this.fillTarget = 1;
         this.filler = null; // Track who is filling us (for sockets)
         this.fillers = []; // Track multiple plugs (for multipart semicircles)
         this.socket = null; // Track which socket we are in (for plugs)
@@ -96,6 +97,12 @@ class UIElement extends BaseElement {
         if (this.elevation === '-' && this.sizeComparison) {
             this.method = METHOD_HOLD;
             this.remoteActions.push({ id: this.id, type: 'reset' });
+            
+            // Set fillTarget based on comparison type
+            const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
+            if (bipartiteTypes.includes(this.sizeComparison)) {
+                this.fillTarget = 2;
+            }
         }
 
         // Tumbler specific initialization
@@ -852,8 +859,8 @@ class UIElement extends BaseElement {
         // Include both sunken elements AND flat tumblers as potential snap targets
         const sunkenElements = document.querySelectorAll('.element:not(.raised)');
 
-        // console.log(`[Snap] Checking snap for ${this.shape} ${this.id}`);
-        // console.log(`[Snap] Found ${sunkenElements.length} potential targets`);
+        console.log(`[Snap] Checking snap for ${this.shape} ${this.id}`);
+        console.log(`[Snap] Found ${sunkenElements.length} potential targets`);
 
         for (const sunken of sunkenElements) {
             if (sunken === this.element) continue;
@@ -870,30 +877,28 @@ class UIElement extends BaseElement {
             }
 
             if (!sunkenElement) {
-                // console.log(`[Snap] Skipping - no element object found`);
+                console.log(`[Snap] Skipping - no element object found`);
                 continue;
             }
 
-            // console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, filled=${sunkenElement.filled}, sizeComparison=${sunkenElement.sizeComparison}`);
+            console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, filled=${sunkenElement.filled}, fillTarget=${sunkenElement.fillTarget}, fillers=${sunkenElement.fillers.length}, sizeComparison=${sunkenElement.sizeComparison}`);
 
-            // Handle bipartite sockets (can accept multiple pieces)
-            const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
-            const isBipartite = bipartiteTypes.includes(sunkenElement.sizeComparison);
-
-            if (sunkenElement.filled) {
-                //  console.log(`[Snap] Skipping ${sunkenElement.id} - already filled`);
+            // Skip if socket is at capacity
+            if (sunkenElement.filled >= sunkenElement.fillTarget) {
+                console.log(`[Snap] Skipping ${sunkenElement.id} - at capacity (${sunkenElement.filled}/${sunkenElement.fillTarget})`);
                 continue;
             }
 
-            // For bipartite sockets, check if we already have this specific piece
-            if (isBipartite && sunkenElement.fillers.some(f => f.shape === this.shape)) {
+            // For multi-fill sockets, check if we already have this specific piece
+            if (sunkenElement.fillTarget > 1 && sunkenElement.fillers.some(f => f.shape === this.shape)) {
+                console.log(`[Snap] Skipping ${sunkenElement.id} - already has ${this.shape}`);
                 continue;
             }
 
             // Skip sunken elements without size comparison (they don't accept drops)
             // EXCEPT for tumblers which accept keys
             if (!sunkenElement.sizeComparison && sunkenElement.shape !== 'tumbler') {
-                //  console.log(`[Snap] Skipping ${sunkenElement.id} - no size comparison and not a tumbler`);
+                console.log(`[Snap] Skipping ${sunkenElement.id} - no size comparison and not a tumbler`);
                 continue;
             }
 
@@ -903,13 +908,24 @@ class UIElement extends BaseElement {
             let isTumblerKeyPair = false;
             let isBipartiteMatch = false;
 
-            if (isBipartite) {
+            console.log(`[Snap] Evaluating shape match for ${this.shape} -> ${sunkenElement.shape}`);
+
+            if (sunkenElement.fillTarget > 1) {
                 if (sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X || sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X_STRICT) {
-                    if (this.shape === 'semicircle_left' || this.shape === 'semicircle_right') isBipartiteMatch = true;
+                    if (this.shape === 'semicircle_left' || this.shape === 'semicircle_right') {
+                        isBipartiteMatch = true;
+                        console.log(`[Snap] Bipartite X match found`);
+                    }
                 } else if (sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y || sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y_STRICT) {
-                    if (this.shape === 'semicircle_down' || this.shape === 'semicircle_up') isBipartiteMatch = true;
+                    if (this.shape === 'semicircle_down' || this.shape === 'semicircle_up') {
+                        isBipartiteMatch = true;
+                        console.log(`[Snap] Bipartite Y match found`);
+                    }
                 }
-                if (!isBipartiteMatch) continue;
+                if (!isBipartiteMatch) {
+                    console.log(`[Snap] Skipping ${sunkenElement.id} - not a bipartite match`);
+                    continue;
+                }
             } else if (sunkenElement.shape === 'tumbler' && this.shape === 'key') {
                 // Keys can snap into tumblers (special case)
                 // console.log(`[Snap] Found tumbler/key pair!`);
@@ -923,6 +939,7 @@ class UIElement extends BaseElement {
 
             // Check size comparison if specified
             if (sunkenElement.sizeComparison) {
+                console.log(`[Snap] Checking size comparison for ${sunkenElement.id}`);
                 const sunkenSize = sunkenElement.size;
                 const draggedSize = this.size;
 
@@ -948,10 +965,14 @@ class UIElement extends BaseElement {
             const overlap = (dragRect.left < sunkenRect.right && dragRect.right > sunkenRect.left &&
                 dragRect.top < sunkenRect.bottom && dragRect.bottom > sunkenRect.top);
 
+            console.log(`[Snap] Overlap check for ${sunkenElement.id}: ${overlap}`);
+
             if (overlap) {
 
                 const isCovered = this.isElementCovered(sunken);
+                console.log(`[Snap] isCovered check for ${sunkenElement.id}: ${isCovered}`);
                 if (isCovered) {
+                    console.log(`[Snap] Skipping ${sunkenElement.id} - is covered`);
                     continue;
                 }
 
@@ -1055,14 +1076,12 @@ class UIElement extends BaseElement {
                     this.element.style.top = `${targetY}px`;
                 }
 
-                if (isBipartite) {
+                if (isBipartiteMatch) {
                     sunkenElement.fillers.push(this);
-                    if (sunkenElement.fillers.length >= 2) {
-                        sunkenElement.filled = true;
-                    }
+                    sunkenElement.filled++;
                 } else {
                     // Mark sunken element as filled
-                    sunkenElement.filled = true;
+                    sunkenElement.filled++;
                     sunkenElement.filler = this; // Store reference to the filler
                 }
 
@@ -1093,15 +1112,34 @@ class UIElement extends BaseElement {
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
 
-        // Temporarily hide the dragged element to check what's underneath
-        const wasVisible = this.element.style.pointerEvents;
+        // Temporarily disable pointer events on the dragged element
+        const prev = this.element.style.pointerEvents;
         this.element.style.pointerEvents = 'none';
 
         const topElement = document.elementFromPoint(x, y);
 
-        this.element.style.pointerEvents = wasVisible;
+        this.element.style.pointerEvents = prev;
 
-        return !(el === topElement || el.contains(topElement));
+        // If it's the same element or a child, it's not covered
+        if (el === topElement || el.contains(topElement)) {
+            return false;
+        }
+
+        let coveringElement = topElement;
+        // if a path then get the svg
+        if (topElement && topElement.tagName === 'path') {
+            coveringElement = topElement.parentElement;
+        }
+
+        console.log(`[Cover Check] coveringElement `, coveringElement, ` at (${x}, ${y}) for ${el.id}`);
+        // If the covering element *or any of its ancestors* has class "sunken",
+        // treat it as non-covering
+        if (coveringElement && coveringElement.closest('.done')) {
+            return false;
+        }
+
+        // Otherwise, it's covered
+        return true;
     }
 
     isSatisfied() {
@@ -1121,7 +1159,7 @@ class UIElement extends BaseElement {
         if (this.elevation === '-') {
             // targetState 9 is the internal flag for an optional decoy (visually sunken but elective)
             if (this.targetState === 9) return true;
-            return this.filled;
+            return this.filled >= this.fillTarget;
         }
         if (this.shape === 'switch' && this.method === METHOD_TAP) {
             const target = parseInt(this.targetState);
@@ -1134,7 +1172,7 @@ class UIElement extends BaseElement {
             if (this.change === CHANGE_MOVE && this.targetState !== 0) {
                 return this.state == this.targetState;
             }
-            return this.filled;
+            return this.filled >= this.fillTarget;
         }
 
         if (this.method === METHOD_NONE) {
@@ -1192,17 +1230,17 @@ class UIElement extends BaseElement {
 
         // If we are a socket being reset, we must also reset our filler(s)
         if (this.elevation === '-') {
-            if (this.filled || this.fillers.length > 0) {
+            if (this.filled > 0 || this.fillers.length > 0) {
                 if (this.filler) {
                     const fillerToReset = this.filler;
                     this.filler = null;
-                    this.filled = false;
+                    this.filled = 0;
                     fillerToReset.reset();
                 }
                 if (this.fillers.length > 0) {
                     const fillersToReset = [...this.fillers];
                     this.fillers = [];
-                    this.filled = false;
+                    this.filled = 0;
                     fillersToReset.forEach(f => f.reset());
                 }
             }
@@ -1212,7 +1250,7 @@ class UIElement extends BaseElement {
         if (this.socket) {
             const socket = this.socket;
             // console.log(`[Reset-Trace] ! Plug ${this.id} is disconnecting from socket ${socket.id}`);
-            socket.filled = false;
+            socket.filled--;
             socket.filler = null;
             // Also remove from fillers array
             socket.fillers = socket.fillers.filter(f => f !== this);
@@ -1299,7 +1337,7 @@ class UIElement extends BaseElement {
         this.change = this.initialConfig.change;
         this.targetState = this.initialConfig.targetState;
         this.draggable = this.initialConfig.draggable;
-        this.filled = false;
+        this.filled = 0;
         this.persistentSatisfaction = false;
         this.wasSatisfiedOnce = false;
 
