@@ -7,7 +7,8 @@ class SemicircleTechnique {
 
     apply(panel, generator) {
         // Choose size for the circle socket (must fit on panel)
-        const size = randBetween(1, 2);
+        // Minimum size is 1.25 as per requirement
+        const size = randBetween(5, 8) * 0.25;
         const color = generator.getRandomColor(0.5);
 
         // Find space for the circle socket
