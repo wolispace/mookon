@@ -89,10 +89,10 @@ class PuzzleGenerator {
 
         if (isEasy && !DEBUG_CONFIG.enabled) {
             localTechniquesList = localTechniquesList.filter(t =>
-                t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'GroupTechnique' && t.constructor.name !== 'SemicircleTechnique'
+                t.constructor.name !== 'TumblerTechnique' && t.constructor.name !== 'SemicircleTechnique'
             );
             localPlugAndSocketTechniques = localPlugAndSocketTechniques.filter(t =>
-                t.constructor.name !== 'MazeTechnique' && t.constructor.name !== 'SemicircleTechnique'
+                t.constructor.name !== 'TumblerTechnique' && t.constructor.name !== 'SemicircleTechnique'
             );
         }
 

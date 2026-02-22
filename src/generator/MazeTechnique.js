@@ -1,9 +1,14 @@
 class MazeTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
+        this.oneOnly = true; // Only one maze per puzzle due to space constraints
         this.priority = 100; // Mazes should go first as they are space-intensive
     }
     apply(panel, generator) {
+
+        if (panel.hasMaze) return;
+        panel.hasMaze = true;
+        console.log(`maze added to panel ${panel.index}`, panel);
         let GRID_X = randBetween(5, 7);
         let GRID_Y = randBetween(5, 6); // Cap at 6 to always leave at least one row for buffer
         if (GRID_X % 2 === 0) GRID_X--;
