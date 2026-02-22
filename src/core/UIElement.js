@@ -926,7 +926,7 @@ class UIElement extends BaseElement {
                     // console.log(`[Snap] Skipping ${sunkenElement.id} - not a bipartite match`);
                     continue;
                 }
-            } else if (sunkenElement.shape === 'tumbler' && this.shape === 'key') {
+            } else if (sunkenElement.shape === 'tumbler' && this.shape === 'key' && sunkenElement.color === this.color) {
                 // Keys can snap into tumblers (special case)
                 // console.log(`[Snap] Found tumbler/key pair!`);
                 isTumblerKeyPair = true;
