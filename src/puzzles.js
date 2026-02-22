@@ -1,33 +1,15 @@
 const puzzleConfigs = [
-    `
-     You're a wiz! [comment]
-/
-white:
-c1 1.5x1.5 0x4- 0 5 c,
-w4 2x1 4x6 0 7-8-2 tap state 9 c1 reset,
-q2 0.75x1.5 7x1+ 0 5 drag,
-p3 0.75x1.5 2x3+ 0 5 drag 
-`,
-    `
-     Amazing! [dolly]
-/
-red:
-c1 1.25x1.25 4x5- 0 3 u,
-u2 1.25x0.63 6x1+ 0 6 drag,
-n3 1.25x0.63 5x0+ 0 4 drag,
-c4 1x1 3x6+ 0 0 tap c1 reset `,
-
     `Simples! [star]
 /
 blue:
 w1 1x1 3x3 0 0-6-3 tap state 1,
 `, `
-Simples! [basketball]
+Done! [basketball]
 /
 red:
-q1 1x1 3x3- 0 2 #,
-q2 1x1 1x3+ 0 2 drag,
-q3 1x1 5x3+ 0 3 drag,
+z1 1.5x1.5 3x3- 0 2 #,
+z2 1.5x1.5 0.5x3+ 0 2 drag,
+z3 1.5x1.5 6x3+ 0 3 drag,
  `,
 
     `

@@ -1,4 +1,22 @@
 const debugPuzzleConfigs = [
+    `
+     Great job! [heartbeat]
+/
+black:
+c69 1.5x1.5 4x3- 0 0 c,
+d72 1.5x1.92 3.63x2.31+ 0 1 drag
+/
+green:
+c96 1x1 3x1- 0 7 =,
+p71 0.75x1.5 7x3+ 0 1 drag
+/
+black:
+c101 0.5x0.5 7.25x0.25- 0 1,
+s100 1x1 7x0+ 0 0 hold rotate 3 s100 drag move,
+c99 1x1 3x1+ 0 6 drag,
+c97 1x1 7x3+ 0 7 drag,
+q70 0.75x1.5 1x4+ 0 0 drag 
+    `,
    `
  Amazing! [truck-loading]
 /
