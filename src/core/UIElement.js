@@ -1027,8 +1027,8 @@ class UIElement extends BaseElement {
                     // Standard centering for other snap pairs
                     const sunkenCenterX = PADDING + (sunkenElement.x * cellSize) + (sunkenElement.size * cellSize / 2);
                     const sunkenCenterY = PADDING + (sunkenElement.y * cellSize) + (sunkenElement.size * cellSize / 2);
-                    const draggedCenterX = this.gridWidth * cellSize / 2;
-                    const draggedCenterY = this.gridHeight * cellSize / 2;
+                    const draggedCenterX = this.size * cellSize / 2;
+                    const draggedCenterY = this.size * cellSize / 2;
                     targetX = sunkenCenterX - draggedCenterX;
                     targetY = sunkenCenterY - draggedCenterY;
                 }
