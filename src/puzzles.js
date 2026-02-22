@@ -39,6 +39,14 @@ c0 1 3x1+ 0 3,
 r9 8x0.1 0x0+ 0 0,
 c1 1 7x7- 0 1 =,
 `,
+`
+ Congratulations! [donate]
+/
+yellow:
+c1 1.75x1.75 5x2- 0 8 u,
+u2 1.75x0.88 2x7+ 0 8 drag,
+n3 1.75x0.88 1x5+ 0 8 drag 
+`,
 ];
 
 /*

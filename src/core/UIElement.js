@@ -1311,7 +1311,7 @@ class UIElement extends BaseElement {
             }
 
             // Restore style and reparent
-            console.log(`[Reset-Trace] >> Positioning ${this.id} at ${this.x}x${this.y}`);
+            // console.log(`[Reset-Trace] >> Positioning ${this.id} at ${this.x}x${this.y}`);
             this.element.style.left = `${PADDING + (this.x * cellSize)}px`;
             this.element.style.top = `${PADDING + (this.y * cellSize)}px`;
             this.element.style.transform = ''; // Clear any snap transforms
