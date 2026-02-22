@@ -8,7 +8,7 @@ class MazeTechnique {
 
         if (panel.hasMaze) return;
         panel.hasMaze = true;
-        console.log(`maze added to panel ${panel.index}`, panel);
+        // console.log(`maze added to panel ${panel.index}`, panel);
         let GRID_X = randBetween(5, 7);
         let GRID_Y = randBetween(5, 6); // Cap at 6 to always leave at least one row for buffer
         if (GRID_X % 2 === 0) GRID_X--;

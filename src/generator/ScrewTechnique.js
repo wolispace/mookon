@@ -65,7 +65,7 @@ class ScrewTechnique {
             screw.elevation = '+';
 
             hole.setSize(holeSize);
-            hole.color = generator.getRandomColor(0.2); // Low theme chance for specific hole color, usually grey/black
+            hole.color = 1; //generator.getRandomColor(0.2); // Low theme chance for specific hole color, usually grey/black
             hole.elevation = '-';
             hole.x = screw.x + (screwSize - holeSize) / 2;
             hole.y = screw.y + (screwSize - holeSize) / 2;
@@ -90,7 +90,11 @@ class ScrewTechnique {
 
                     const plug = new BuildElement('circle');
                     plug.setSize(holeSize);
-                    plug.color = (hole.method === '#') ? hole.color : generator.getRandomColor(0.5);
+                    plug.color = generator.getRandomColor(0.5);
+                    if (hole.method === '#') {
+                      hole.color = generator.getRandomColor(0.2); // Low theme chance for specific hole color, usually grey/black
+                      plug.color = hole.color;
+                    }
                     plug.elevation = '+';
 
                     plug.method = 'drag';
