@@ -57,10 +57,10 @@ class BuildElement extends BaseElement {
             h = KEY_HEIGHT;
         }
 
-        // For switches, preserve color string format (e.g., "1-2-5")
+        // For switches and master_switch, preserve color string format (e.g., "1-2-5" or "x-2-5")
         // For other elements, ensure color is a number
         let color = this.color;
-        if (this.type !== 'w') {
+        if (this.type !== 'w' && this.type !== 'm') {
             // Not a switch - convert to number
             color = typeof this.color === 'number' ? this.color : (parseInt(this.color) || 0);
         } else if (typeof this.color === 'number') {
@@ -116,6 +116,13 @@ class BuildElement extends BaseElement {
                 }
             }
         });
+
+        // Append linked switch IDs for master_switch elements
+        if (this.linkedSwitches && this.linkedSwitches.length > 0) {
+            this.linkedSwitches.forEach(id => {
+                configString += ` ${id}`;
+            });
+        }
 
         // Add elevation target if present (shorthand ^ in location)
         if (this.elevationTarget === '+') {

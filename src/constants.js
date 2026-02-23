@@ -40,6 +40,7 @@ const SHAPES = {
     'plus': { code: 'z', draggable: true, scale: 1.5 },
     'diamond': { code: 'd', draggable: true, scale: 1.5 },
     'switch': { code: 'w', draggable: false, scale: 1 },
+    'master_switch': { code: 'm', draggable: false, scale: 1 },
     'tumbler': { code: 't', draggable: false, scale: 1 },
     'key': { code: 'k', draggable: true, scale: 1 },
     'semicircle_left': { code: 'q', draggable: true, scale: 1 },
@@ -91,7 +92,7 @@ const COMPARISON_NAMES = [COMPARISON_EQUAL, COMPARISON_STRICT, COMPARISON_GREATE
 const COMPARISON_PATTERN = new RegExp(`^[${COMPARISON_NAMES.join('')}]$`);
 
 // Pattern constants
-const ELEMENT_ID_PATTERN = /^[ctswrpdukxyzvqn]\d+$/;
+const ELEMENT_ID_PATTERN = /^[ctswrpdukxyzvqnm]\d+$/;
 const NUMERIC_PATTERN = /^\d+$/;
 
 // Puzzle generation configuration
@@ -137,9 +138,9 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: false,
+    enabled: true,
     showPanelSatisfaction: false, // Show first unsatisfied element in console
-    technique: 'semicircle', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler'
+    technique: 'switchpattern', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler', 'switchpattern'
     coverStyle: 5      // Set to 5 for ResetCover
 };
 

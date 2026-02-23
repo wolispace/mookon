@@ -61,8 +61,8 @@ class UIElement extends BaseElement {
             this.element.classList.add('sunken');
         }
 
-        // For switches, disable pointer events on the SVG container
-        if (this.shape === 'switch') {
+        // For switches and master_switch, disable pointer events on the SVG container
+        if (this.shape === 'switch' || this.shape === 'master_switch') {
             this.element.style.pointerEvents = 'none';
         }
 
@@ -74,8 +74,8 @@ class UIElement extends BaseElement {
         this.element.style.cursor = (this.elevation === '-' && this.sizeComparison) ? 'pointer' : 'pointer';
         this.element.style.zIndex = '2';
 
-        // Handle switch width spanning
-        if (this.shape === 'switch') {
+        // Handle switch / master_switch width spanning
+        if (this.shape === 'switch' || this.shape === 'master_switch') {
             const switchWidth = 1 + this.size;
             this.element.style.width = `calc(var(--cell-size) * ${switchWidth})`;
         }
@@ -97,7 +97,7 @@ class UIElement extends BaseElement {
         if (this.elevation === '-' && this.sizeComparison) {
             this.method = METHOD_HOLD;
             this.remoteActions.push({ id: this.id, type: 'reset' });
-            
+
             // Set fillTarget based on comparison type
             const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
             if (bipartiteTypes.includes(this.sizeComparison)) {
@@ -145,8 +145,8 @@ class UIElement extends BaseElement {
     setupEvents() {
         if (this.method === METHOD_NONE) return;
 
-        // For switches, attach events to the ball element
-        const target = this.shape === 'switch' ? this.element.querySelector('.switch-ball') : this.element;
+        // For switches and master_switch, attach events to the ball element
+        const target = (this.shape === 'switch' || this.shape === 'master_switch') ? this.element.querySelector('.switch-ball') : this.element;
 
         // Remove existing event listeners to prevent duplicates
         target.removeEventListener('mousedown', this.boundHandleStart);
@@ -179,6 +179,23 @@ class UIElement extends BaseElement {
         e.stopPropagation();
 
         if (this.method === METHOD_TAP) {
+            // Master switch: only advance if all linked switches are at their target states
+            if (this.shape === 'master_switch' && this.linkedSwitches && this.linkedSwitches.length > 0) {
+                const allLinkedSatisfied = this.linkedSwitches.every(swId => {
+                    for (const panel of this.panel.game.panels) {
+                        const linked = panel.elements.find(el => el.id === swId);
+                        if (linked) return linked.isSatisfied();
+                    }
+                    return false; // linked switch not found = not satisfied
+                });
+
+                if (!allLinkedSatisfied) {
+                    // Snap back to 0 — reset without advancing
+                    this.state = 0;
+                    this.updateVisuals();
+                    return;
+                }
+            }
             this.progressState();
         }
     }
@@ -555,7 +572,7 @@ class UIElement extends BaseElement {
         this.svg.style.transform = `rotate(${rotationDegrees}deg)`;
 
         // Handle switch-specific visuals
-        if (this.shape === 'switch') {
+        if (this.shape === 'switch' || this.shape === 'master_switch') {
             const ball = this.svg.querySelector('.switch-ball');
             const bg = this.svg.querySelector('rect');
             if (ball && bg) {
@@ -570,8 +587,13 @@ class UIElement extends BaseElement {
                 const position = leftPos + (this.state * range / this.maxState);
                 ball.setAttribute('cx', position);
 
-                // Set background color based on state match
-                if (this.state === this.targetState && this.secondaryColor !== null) {
+                if (this.colorCycleMode) {
+                    // Color-cycling pill: background cycles through colors starting at colorCycleStart
+                    const numColors = COLOR_ARRAY.length;
+                    const cycleIndex = (this.colorCycleStart + this.state) % numColors;
+                    bg.setAttribute('fill', getColor(COLOR_ARRAY[cycleIndex]));
+                } else if (this.state === this.targetState && this.secondaryColor !== null) {
+                    // Standard switch: show satisfied color when at target
                     bg.setAttribute('fill', getColor(COLOR_ARRAY[this.secondaryColor]));
                 } else {
                     bg.setAttribute('fill', 'currentColor');
@@ -1166,6 +1188,9 @@ class UIElement extends BaseElement {
             // unreachable target states are satisfied (trap switches)
             if (target > this.maxState) return true;
             return this.state == target;
+        }
+        if (this.shape === 'master_switch' && this.method === METHOD_TAP) {
+            return this.state == this.targetState;
         }
         if (this.method === METHOD_DRAG) {
             // Elements with move requirement must reach target state

@@ -82,9 +82,17 @@ class PuzzleParser {
         element.rotation = parseInt(rotationStr) || 0;
         element.initialRotation = element.rotation;
 
-        // Handle dual/triple colors for switches
+        // Handle dual/triple colors for switches and master_switch
+        // Special prefix 'x' means color-cycling mode: x-<cycleStartColor>-<ballColor>
         let initialState, secondaryColorIndex = null, ballColorIndex = null;
-        if (colorStr.includes('-')) {
+        if (typeof colorStr === 'string' && colorStr.startsWith('x-')) {
+            const colors = colorStr.split('-');
+            element.colorCycleMode = true;
+            element.colorCycleStart = parseInt(colors[1]) || 0;
+            ballColorIndex = colors[2] !== undefined ? parseInt(colors[2]) : null;
+            initialState = 0; // starts at state 0
+            secondaryColorIndex = null; // no separate satisfied color for cycling switches
+        } else if (colorStr.includes('-')) {
             const colors = colorStr.split('-');
             initialState = parseInt(colors[0]) || 0;
             secondaryColorIndex = parseInt(colors[1]) || 0;
@@ -137,6 +145,19 @@ class PuzzleParser {
                 }
 
                 // Check for remote element ID
+                // Master switch: remaining element IDs are linked switches, not remote actions
+                if (element.shape === 'master_switch') {
+                    element.linkedSwitches = [];
+                    while (i < filteredTokens.length) {
+                        const token = filteredTokens[i];
+                        if (ELEMENT_ID_PATTERN.test(token)) {
+                            element.linkedSwitches.push(token);
+                        }
+                        i++;
+                    }
+                    break;
+                }
+
                 if (i < filteredTokens.length && ELEMENT_ID_PATTERN.test(filteredTokens[i])) {
                     const remoteId = filteredTokens[i];
                     i++;
@@ -244,10 +265,11 @@ class PuzzleParser {
             element.state = element.change === CHANGE_COLOR ? initialState : 0;
         }
 
+
         if (element.change === CHANGE_SIZE) {
             element.maxState = 7;
         } else {
-            element.maxState = element.shape === 'switch' ? element.size : 8;
+            element.maxState = (element.shape === 'switch' || element.shape === 'master_switch') ? element.size : 8;
         }
 
         if (element.method === METHOD_DRAG || element.shape === 'key') {

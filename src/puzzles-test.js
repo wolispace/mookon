@@ -17,7 +17,7 @@ c99 1x1 3x1+ 0 6 drag,
 c97 1x1 7x3+ 0 7 drag,
 q70 0.75x1.5 1x4+ 0 0 drag 
     `,
-   `
+    `
  Amazing! [truck-loading]
 /
 orange:
@@ -51,8 +51,8 @@ r130 1x1 6x2+ 0 6 tap c121 0.5x0,
 c131 1x1 1x0+ 0 0 tap z119 size 
 
 `,
-   
-`
+
+    `
  You're a wiz! [hand-lizard]
 /
 green:
@@ -121,7 +121,7 @@ c358 1x1 6x0+ 0 5 drag,
 c356 1x1 0x6+ 0 5 drag 
 
 `,
-`
+    `
  You did it! [donate]
 /
 red:
@@ -467,5 +467,11 @@ r225 1x1 1x4+ 0 0,
 r226 1x1 2x4+ 0 0,
 r227 1x1 4x4+ 0 0,
 c229 1x1 5x4+ 0 1 drag`,
+
+    // 26. Switch Pattern: Example 1
+    `You did it! [star]\n/\norange:\nw1 3x1 1x1 0 x-2-5 tap state 2,\nw2 2x1 1x2 0 x-2-2 tap state 2,\nm3 1x1 1x3 0 4-2-3 tap state 1 w1 w2`,
+
+    // 27. Switch Pattern: Example 2 (diagonal targets)
+    `Nicely done! [brain]\n/\nblue:\nw4 3x1 1x1 0 x-0-5 tap state 0,\nw5 5x1 1x2 0 x-1-5 tap state 1,\nw6 4x1 1x3 0 x-2-5 tap state 2,\nm7 1x1 1x4 0 2-7-5 tap state 1 w4 w5 w6`,
 
 ];

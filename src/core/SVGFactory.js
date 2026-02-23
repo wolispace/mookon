@@ -176,7 +176,7 @@ class SVGFactory {
         const svgNS = 'http://www.w3.org/2000/svg';
         const svg = document.createElementNS(svgNS, 'svg');
         const base = getElementSize();
-        const size = element.shape === 'switch' ? base : Math.round(base * element.size);
+        const size = (element.shape === 'switch' || element.shape === 'master_switch') ? base : Math.round(base * element.size);
 
         svg.style.display = 'block';
         svg.style.transformOrigin = 'center';
@@ -294,6 +294,7 @@ class SVGFactory {
                 }
                 break;
             case 'switch':
+            case 'master_switch': {
                 const swW = Math.round(base * (1 + element.size));
                 const swH = base;
                 svg.setAttribute('viewBox', `0 0 ${swW} ${swH}`);
@@ -309,6 +310,7 @@ class SVGFactory {
                 b.style.pointerEvents = 'auto';
                 b.style.cursor = 'pointer';
                 break;
+            }
             case 'tumbler':
                 // Tumbler is always size 2 (perfect circle)
                 const tumblerSize = base * 2;

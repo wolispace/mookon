@@ -80,7 +80,7 @@ The `CoverManager` orchestrates the application of covers during panel generatio
 - **Stacking**: Can stack multiple covers on a single element (e.g., a screw cover that is also remote-only).
 - **Difficulty Awareness**: Adjusts maximum covers and stack limits based on the `DIFFICULTY_CONFIG`.
 
-### tumbler and technique
+### tumbler and key technique
 This consists of a tumbler 't': 
 - It's a circle in any color, styled as raised, 
 - with a socket (wide rectangle in a dark grey and a sunken style) 
@@ -112,7 +112,6 @@ t1 1 1x1 0 2 hold rotate 2
 k1 1 3x3 0 2 drag
 
 
-## New ideas
 
 
 ### Semicircles technique
@@ -153,15 +152,39 @@ c1 1 1x1- 0 0 c,
 q1 1 3x3+ 0 2 tap drag,
 p2 1 6x3+ 0 2 tap drag,
 
+## New ideas
 
-### Switch patterns technique (incomplete spec - don not implement yet)
-A set of switches that must be moved to each switches target state then a master switch can to be switched to satisfy itself - only when all linked switcheds are in their target state.
+### Switch patterns technique
+A set of switches that must be moved to each switches target state then a master switch can to be switched to satisfy itself - only when all linked switches are in their target state.
 
-This means two new switch types:
-- a switch that cycles colours each step ensuring their target state is a specific color all switches in this set share. Then do not count towards panel completeness, only the master switch does.
+We need an optional color for the pill 'x' that cycles through colors making sure the target state is part of the colors in the cycle, eg a size 3 switch with target state 2 will cycle through colours 2, 3, 4 then back to 2.
 
-- a master switch that is always size 1 target 1 and if all of the linked switches are in their target state the master switch stays in place and is staisfied. if not it resets back to state 0.
+No background flash should be applied when the switch = target state.
 
-i1 3x1 1x1 0 x-2-5 tap state 2,
-i2 2x1 1x2 0 3-2-2 tap state 2,
+A new type of switch 'm' looks and behaves like a switch. It will be size 1, will need to list every linked switch, and will reset to 0 if any of these switches are not = their own target state.
+
+Example 1:
+w1 3x1 1x1 0 x-2-5 tap state 2,
+w2 2x1 1x2 0 x-2-2 tap state 2,
+m3 1 1x2 0 4-2-3 tap state 1 w1 w2,
+
+Explanation: w1 and w2 need to have target state = 2 before m3 will be satisfied, it resets if not.
+
+Example 2:
+w1 3x1 1x1 0 0-0-0 tap state 0,
+w2 5x1 1x2 0 0-0-0 tap state 1,
+w3 4x1 1x3 0 0-0-0 tap state 2,
+m4 1 1x2 0 2-7-5 tap state 1 w1 w2 w3,
+
+Explanation: three switches dont cycle or change colour when being switched, and must be in a diagonal line from state 0,1 then3 before m4 will be satisfied, it resets to 0 if any os these swicthes is not equal to their target state.
+
+The important part are the 'hidden-to-the-iser target states of each switch, these need to be governed by a random strategy
+- all target states are identical eg 2
+- target states increase by 1
+- target states decrease by 1
+- the target state should metch the global prefered colour for the whole puzzle
+
+This means the width of the switches should accomodate the strategy, eg:
+- if the target state = 4 then each switch must be 4 or wider. 
+- if the tagrte is an increasing or decreasing 'diagonal' line then the switchs should match or exceed their respective states.
 
