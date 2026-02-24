@@ -10,6 +10,7 @@ class UIElement extends BaseElement {
         this.socket = null; // Track which socket we are in (for plugs)
         this.unlocked = false;
         this.draggable = false;
+        this.noBackgroundFlash = false;
     }
 
     toString() {
@@ -52,6 +53,7 @@ class UIElement extends BaseElement {
             const isController = this.remoteActions.length > 0 && !this.draggable;
             if (isController) {
                 this.element.classList.add('controller');
+                this.element.noBackgroundFlash = true;
             } else {
                 this.element.classList.add('raised');
             }
@@ -379,6 +381,10 @@ class UIElement extends BaseElement {
             this.change === CHANGE_NONE &&
             (this.method === METHOD_TAP || this.method === METHOD_HOLD)) {
             shouldTrigger = true;
+        }
+
+        if (this.noBackgroundFlash) {
+            shouldTrigger = false;
         }
 
         if (shouldTrigger) {

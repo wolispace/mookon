@@ -65,6 +65,12 @@ class Panel {
             element.initialize();
             this.container.appendChild(element.element);
             this.elements.push(element);
+            // remove background flashability from linked
+            if (element.shape === 'master_switch') {
+                for (const linkedSwitchId of element.linkedSwitches) {
+                    this.elements.find(element => element.id === linkedSwitchId).noBackgroundFlash = true;
+                }
+            }
         });
 
         // Add immediate z-index raising on click/touch (if not on an element)
@@ -108,10 +114,10 @@ class Panel {
 
         if (allSatisfied && this.elements.length > 0 && !this.isUnlocked) {
             this.isUnlocked = true;
-            
+
             // Flash body background on panel satisfaction
             triggerBackgroundFlash();
-            
+
             this.container.classList.add('wiggle');
 
             // Decrement incomplete panels counter

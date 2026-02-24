@@ -29,7 +29,6 @@ class PuzzleParser {
         const color = panelString.substring(0, colonIndex).trim();
         const elementSection = panelString.substring(colonIndex + 1).trim();
         const elements = elementSection.split(',').map(s => s.trim()).filter(s => s);
-
         return { color, elements };
     }
 
