@@ -18,9 +18,9 @@ class SwitchPatternTechnique {
         // Determine base target state for the strategy
         let baseTarget;
         if (strategy === 'theme') {
-            baseTarget = themeColor;
+            baseTarget = Math.min(themeColor, 4);
         } else {
-            baseTarget = numSwitches;
+            baseTarget = numSwitches; // numSwitches is 2..4
         }
 
         // Pick a hint strategy to give the player a clue about the target state
@@ -54,22 +54,22 @@ class SwitchPatternTechnique {
             panel.color = COLOR_NAMES[themeColor];
         }
 
-        // Build switch configs (max switch width is 6)
+        // Build switch configs 
+        const MAX_UNIFORM_TARGET = 4;
         const MAX_SWITCH_WIDTH = 6;
         const switchConfigs = [];
         for (let i = 0; i < numSwitches; i++) {
             let targetState;
             if (strategy === 'identical' || strategy === 'theme') {
-                targetState = Math.min(baseTarget, MAX_SWITCH_WIDTH);
+                targetState = Math.min(baseTarget, MAX_UNIFORM_TARGET);
             } else if (strategy === 'increasing') {
                 targetState = Math.min(baseTarget + i, MAX_SWITCH_WIDTH);
             } else { // decreasing
                 targetState = Math.max(1, baseTarget - i);
             }
 
-            // Width must accommodate the target state
-            const minWidth = targetState; // need at least target+1 positions (0..target)
-            const width = randBetween(minWidth, Math.min(minWidth + 1, MAX_SWITCH_WIDTH));
+            // Width must be at least targetState and can be up to 6
+            const width = randBetween(targetState, MAX_SWITCH_WIDTH);
 
             switchConfigs.push({ targetState, width });
         }
@@ -95,8 +95,16 @@ class SwitchPatternTechnique {
             sw.x = startX;
             sw.y = startY + i;
 
-            // x-<targetColor>-<ballColor> triggers color-cycling mode
-            sw.color = `x-${themeColor}-${ballColor}`;
+            // Normally use color-cycling: x-<targetColor>-<ballColor>
+            let colorString = `x-${themeColor}-${ballColor}`;
+
+            // If hint_dots is the strategy, high chance to use static color instead of cycling
+            if (hintStrategy === 'hint_dots' && randBetween(1, 10) <= 7) {
+                const staticBg = (randBetween(1, 2) === 1) ? themeColor : 0;
+                colorString = `${staticBg}-${staticBg}-${ballColor}`;
+            }
+
+            sw.color = colorString;
             sw.method = 'tap';
             sw.change = 'state';
             sw.targetState = targetState;
@@ -138,7 +146,7 @@ class SwitchPatternTechnique {
             const dotCount = baseTarget;
             const dotShapes = ['circle', 'rectangle', 'triangle', 'plus', 'diamond'];
             const dotShape = dotShapes[randBetween(0, dotShapes.length - 1)];
-            const dotColor = generator.getRandomColor(0.2);
+            const dotColor = generator.getRandomColor(0); // Fully random, no theme bias
             for (let d = 0; d < dotCount; d++) {
                 const dot = new BuildElement(dotShape);
                 dot.gridWidth = 1;
