@@ -63,10 +63,8 @@ class UIElement extends BaseElement {
             this.element.classList.add('sunken');
         }
 
-        // For switches and master_switch, disable pointer events on the SVG container
-        if (this.shape === 'switch' || this.shape === 'master_switch') {
-            this.element.style.pointerEvents = 'none';
-        }
+        // DELETED: pointer-events: none for switches/master_switches to allow full-area interaction
+
 
         // Position in 8x8 grid using absolute positioning with 12px padding offset
         const cellSize = getElementSize();
@@ -147,8 +145,7 @@ class UIElement extends BaseElement {
     setupEvents() {
         if (this.method === METHOD_NONE) return;
 
-        // For switches and master_switch, attach events to the ball element
-        const target = (this.shape === 'switch' || this.shape === 'master_switch') ? this.element.querySelector('.switch-ball') : this.element;
+        const target = this.element;
 
         // Remove existing event listeners to prevent duplicates
         target.removeEventListener('mousedown', this.boundHandleStart);

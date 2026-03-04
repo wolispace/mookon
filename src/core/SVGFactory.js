@@ -302,7 +302,7 @@ class SVGFactory {
                 svg.style.height = `${swH}px`;
                 const pill = draw('rect', { x: 2, y: 2, width: swW - 4, height: swH - 4, rx: (swH - 4) / 2, fill: 'currentColor' });
                 pill.classList.add('switch-pill', 'sunken');
-                pill.style.pointerEvents = 'none';
+
                 const br = Math.round(base * 0.95) / 2;
                 const ballColor = element.ballColor !== null ? getColor(COLOR_ARRAY[element.ballColor]) : getColor(COLOR_ARRAY[0]);
                 const b = draw('circle', { cx: br + 2, cy: swH / 2, r: br, fill: ballColor });
