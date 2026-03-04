@@ -7,11 +7,7 @@ class SwitchPatternTechnique {
     }
 
     apply(panel, generator) {
-        const numSwitches = randBetween(2, 4);
-
-        // TODO: How define the key number and make it known to the user.
-        // If using themeColor, make sure something is that color
-        // If its a number, make that number known (number of switches, no=umber of elements on panel)
+        let numSwitches = randBetween(2, 4);
 
         // Pick a strategy for target states
         const strategies = ['identical', 'increasing', 'decreasing', 'theme'];
@@ -24,24 +20,50 @@ class SwitchPatternTechnique {
         if (strategy === 'theme') {
             baseTarget = themeColor;
         } else {
-            baseTarget = numSwitches; // randBetween(2, 4); // Keep targets modest so switches aren't too wide
+            baseTarget = numSwitches;
         }
 
-        // Build switch configs
+        // Pick a hint strategy to give the player a clue about the target state
+        // switch_count only works for identical/theme where all targets are the same
+        const isUniformTarget = (strategy === 'identical' || strategy === 'theme');
+        let hintStrategies = ['ball_color', 'hint_dots', 'panel_color'];
+        if (isUniformTarget) {
+            hintStrategies.push('switch_count');
+        }
+        const hintStrategy = hintStrategies[randBetween(0, hintStrategies.length - 1)];
+
+        // Apply switch_count hint: force numSwitches to equal baseTarget
+        if (hintStrategy === 'switch_count' && isUniformTarget) {
+            numSwitches = Math.max(2, Math.min(baseTarget, 4));
+            if (strategy !== 'theme') {
+                baseTarget = numSwitches; // keep in sync for identical
+            }
+        }
+
+        // Determine ball color: use target color for ball_color hint, random otherwise
+        const ballColor = (hintStrategy === 'ball_color') ? themeColor : generator.getRandomColor(0.5);
+
+        // Apply panel_color hint: set panel background to target color
+        if (hintStrategy === 'panel_color') {
+            panel.color = COLOR_NAMES[themeColor];
+        }
+
+        // Build switch configs (max switch width is 6)
+        const MAX_SWITCH_WIDTH = 6;
         const switchConfigs = [];
         for (let i = 0; i < numSwitches; i++) {
             let targetState;
             if (strategy === 'identical' || strategy === 'theme') {
-                targetState = baseTarget;
+                targetState = Math.min(baseTarget, MAX_SWITCH_WIDTH);
             } else if (strategy === 'increasing') {
-                targetState = baseTarget + i;
+                targetState = Math.min(baseTarget + i, MAX_SWITCH_WIDTH);
             } else { // decreasing
                 targetState = Math.max(1, baseTarget - i);
             }
 
             // Width must accommodate the target state
             const minWidth = targetState; // need at least target+1 positions (0..target)
-            const width = randBetween(minWidth, Math.min(minWidth + 1, 4));
+            const width = randBetween(minWidth, Math.min(minWidth + 1, MAX_SWITCH_WIDTH));
 
             switchConfigs.push({ targetState, width });
         }
@@ -55,9 +77,6 @@ class SwitchPatternTechnique {
 
         const startX = stackPos.x;
         const startY = stackPos.y;
-
-        // Consistent colors
-        const ballColor = generator.getRandomColor(0.5);
 
         // Create each linked switch
         const switchIds = [];
@@ -106,5 +125,29 @@ class SwitchPatternTechnique {
         master.context = 'Switch_Pattern_Technique';
 
         panel.addElement(master, true, 'Master Switch');
+
+        // Apply hint_dots: place decorative circles in the target color as a count clue
+        if (hintStrategy === 'hint_dots') {
+            const dotCount = baseTarget;
+            for (let d = 0; d < dotCount; d++) {
+                const dot = new BuildElement('circle');
+                dot.gridWidth = 1;
+                dot.gridHeight = 1;
+                dot.color = themeColor;
+                dot.method = '';
+                dot.change = '';
+                dot.targetState = 0;
+                dot.remoteActions = [];
+                dot.elevation = '+';
+                dot.context = 'Switch_Pattern_Hint';
+
+                const dotPos = panel.findFreeSpace(1, 1, 'circle');
+                if (dotPos) {
+                    dot.x = dotPos.x;
+                    dot.y = dotPos.y;
+                    panel.addElement(dot, false, 'Hint Dot');
+                }
+            }
+        }
     }
 }

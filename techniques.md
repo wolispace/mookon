@@ -188,3 +188,15 @@ This means the width of the switches should accomodate the strategy, eg:
 - if the target state = 4 then each switch must be 4 or wider. 
 - if the tagrte is an increasing or decreasing 'diagonal' line then the switchs should match or exceed their respective states.
 
+---
+When SwitchPatternTechnique is used, we need to give a hint as to the target state.
+
+There is already a chance the colour with be the entire puzzle theme colour, which is fine, but if the first panel is this technique then we need to provide some hint.
+
+THis could be all covers are that colour, OR all the buttons on all switches are the target color OR ithe number of switches should match the target state OR add the same number of sockets as the target number OR all sockets have the same background colour as the target state.
+
+---
+
+A new type of plug and socket where adding a plug to an exact color match socket does not instantly satisfy the socket but change its required colour to another of similar shape of different color.
+
+eg: a circle 'hole' color red size 2 has a plug that is a red circle plug size 2 and also on the panel (or later panels) is a blue circle size 2 plug.When the red plug is dropped in its socket, it turns blue, signalling to the player that they need to find the blue plug to satisfy the socket.
