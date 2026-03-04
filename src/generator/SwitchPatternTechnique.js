@@ -24,11 +24,11 @@ class SwitchPatternTechnique {
         }
 
         // Pick a hint strategy to give the player a clue about the target state
-        // switch_count only works for identical/theme where all targets are the same
+        // switch_count and hint_dots only work for identical/theme where all targets are the same
         const isUniformTarget = (strategy === 'identical' || strategy === 'theme');
-        let hintStrategies = ['ball_color', 'hint_dots', 'panel_color'];
+        let hintStrategies = ['ball_color', 'panel_color'];
         if (isUniformTarget) {
-            hintStrategies.push('switch_count');
+            hintStrategies.push('switch_count', 'hint_dots');
         }
         const hintStrategy = hintStrategies[randBetween(0, hintStrategies.length - 1)];
 
@@ -40,8 +40,14 @@ class SwitchPatternTechnique {
             }
         }
 
-        // Determine ball color: use target color for ball_color hint, random otherwise
-        const ballColor = (hintStrategy === 'ball_color') ? themeColor : generator.getRandomColor(0.5);
+        // Determine ball color: use target color for ball_color hint
+        // Use low theme probability for other hints to avoid double-hinting
+        let ballColor;
+        if (hintStrategy === 'ball_color') {
+            ballColor = themeColor;
+        } else {
+            ballColor = generator.getRandomColor(0.1);
+        }
 
         // Apply panel_color hint: set panel background to target color
         if (hintStrategy === 'panel_color') {
@@ -126,14 +132,18 @@ class SwitchPatternTechnique {
 
         panel.addElement(master, true, 'Master Switch');
 
-        // Apply hint_dots: place decorative circles in the target color as a count clue
+        // Apply hint_dots: place decorative shapes in the target color as a count clue
+        // All dots use the same random shape and size
         if (hintStrategy === 'hint_dots') {
             const dotCount = baseTarget;
+            const dotShapes = ['circle', 'rectangle', 'triangle', 'plus', 'diamond'];
+            const dotShape = dotShapes[randBetween(0, dotShapes.length - 1)];
+            const dotColor = generator.getRandomColor(0.2);
             for (let d = 0; d < dotCount; d++) {
-                const dot = new BuildElement('circle');
+                const dot = new BuildElement(dotShape);
                 dot.gridWidth = 1;
                 dot.gridHeight = 1;
-                dot.color = themeColor;
+                dot.color = dotColor;
                 dot.method = '';
                 dot.change = '';
                 dot.targetState = 0;
@@ -141,7 +151,7 @@ class SwitchPatternTechnique {
                 dot.elevation = '+';
                 dot.context = 'Switch_Pattern_Hint';
 
-                const dotPos = panel.findFreeSpace(1, 1, 'circle');
+                const dotPos = panel.findFreeSpace(1, 1, dotShape);
                 if (dotPos) {
                     dot.x = dotPos.x;
                     dot.y = dotPos.y;
