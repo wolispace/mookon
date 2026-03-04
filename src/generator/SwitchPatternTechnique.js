@@ -9,6 +9,10 @@ class SwitchPatternTechnique {
     apply(panel, generator) {
         const numSwitches = randBetween(2, 4);
 
+        // TODO: How define the key number and make it known to the user.
+        // If using themeColor, make sure something is that color
+        // If its a number, make that number known (number of switches, no=umber of elements on panel)
+
         // Pick a strategy for target states
         const strategies = ['identical', 'increasing', 'decreasing', 'theme'];
         const strategy = strategies[randBetween(0, strategies.length - 1)];
@@ -20,7 +24,7 @@ class SwitchPatternTechnique {
         if (strategy === 'theme') {
             baseTarget = themeColor;
         } else {
-            baseTarget = randBetween(1, 4); // Keep targets modest so switches aren't too wide
+            baseTarget = numSwitches; // randBetween(2, 4); // Keep targets modest so switches aren't too wide
         }
 
         // Build switch configs
@@ -36,8 +40,8 @@ class SwitchPatternTechnique {
             }
 
             // Width must accommodate the target state
-            const minWidth = targetState + 1; // need at least target+1 positions (0..target)
-            const width = randBetween(minWidth, Math.min(minWidth + 2, 5));
+            const minWidth = targetState; // need at least target+1 positions (0..target)
+            const width = randBetween(minWidth, Math.min(minWidth + 1, 4));
 
             switchConfigs.push({ targetState, width });
         }
@@ -66,8 +70,8 @@ class SwitchPatternTechnique {
             sw.x = startX;
             sw.y = startY + i;
 
-            // x-<targetState>-<ballColor> triggers color-cycling mode
-            sw.color = `x-${targetState}-${ballColor}`;
+            // x-<targetColor>-<ballColor> triggers color-cycling mode
+            sw.color = `x-${themeColor}-${ballColor}`;
             sw.method = 'tap';
             sw.change = 'state';
             sw.targetState = targetState;

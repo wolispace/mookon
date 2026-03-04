@@ -594,9 +594,9 @@ class UIElement extends BaseElement {
                 ball.setAttribute('cx', position);
 
                 if (this.colorCycleMode) {
-                    // Color-cycling pill: background cycles through colors starting at colorCycleStart
+                    // Color-cycling pill: colorCycleStart is the target color shown at targetState
                     const numColors = COLOR_ARRAY.length;
-                    const cycleIndex = (this.colorCycleStart + this.state) % numColors;
+                    const cycleIndex = ((this.colorCycleStart - this.targetState + this.state) % numColors + numColors) % numColors;
                     bg.setAttribute('fill', getColor(COLOR_ARRAY[cycleIndex]));
                 } else if (this.state === this.targetState && this.secondaryColor !== null) {
                     // Standard switch: show satisfied color when at target

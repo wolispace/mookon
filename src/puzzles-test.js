@@ -3,16 +3,10 @@ const debugPuzzleConfigs = [
      Well done! [industry]
 /
 yellow:
-w1 4x1 0x0 0 x-2-6 tap state 2,
+w1 4x1 0x0 0 x-2-6 tap state 1,
 w2 4x1 0x1 0 x-2-6 tap state 2,
-w3 5x1 0x2 0 x-2-6 tap state 2,
+w3 5x1 0x2 0 x-2-6 tap state 3,
 m4 1x1 0x3 0 6-0-6 tap state 1 w1 w2 w3,
-    `,
-    `
-    w5 3x1 3x5 0 3-7-7 tap state 9 w3 reset,
-w7 2x1 4x6 0 3-4-4 tap state 9 w2 reset,
-c6 1x1 1x6+ 0 3 tap m4 reset 
-
     `,
 
     `
@@ -33,6 +27,7 @@ c99 1x1 3x1+ 0 6 drag,
 c97 1x1 7x3+ 0 7 drag,
 q70 0.75x1.5 1x4+ 0 0 drag 
     `,
+
     `
  Amazing! [truck-loading]
 /
