@@ -178,24 +178,16 @@ class UIElement extends BaseElement {
         e.stopPropagation();
 
         if (this.method === METHOD_TAP) {
-            // Master switch: only advance if all linked switches are at their target states
-            if (this.shape === 'master_switch' && this.linkedSwitches && this.linkedSwitches.length > 0) {
-                const allLinkedSatisfied = this.linkedSwitches.every(swId => {
-                    for (const panel of this.panel.game.panels) {
-                        const linked = panel.elements.find(el => el.id === swId);
-                        if (linked) return linked.isSatisfied();
-                    }
-                    return false; // linked switch not found = not satisfied
-                });
+            this.progressState();
 
-                if (!allLinkedSatisfied) {
-                    // Snap back to 0 — reset without advancing
+            // Master switch: "bounce back" if not truly satisfied (including links)
+            if (this.shape === 'master_switch' && !this.isSatisfied()) {
+                // Visual "bounce back": stay at state 1 briefly then snap back to 0
+                setTimeout(() => {
                     this.state = 0;
                     this.updateVisuals();
-                    return;
-                }
+                }, 400);
             }
-            this.progressState();
         }
     }
 
@@ -363,9 +355,8 @@ class UIElement extends BaseElement {
 
         let shouldTrigger = false;
 
-        // Standard trigger: state matches target
-        // OR unreachable target state (allows for continuous controllers)
-        if (this.state === this.targetState || (typeof this.targetState === 'number' && this.targetState > this.maxState)) {
+        // Standard trigger: isSatisfied() returns true
+        if (this.isSatisfied()) {
             shouldTrigger = true;
         }
         // Strict Remote Control Trigger:
@@ -1193,7 +1184,17 @@ class UIElement extends BaseElement {
             return this.state == target;
         }
         if (this.shape === 'master_switch' && this.method === METHOD_TAP) {
-            return this.state == this.targetState;
+            if (this.state != this.targetState) return false;
+            if (!this.linkedSwitches || this.linkedSwitches.length === 0) return true;
+
+            // Master switch is only satisfied if all linked switches are satisfied
+            return this.linkedSwitches.every(swId => {
+                for (const panel of this.panel.game.panels) {
+                    const linked = panel.elements.find(el => el.id === swId);
+                    if (linked) return linked.isSatisfied();
+                }
+                return false;
+            });
         }
         if (this.method === METHOD_DRAG) {
             // Elements with move requirement must reach target state

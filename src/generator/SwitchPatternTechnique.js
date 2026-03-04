@@ -138,6 +138,7 @@ class SwitchPatternTechnique {
         master.title = `Master Switch ${master.id}`;
         master.context = 'Switch_Pattern_Technique';
 
+        master.maxState = 1;
         panel.addElement(master, true, 'Master Switch');
 
         // Apply hint_dots: place decorative shapes in the target color as a count clue
