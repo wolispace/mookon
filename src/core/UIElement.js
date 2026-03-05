@@ -4,13 +4,15 @@ class UIElement extends BaseElement {
         super(shape);
         this.panel = panel;
         this.filled = 0;
-        this.fillTarget = 1;
+        this.fillTarget = 0; // Default to 0 for draggables
         this.filler = null; // Track who is filling us (for sockets)
         this.fillers = []; // Track multiple plugs (for multipart semicircles)
         this.socket = null; // Track which socket we are in (for plugs)
         this.unlocked = false;
         this.draggable = false;
         this.noBackgroundFlash = false;
+        this.persistentSatisfaction = false;
+        this.wasSatisfiedOnce = false;
     }
 
     toString() {
@@ -93,15 +95,21 @@ class UIElement extends BaseElement {
             this.element.classList.add('draggable', 'raised', 'unlocked');
         }
 
-        // Enable self-reset for all sockets
-        if (this.elevation === '-' && this.sizeComparison) {
-            this.method = METHOD_HOLD;
-            this.remoteActions.push({ id: this.id, type: 'reset' });
-
-            // Set fillTarget based on comparison type
+        // Sockets (elevation '-') require items to be satisfied
+        if (this.elevation === '-') {
             const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
             if (bipartiteTypes.includes(this.sizeComparison)) {
                 this.fillTarget = 2;
+            } else {
+                this.fillTarget = 1;
+            }
+
+            // Enable self-reset for sockets with size comparison
+            if (this.sizeComparison) {
+                this.method = METHOD_HOLD;
+                if (!this.remoteActions.some(ra => ra.type === 'reset' && ra.id === this.id)) {
+                    this.remoteActions.push({ id: this.id, type: 'reset' });
+                }
             }
         }
 
@@ -115,13 +123,11 @@ class UIElement extends BaseElement {
             if (this.change === CHANGE_COLOR) {
                 this.maxState = COLOR_ARRAY.length - 1;
             } else if (this.change === CHANGE_SIZE) {
-                // Size cycle has 8 steps [1.0, 1.25, 1.5, 1.75, 2.0, 1.75, 1.5, 1.25]
                 this.maxState = 7;
             } else {
-                this.maxState = 7; // Default fallback (e.g. 8 rotation directions)
+                this.maxState = 1;
             }
         }
-
         // Store initial properties for reset capability
         // MOVED TO END to ensure all properties (like elevation) are captured after setup
         this.initialConfig = {
@@ -137,10 +143,8 @@ class UIElement extends BaseElement {
             draggable: this.draggable,
             filled: this.filled
         };
-
-        this.persistentSatisfaction = false;
-        this.wasSatisfiedOnce = false;
     }
+
 
     setupEvents() {
         if (this.method === METHOD_NONE) return;
@@ -350,7 +354,7 @@ class UIElement extends BaseElement {
         // console.log(`${this.id} checking target state: current=${this.state}, target=${this.targetState}, method=${this.method}, change=${this.change}`);
 
         if (DEBUG_CONFIG.showPanelSatisfaction) {
-            console.log(`${this.id}`);
+            console.log(`check id=${this.id} satisfied=${this.isSatisfied()} target=${this.targetState} state=${this.state}`);
         }
 
         let shouldTrigger = false;
@@ -696,6 +700,13 @@ class UIElement extends BaseElement {
             if (!this.isDragging && Math.hypot(cx - startX, cy - startY) > 5) {
                 this.isDragging = true;
                 this.element.classList.add('dragging');
+
+                // If we were in a socket, free it safely
+                if (this.socket && typeof this.socket === 'object' && this.socket.filled !== undefined) {
+                    this.socket.filled = Math.max(0, this.socket.filled - 1);
+                    this.socket = null;
+                }
+
                 this.element.style.position = 'fixed';
                 this.element.style.zIndex = ++globalZIndex;
                 this.element.style.left = `${initPos.left}px`;
@@ -1159,6 +1170,8 @@ class UIElement extends BaseElement {
     }
 
     isSatisfied() {
+        if (this.socket !== null) return true;
+
         // Elements with no target state (no value after color) are auto-satisfied
         if (this.targetState === 0 && this.method === METHOD_NONE && !this.draggable && !this.sizeComparison) {
             return true;
@@ -1201,7 +1214,9 @@ class UIElement extends BaseElement {
             if (this.change === CHANGE_MOVE && this.targetState !== 0) {
                 return this.state == this.targetState;
             }
-            return this.filled >= this.fillTarget;
+            // Draggable elements are satisfied if they have filled a socket 
+            // OR if they have no fill requirements (fillTarget is 0)
+            return this.socket !== null || this.filled >= this.fillTarget;
         }
 
         if (this.method === METHOD_NONE) {

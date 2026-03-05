@@ -1,12 +1,12 @@
 const debugPuzzleConfigs = [
     `
-     Well done! [industry]
+ You did it! [donate]
 /
-yellow:
-w1 4x1 0x0 0 x-2-6 tap state 1,
-w2 4x1 0x1 0 x-2-6 tap state 2,
-w3 5x1 0x2 0 x-2-6 tap state 3,
-m4 1x1 0x3 0 6-0-6 tap state 1 w1 w2 w3,
+red:
+c11 1.5x1.5 6x0- 0 2 c,
+q12 1.5x1.5 3x0+ 0 2 drag,
+p13 1.5x1.5 2x2+ 0 0 tap color 2 p13 drag,
+
     `,
 
     `

@@ -104,12 +104,19 @@ class Panel {
             console.log(`Interacted: ${triggerId} (satisfied)`);
         }
 
-        const allSatisfied = this.elements.every(el => {
+        let allSatisfied = true;
+        this.elements.forEach(el => {
             const sat = el.isSatisfied();
-            if (!sat && DEBUG_CONFIG.showPanelSatisfaction) {
-                console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
+            if (!sat) {
+                allSatisfied = false;
+                if (DEBUG_CONFIG.showPanelSatisfaction) {
+                    if (el.elevation === '-' || el.socket !== null || el.draggable) {
+                        console.log(`Unsatisfied: ${el.id} (filled=${el.filled}/${el.fillTarget})`);
+                    } else {
+                        console.log(`Unsatisfied: ${el.id} (target=${el.targetState}, current=${el.state})`);
+                    }
+                }
             }
-            return sat;
         });
 
         if (allSatisfied && this.elements.length > 0 && !this.isUnlocked) {
