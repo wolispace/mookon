@@ -138,8 +138,8 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: true,
-    showPanelSatisfaction: true, // Show first unsatisfied element in console
+    enabled: false,
+    showPanelSatisfaction: false, // Show first unsatisfied element in console
     technique: 'switchpattern', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler', 'switchpattern'
     coverStyle: 2      // Set to 5 for ResetCover
 };

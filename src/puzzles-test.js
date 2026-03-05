@@ -1,5 +1,22 @@
 const debugPuzzleConfigs = [
     `
+ Success! [tint]
+/
+teal:
+t1 2x2 2x0 0 4 hold rotate 4
+/
+teal:
+w3 3x1 1x4 0 x-4-8 tap state 3,
+w4 3x1 1x5 0 x-4-8 tap state 3,
+w5 5x1 1x6 0 x-4-8 tap state 3,
+m6 1x1 1x7 0 4-0-8 tap state 1 w3 w4 w5,
+w7 5x1 0x0 0 x-4-2 tap state 3,
+w8 3x1 0x1 0 x-4-2 tap state 3,
+w9 5x1 0x2 0 x-4-2 tap state 3,
+m10 1x1 0x3 0 4-7-2 tap state 1 w7 w8 w9,
+k2 0.6x1.6 5x3+ 0 4 drag
+`,
+    `
  You did it! [donate]
 /
 red:

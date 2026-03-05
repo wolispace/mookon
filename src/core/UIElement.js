@@ -141,7 +141,10 @@ class UIElement extends BaseElement {
             change: this.change,
             targetState: this.targetState,
             draggable: this.draggable,
-            filled: this.filled
+            filled: this.filled,
+            color: this.color,
+            size: this.size,
+            remoteActions: JSON.parse(JSON.stringify(this.remoteActions || []))
         };
     }
 
@@ -268,6 +271,10 @@ class UIElement extends BaseElement {
 
         if (this.isHolding && !this.unlocked) {
             this.holdTimer = setTimeout(() => this.holdStep(), 200);
+        } else if (this.isHolding && this.method === METHOD_HOLD && this.shape !== 'tumbler' && this.shape !== 'screw') {
+            // Generic hold-to-trigger (e.g. Socket Reset)
+            this.isHolding = false;
+            this.checkTargetState();
         }
     }
 
@@ -1278,13 +1285,11 @@ class UIElement extends BaseElement {
                 if (this.filler) {
                     const fillerToReset = this.filler;
                     this.filler = null;
-                    this.filled = 0;
                     fillerToReset.reset();
                 }
                 if (this.fillers.length > 0) {
                     const fillersToReset = [...this.fillers];
                     this.fillers = [];
-                    this.filled = 0;
                     fillersToReset.forEach(f => f.reset());
                 }
             }
@@ -1294,7 +1299,7 @@ class UIElement extends BaseElement {
         if (this.socket) {
             const socket = this.socket;
             // console.log(`[Reset-Trace] ! Plug ${this.id} is disconnecting from socket ${socket.id}`);
-            socket.filled--;
+            socket.filled = Math.max(0, socket.filled - 1);
             socket.filler = null;
             // Also remove from fillers array
             socket.fillers = socket.fillers.filter(f => f !== this);
@@ -1382,12 +1387,38 @@ class UIElement extends BaseElement {
         this.change = this.initialConfig.change;
         this.targetState = this.initialConfig.targetState;
         this.draggable = this.initialConfig.draggable;
+        this.unlocked = this.draggable; // Sync unlocked with initial draggable state
+
+        // Restore color and size
+        const sizeChanged = this.size !== this.initialConfig.size;
+        this.color = this.initialConfig.color;
+        this.size = this.initialConfig.size;
+
+        this.remoteActions = JSON.parse(JSON.stringify(this.initialConfig.remoteActions || []));
         this.filled = 0;
         this.persistentSatisfaction = false;
         this.wasSatisfiedOnce = false;
 
+        this.isHolding = false;
+        if (this.holdTimer) {
+            clearTimeout(this.holdTimer);
+            this.holdTimer = null;
+        }
+
         // 3. Update visuals and event handlers
         this.element.classList.remove('done', 'unlocked', 'draggable', 'raised', 'sunken', 'jump', 'flying', 'dragging', 'wiggle');
+
+        if (sizeChanged) {
+            // Re-create SVG if size was modified (matches applyState logic)
+            const oldElement = this.element;
+            const parent = oldElement.parentElement;
+            this.element = SVGFactory.create(this);
+            this.svg = this.element;
+            this.element.id = this.id;
+            this.element.classList.add('element');
+            if (parent) parent.replaceChild(this.element, oldElement);
+            this.setupEvents();
+        }
         // If we were hidden inside a socket, ensure we are visible again
         this.element.style.opacity = '1';
         this.element.style.display = '';
