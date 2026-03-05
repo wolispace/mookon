@@ -53,29 +53,8 @@ function initEventListeners() {
  * @param {HTMLElement} buttonElement - The button that triggered the share
  */
 function handleShare(buttonElement) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasSharedPuzzle = urlParams.get('p');
-
-    let currentPuzzle = '';
-
-    // Corrected logic to determine which puzzle string to share
-    if (hasSharedPuzzle) {
-        if (currentPuzzleIndex === 0) {
-            currentPuzzle = sharedPuzzle;
-        } else if (currentPuzzleIndex >= 1 && currentPuzzleIndex <= 3) {
-            currentPuzzle = randomPuzzle;
-        } else {
-            // Static puzzles start at index 4 when shared is present
-            currentPuzzle = puzzleConfigs[currentPuzzleIndex - 4];
-        }
-    } else {
-        if (currentPuzzleIndex >= 0 && currentPuzzleIndex <= 2) {
-            currentPuzzle = randomPuzzle;
-        } else {
-            // Static puzzles start at index 3 when no shared is present
-            currentPuzzle = puzzleConfigs[currentPuzzleIndex - 3];
-        }
-    }
+    // Use the already populated global thisPuzzle as the single source of truth
+    let currentPuzzle = typeof thisPuzzle !== 'undefined' ? thisPuzzle : '';
 
     if (!currentPuzzle) {
         console.error("No puzzle content to share.");
