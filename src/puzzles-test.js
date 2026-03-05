@@ -3,18 +3,8 @@ const debugPuzzleConfigs = [
  Success! [tint]
 /
 teal:
-t1 2x2 2x0 0 4 hold rotate 4
-/
-teal:
-w3 3x1 1x4 0 x-4-8 tap state 3,
-w4 3x1 1x5 0 x-4-8 tap state 3,
-w5 5x1 1x6 0 x-4-8 tap state 3,
-m6 1x1 1x7 0 4-0-8 tap state 1 w3 w4 w5,
-w7 5x1 0x0 0 x-4-2 tap state 3,
-w8 3x1 0x1 0 x-4-2 tap state 3,
-w9 5x1 0x2 0 x-4-2 tap state 3,
-m10 1x1 0x3 0 4-7-2 tap state 1 w7 w8 w9,
-k2 0.6x1.6 5x3+ 0 4 drag
+t1 2x2 2x0 0 4 hold rotate 4,
+k2 0.6x1.6 5x3+ 0 4 drag,
 `,
     `
  You did it! [donate]
@@ -23,149 +13,8 @@ red:
 c11 1.5x1.5 6x0- 0 2 c,
 q12 1.5x1.5 3x0+ 0 2 drag,
 p13 1.5x1.5 2x2+ 0 0 tap color 2 p13 drag,
-
-    `,
-
-    `
-     Great job! [heartbeat]
-/
-black:
-c69 1.5x1.5 4x3- 0 0 c,
-d72 1.5x1.92 3.63x2.31+ 0 1 drag
-/
-green:
-c96 1x1 3x1- 0 7 =,
-p71 0.75x1.5 7x3+ 0 1 drag
-/
-black:
-c101 0.5x0.5 7.25x0.25- 0 1,
-s100 1x1 7x0+ 0 0 hold rotate 3 s100 drag move,
-c99 1x1 3x1+ 0 6 drag,
-c97 1x1 7x3+ 0 7 drag,
-q70 0.75x1.5 1x4+ 0 0 drag 
-    `,
-
-    `
- Amazing! [truck-loading]
-/
-orange:
-c107 1.5x1.5 5x5- 0 8 u,
-p110 2.28x2.01 4.61x4.75+ 0 7 tap color 3 p110 drag,
-r112 1x1 1x2+ 0 2 tap z111 0x-0.5,
-r113 1x1 0x3+ 0 2 tap z111 -0.5x0,
-r114 1x1 1x4+ 0 2 tap z111 0x0.5,
-r115 1x1 2x3+ 0 2 tap z111 0.5x0,
-z111 1.77x1.79 4.42x4.41+ 0 3 none
-/
-grey:
-s116 2x2 0x6- 0 0 =,
-z118 1x1 3x1- 0 3 #,
-c120 1x1 5x5- 0 5 =,
-u108 2x1 6x6+ 0 8 state 1 drag,
-n109 1.5x0.75 6x4+ 0 2 drag,
-c122 1x1 2x5+ 0 3 tap u108 size
-/
-orange:
-t123 2x2 2x4 0 6 hold rotate 4,
-s117 2x2 5x5+ 0 0 drag,
-c121 1x1 5x0+ 0 5 none,
-k124 0.6x1.6 7x0+ 0 6 drag,
-z119 1.5x1.5 6x3+ 0 3 state 6 drag,
-s125 2.87x2.87 4.56x4.56+ 0 8 hold rotate 2 s125 drag,
-r127 1x1 3x1+ 0 6 tap c121 0x-0.5,
-r128 1x1 4x2+ 0 6 tap c121 -0.5x0,
-r129 1x1 5x1+ 0 6 tap c121 0x0.5,
-r130 1x1 6x2+ 0 6 tap c121 0.5x0,
-c131 1x1 1x0+ 0 0 tap z119 size 
-
 `,
 
-    `
- You're a wiz! [hand-lizard]
-/
-green:
-c316 1x1 1x1- 0 5 #,
-w318 5x1 2x6 0 5-4-5 tap state 5,
-r299 1x1 0x0+ 0 2,
-r300 1x1 1x0+ 0 2,
-r301 1x1 2x0+ 0 2,
-r302 1x1 3x0+ 0 2,
-r303 1x1 4x0+ 0 2,
-r304 1x1 0x1+ 0 2,
-r305 1x1 4x1+ 0 2,
-r306 1x1 0x2+ 0 2,
-r307 1x1 1x2+ 0 2,
-r308 1x1 2x2+ 0 2,
-r309 1x1 4x2+ 0 2,
-r310 1x1 0x3+ 0 2,
-r311 1x1 4x3+ 0 2,
-r312 1x1 0x4+ 0 2,
-r313 1x1 2x4+ 0 2,
-r314 1x1 3x4+ 0 2,
-r315 1x1 4x4+ 0 2
-/
-green:
-c336 1x1 1x1- 0 6 #,
-c355 1x1 1x1- 0 5 =,
-c357 1x1 1x3- 0 5 # decoy,
-w318 5x1 2x6 0 5-4-5 tap state 5,
-r319 1x1 0x0+ 0 5,
-r320 1x1 1x0+ 0 5,
-r321 1x1 2x0+ 0 5,
-r322 1x1 3x0+ 0 5,
-r323 1x1 4x0+ 0 5,
-r324 1x1 0x1+ 0 5,
-r325 1x1 2x1+ 0 5,
-r326 1x1 4x1+ 0 5,
-r327 1x1 0x2+ 0 5,
-r328 1x1 2x2+ 0 5,
-r329 1x1 4x2+ 0 5,
-r330 1x1 0x3+ 0 5,
-r331 1x1 4x3+ 0 5,
-r332 1x1 0x4+ 0 5,
-r333 1x1 1x4+ 0 5,
-r334 1x1 2x4+ 0 5,
-r335 1x1 4x4+ 0 5,
-c337 1x1 3x4+ 0 6 drag,
-r338 1x1 0x0+ 0 6,
-r339 1x1 1x0+ 0 6,
-r340 1x1 2x0+ 0 6,
-r341 1x1 3x0+ 0 6,
-r342 1x1 4x0+ 0 6,
-r343 1x1 0x1+ 0 6,
-r344 1x1 4x1+ 0 6,
-r345 1x1 0x2+ 0 6,
-r346 1x1 1x2+ 0 6,
-r347 1x1 2x2+ 0 6,
-r348 1x1 4x2+ 0 6,
-r349 1x1 0x3+ 0 6,
-r350 1x1 4x3+ 0 6,
-r351 1x1 0x4+ 0 6,
-r352 1x1 1x4+ 0 6,
-r353 1x1 2x4+ 0 6,
-r354 1x1 4x4+ 0 6,
-c317 1x1 3x7+ 0 5 drag,
-c358 1x1 6x0+ 0 5 drag,
-c356 1x1 0x6+ 0 5 drag 
-
-`,
-    `
- You did it! [donate]
-/
-red:
-c11 1.5x1.5 6x0- 0 2 c,
-q12 1.5x1.5 3x0+ 0 2 drag,
-p13 1.5x1.5 2x2+ 0 2 drag,
-r14 1x1 6x4+ 0 5 tap c11 reset `,
-    `
-     You did it! [shower]
-/
-orange:
-c18 1x1 3x1- 0 1 =,
-w20 1x1 4x6 0 3-7-6 tap state 9 c18 reset,
-c19 1x1 6x6+ 0 2 drag, 
-w1 1x1 1x7 0 3-7-6 tap state 1,
-`,
     // 1. Hole: Basic
     `Puzzle Solved! [heart]
 /

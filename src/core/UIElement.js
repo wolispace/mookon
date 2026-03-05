@@ -116,6 +116,7 @@ class UIElement extends BaseElement {
         // Tumbler specific initialization
         if (this.shape === 'tumbler') {
             this.maxState = 4; // Limit rotation to 0-180 degrees (4 steps of 45)
+            this.fillTarget = 1; // Tumblers accept 1 key
         }
 
         // Fix: Ensure maxState is defined for other interaction types
@@ -1279,8 +1280,8 @@ class UIElement extends BaseElement {
         const isSnapped = this.element.parentElement && this.element.parentElement !== this.panel.container;
         // console.log(`[Reset-Trace] State of ${this.id}: filled=${this.filled}, filler=${this.filler ? this.filler.id : 'null'}, socket=${this.socket ? this.socket.id : 'null'}, wasInSocket=${wasInSocket}, isSnapped=${isSnapped}`);
 
-        // If we are a socket being reset, we must also reset our filler(s)
-        if (this.elevation === '-') {
+        // If we are a socket or tumbler being reset, we must also reset our filler(s)
+        if (this.elevation === '-' || this.shape === 'tumbler') {
             if (this.filled > 0 || this.fillers.length > 0) {
                 if (this.filler) {
                     const fillerToReset = this.filler;
