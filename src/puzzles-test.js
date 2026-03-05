@@ -22,17 +22,6 @@ grey:
 c2 2 0x0- 0 2 =,
 c3 2 3x0+ 0 2 drag`,
 
-    // 2. Hole: Color Match
-    `You did it! [vials]
-/
-white:
-p5 1x1 0x5- 0 6 =,
-t8 1x1 2x0- 0 6 =,
-p11 2x2 5x4- 0 4 #,
-p12 2x2 4x0+ 0 4 drag,
-t9 1x1 1x3+ 0 6 drag,
-p6 1x1 3x3+ 0 6 drag`,
-
     // 3. Screw: Corners
     `Congratulations! [donate]
 /
@@ -113,19 +102,6 @@ w56 2x1 4x1 0 7-5-4 tap state 1,
 w57 3x1 4x2 0 7-5-4 tap state 2,
 w58 3x1 4x3 0 3-5-4 tap state 3`,
 
-    // 10. Cover: Remote Only
-    `You're a wiz! [circle-notch]
-/
-green:
-r60 2x2 6x6- 0 0 none,
-t63 2x2 0x4- 0 5 =,
-t64 2x2 3x2+ 0 5 drag,
-r61 2x2 0x1+ 0 0 drag,
-r66 1x1 4x0+ 0 6 tap r60 0x-0.5,
-r67 1x1 5x1+ 0 6 tap r60 -0.5x0,
-r68 1x1 6x0+ 0 6 tap r60 0x0.5,
-r69 1x1 7x1+ 0 6 tap r60 0.5x0`,
-
     // 11. Cover: Switch Release
     `Well done! [universal-access]
 /
@@ -149,13 +125,6 @@ t83 1.25x1.25 0x3+ 0 0 state 1 drag,
 k80 0.6x1.6 3x3+ 0 1 drag,
 k86 0.6x1.6 0x2+ 0 6 drag,
 c87 1x1 2x5+ 0 2 tap t83 size`,
-
-    // 13. Cover: Reset Trap
-    `Nicely done! [sign-language]
-/
-red:
-c89 1x1 0x0- 0 5 #,
-c90 1x1 0x4+ 0 5 drag`,
 
     // 14. Multi: Hole + Screw
     `You did it! [sync]

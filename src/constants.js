@@ -10,6 +10,7 @@ const KEY_HEIGHT = 1.6;
 // Timing constants
 const ROTATION_DEGREES = 45; // Degrees per rotation step
 const INTERACTION_TIMEOUT = 300; // ms to restore styles after interacting
+const PLUG_DONE_BRIGHTNESS = 0.25; // Multiplier for plug darkening when dropped
 
 // Color constants - single source of truth
 const COLORS = {

@@ -10,6 +10,9 @@ class Panel {
         this.container.className = `panel panel-${config.color}`;
         this.container.style.zIndex = index;
 
+        // Inject UI constants as CSS variables
+        document.documentElement.style.setProperty('--plug-done-brightness', PLUG_DONE_BRIGHTNESS);
+
         if (config.color === 'victory') {
             this.container.className += ' panel-victory';
 
