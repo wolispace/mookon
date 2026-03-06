@@ -3,6 +3,7 @@ class HoleTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
         this.priority = 50;
+        this.minDifficulty = 1;
     }
     apply(panel, generator) {
         const numHoles = randBetween(1, 3);

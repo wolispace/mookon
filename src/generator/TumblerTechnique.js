@@ -2,6 +2,7 @@ class TumblerTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
         this.priority = 50;
+        this.minDifficulty = 2;
     }
 
     apply(panel, generator) {

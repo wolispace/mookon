@@ -82,20 +82,11 @@ class PuzzleGenerator {
         const diff = DIFFICULTY_SETTINGS[PUZZLE_CONFIG.DIFFICULTY] || DIFFICULTY_SETTINGS[2];
         const panelCount = randBetween(diff.minPanels, diff.maxPanels);
 
-        const isEasy = PUZZLE_CONFIG.DIFFICULTY === 1;
-
-        // Filter techniques for Easy mode (exclude Maze and Group)
-        let localTechniquesList = [...this.techniquesList];
-        let localPlugAndSocketTechniques = [...this.plugAndSocketTechniques];
-
-        if (isEasy && !DEBUG_CONFIG.enabled) {
-            localTechniquesList = localTechniquesList.filter(t =>
-                t.constructor.name !== 'TumblerTechnique' && t.constructor.name !== 'SemicircleTechnique' && t.constructor.name !== 'SwitchPatternTechnique'
-            );
-            localPlugAndSocketTechniques = localPlugAndSocketTechniques.filter(t =>
-                t.constructor.name !== 'TumblerTechnique' && t.constructor.name !== 'SemicircleTechnique' && t.constructor.name !== 'SwitchPatternTechnique'
-            );
-        }
+        // Filter techniques based on difficulty
+        const currentDifficulty = PUZZLE_CONFIG.DIFFICULTY;
+        const isEasy = currentDifficulty === 1;
+        let localTechniquesList = this.techniquesList.filter(t => (t.minDifficulty || 1) <= currentDifficulty);
+        let localPlugAndSocketTechniques = this.plugAndSocketTechniques.filter(t => (t.minDifficulty || 1) <= currentDifficulty);
 
         for (let i = 0; i < panelCount; i++) {
             const panel = new GeneratedPanel(i, panelCount, this);

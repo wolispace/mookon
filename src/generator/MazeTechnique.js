@@ -2,7 +2,8 @@ class MazeTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
         this.oneOnly = true; // Only one maze per puzzle due to space constraints
-        this.priority = 100; // Mazes should go first as they are space-intensive
+        this.priority = 100;
+        this.minDifficulty = 1;
     }
     apply(panel, generator) {
 

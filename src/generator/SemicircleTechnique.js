@@ -3,6 +3,7 @@ class SemicircleTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
         this.priority = 40;
+        this.minDifficulty = 2;
     }
 
     apply(panel, generator) {

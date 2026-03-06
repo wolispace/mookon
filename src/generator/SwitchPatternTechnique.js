@@ -4,6 +4,7 @@ class SwitchPatternTechnique {
     constructor() {
         this.hasPlugAndSocket = false;
         this.priority = 50;
+        this.minDifficulty = 3;
     }
 
     apply(panel, generator) {

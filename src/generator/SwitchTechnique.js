@@ -3,6 +3,7 @@ class SwitchTechnique {
     constructor() {
         this.hasPlugAndSocket = false;
         this.priority = 50;
+        this.minDifficulty = 1;
     }
     apply(panel, generator) {
         const baseColor = generator.getRandomColor(0.5);

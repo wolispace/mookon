@@ -2,6 +2,7 @@ class ScrewTechnique {
     constructor() {
         this.hasPlugAndSocket = true;
         this.priority = 50;
+        this.minDifficulty = 1;
     }
     apply(panel, generator) {
         // Decide whether to use a pattern or random placement
@@ -92,8 +93,8 @@ class ScrewTechnique {
                     plug.setSize(holeSize);
                     plug.color = generator.getRandomColor(0.5);
                     if (hole.method === '#') {
-                      hole.color = generator.getRandomColor(0.2); // Low theme chance for specific hole color, usually grey/black
-                      plug.color = hole.color;
+                        hole.color = generator.getRandomColor(0.2); // Low theme chance for specific hole color, usually grey/black
+                        plug.color = hole.color;
                     }
                     plug.elevation = '+';
 
