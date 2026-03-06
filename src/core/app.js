@@ -38,12 +38,12 @@ function loadInitialPuzzle(hasShared) {
 
     let initialIndex = 0;
     if (!hasShared) {
-        // Map DIFFICULTY back to select index (Medium=2, Easy=1, Hard=3)
-        // Select order: Medium, Easy, Hard
+        // Map DIFFICULTY back to select index (Easy=1, Medium=2, Hard=3)
+        // Select order: Easy, Medium, Hard
         const currentDiff = PUZZLE_CONFIG.DIFFICULTY;
-        if (currentDiff === 1) initialIndex = 1;      // Easy
+        if (currentDiff === 2) initialIndex = 1;      // Medium
         else if (currentDiff === 3) initialIndex = 2; // Hard
-        else initialIndex = 0;                        // Medium (default)
+        else initialIndex = 0;                        // Easy (default)
     }
 
     loadPuzzle(initialIndex);

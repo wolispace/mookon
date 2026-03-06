@@ -9,8 +9,8 @@ function loadPuzzle(index, regenerate = true) {
 
     // Index mapping:
     // [0]: Shared (if hasShared)
-    // [0+hasShared]: Medium (Diff 2)
-    // [1+hasShared]: Easy   (Diff 1)
+    // [0+hasShared]: Easy   (Diff 1)
+    // [1+hasShared]: Medium (Diff 2)
     // [2+hasShared]: Hard   (Diff 3)
     // [3+hasShared...]: Static Puzzles
 
@@ -19,7 +19,7 @@ function loadPuzzle(index, regenerate = true) {
     } else if (index >= (hasShared ? 1 : 0) && index <= (hasShared ? 3 : 2)) {
         // Difficulty selection
         const diffIndex = hasShared ? index - 1 : index;
-        const newDifficulty = [2, 1, 3][diffIndex]; // Medium, Easy, Hard
+        const newDifficulty = [1, 2, 3][diffIndex]; // Easy, Medium, Hard
 
         PUZZLE_CONFIG.DIFFICULTY = newDifficulty;
         localStorage.setItem('mookon_difficulty', newDifficulty);
@@ -70,8 +70,8 @@ function populatePuzzleSelect() {
 
     // 2. Difficulties
     const difficulties = [
-        { name: "Medium", value: 2 },
         { name: "Easy", value: 1 },
+        { name: "Medium", value: 2 },
         { name: "Hard", value: 3 }
     ];
 
