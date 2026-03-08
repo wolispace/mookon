@@ -140,7 +140,7 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: true,
+    enabled: false,
     showPanelSatisfaction: false, // Show first unsatisfied element in console
     technique: 'stackedhole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler', 'switchpattern'
     coverStyle: 1      // Set to 5 for ResetCover
