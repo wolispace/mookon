@@ -1,5 +1,14 @@
 const debugPuzzleConfigs = [
     `
+ Stacked Hole Test [tint]
+/
+teal:
+v1 2x2 3x4- 0 7 # 7 6,
+v2 2x2 0x4 0 7 drag,
+v3 2x2 4x1 0 6 drag 
+
+`,
+    `
  Success! [tint]
 /
 teal:

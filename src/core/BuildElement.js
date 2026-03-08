@@ -124,6 +124,11 @@ class BuildElement extends BaseElement {
             });
         }
 
+        // Add color sequence for stacked hole technique
+        if (this.stackedColors && this.stackedColors.length > 0) {
+            configString += ` # ${this.stackedColors.join(' ')}`;
+        }
+
         // Add elevation target if present (shorthand ^ in location)
         if (this.elevationTarget === '+') {
             configString = configString.replace(`${this.x}x${this.y}${this.elevation}`, `${this.x}x${this.y}^`);

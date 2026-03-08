@@ -196,24 +196,23 @@ There is already a chance the colour with be the entire puzzle theme colour, whi
 THis could be all covers are that colour, OR all the buttons on all switches are the target color OR ithe number of switches should match the target state OR add the same number of sockets as the target number OR all sockets have the same background colour as the target state.
 
 ---
-w7 4x1 1x0 0 x-8-8 tap state 3,
-w8 3x1 1x1 0 x-8-8 tap state 2,
-w9 1x1 1x2 0 x-8-8 tap state 1,
-m10 1x1 1x3 0 7-8-8 tap state 1 w7 w8 w9,
-z11 1x1 0x6+ 0 8,
-z12 1x1 4x4+ 0 8,
-z13 1x1 1x4+ 0 8 
+New technique Stacked Hole Technique
 
----
+Add a socket like Hole Technique, but after the exact match there is a list of color numbers in order of how they should be added.
 
-Resetting a socket semicircle returns both halves one ending back in its original place hidden in a group on a different panel. 
+eg:
 
-It also lost it unlock when it meets target colour so it can no longer be dragged. 
+c1 2x2 1x5 0 2 # 2 2 0
 
-Socket reset should never return to original state or original panel, just pop them out so they are still draggable and near by. Maybe the should be made flying to they can happily overlap other raised elements and not worry about finding space for them. IE, pop them out, make them flying and just off set them by 0.5 in any direction. 
+Which means we also need some plugs to satisfy it:
 
----
+c2 2x2 3x5 0 2 drag,
+c3 2x2 4x5 0 2 drag,
+c4 2x2 5x5 0 0 drag,
 
-A new type of plug and socket where adding a plug to an exact color match socket does not instantly satisfy the socket but change its required colour to another of similar shape of different color.
+When one red circle snaps into place, it goes dark as normal but then changes color to the next color in this sequence (red = 2) and NOT dark to signal another curcle needs to be places.  When that is placed, again it goes dark then changes to the non-dark verison of the final color (grey = 0).
 
-eg: a circle 'hole' color red size 2 has a plug that is a red circle plug size 2 and also on the panel (or later panels) is a blue circle size 2 plug.When the red plug is dropped in its socket, it turns blue, signalling to the player that they need to find the blue plug to satisfy the socket.
+When that final plug is snapped into place again it goes dark as normal, but this time stays dark and satisfies the socket.
+
+Use exactly the same logic as HoleTechnique for covering socket and plugs, and shifting plugs onto other panels. There will only every be one stacked hole per panel, but it is not exclusive in that other techniques may be applied to the same panel if the difficulty permits.
+

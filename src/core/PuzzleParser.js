@@ -244,6 +244,20 @@ class PuzzleParser {
 
                 // Break after processing method and remote actions
                 break;
+            } else if (token === '#' && i + 1 < filteredTokens.length && /^\d+$/.test(filteredTokens[i + 1])) {
+                // Stacked hole technique: c1 ... # 2 2 0
+                element.colorSequence = [];
+                i++;
+                while (i < filteredTokens.length && /^\d+$/.test(filteredTokens[i])) {
+                    element.colorSequence.push(parseInt(filteredTokens[i]));
+                    i++;
+                }
+                if (element.colorSequence.length > 0) {
+                    element.fillTarget = element.colorSequence.length;
+                    element.colorSequenceIndex = 0;
+                    element.sizeComparison = '#'; // Stacked holes starting with # imply strict matching
+                }
+                continue;
             } else if (token === 'state') {
                 i++;
                 element.state = parseInt(filteredTokens[i]);

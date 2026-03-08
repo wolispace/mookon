@@ -100,9 +100,10 @@ class UIElement extends BaseElement {
             const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
             if (bipartiteTypes.includes(this.sizeComparison)) {
                 this.fillTarget = 2;
-            } else {
+            } else if (!this.fillTarget || this.fillTarget < 1) {
                 this.fillTarget = 1;
             }
+            // If the parser already set fillTarget (e.g. for colorSequence), we keep it.
 
             // Enable self-reset for sockets with size comparison
             if (this.sizeComparison) {
@@ -916,16 +917,18 @@ class UIElement extends BaseElement {
                 continue;
             }
 
-            // console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, filled=${sunkenElement.filled}, fillTarget=${sunkenElement.fillTarget}, fillers=${sunkenElement.fillers.length}, sizeComparison=${sunkenElement.sizeComparison}`);
+            console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, color=${sunkenElement.color}, sequence=${JSON.stringify(sunkenElement.colorSequence)}, seqIdx=${sunkenElement.colorSequenceIndex}`);
 
             // Skip if socket is at capacity
             if (sunkenElement.filled >= sunkenElement.fillTarget) {
-                // console.log(`[Snap] Skipping ${sunkenElement.id} - at capacity (${sunkenElement.filled}/${sunkenElement.fillTarget})`);
+                console.log(`[Snap] ${sunkenElement.id} Rejected: at capacity (${sunkenElement.filled}/${sunkenElement.fillTarget})`);
                 continue;
             }
 
-            // For multi-fill sockets, check if we already have this specific piece
-            if (sunkenElement.fillTarget > 1 && sunkenElement.fillers.some(f => f.shape === this.shape)) {
+            // For multi-fill bipartite sockets, check if we already have this specific piece
+            const bipartiteTypes = [COMPARISON_BIPARTITE_X, COMPARISON_BIPARTITE_Y, COMPARISON_BIPARTITE_X_STRICT, COMPARISON_BIPARTITE_Y_STRICT];
+            const isBipartiteComparison = bipartiteTypes.includes(sunkenElement.sizeComparison);
+            if (isBipartiteComparison && sunkenElement.fillTarget > 1 && sunkenElement.fillers.some(f => f.shape === this.shape)) {
                 // console.log(`[Snap] Skipping ${sunkenElement.id} - already has ${this.shape}`);
                 continue;
             }
@@ -945,30 +948,27 @@ class UIElement extends BaseElement {
 
             // console.log(`[Snap] Evaluating shape match for ${this.shape} -> ${sunkenElement.shape}`);
 
-            if (sunkenElement.fillTarget > 1) {
+            if (sunkenElement.fillTarget > 1 && isBipartiteComparison) {
                 if (sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X || sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X_STRICT) {
                     if (this.shape === 'semicircle_left' || this.shape === 'semicircle_right') {
                         isBipartiteMatch = true;
-                        // console.log(`[Snap] Bipartite X match found`);
                     }
                 } else if (sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y || sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y_STRICT) {
                     if (this.shape === 'semicircle_down' || this.shape === 'semicircle_up') {
                         isBipartiteMatch = true;
-                        // console.log(`[Snap] Bipartite Y match found`);
                     }
                 }
                 if (!isBipartiteMatch) {
-                    // console.log(`[Snap] Skipping ${sunkenElement.id} - not a bipartite match`);
+                    console.log(`[Snap] ${sunkenElement.id} Rejected: not a bipartite match`);
                     continue;
                 }
             } else if (sunkenElement.shape === 'tumbler' && this.shape === 'key' && sunkenElement.color === this.color) {
                 // Keys can snap into tumblers (special case)
-                // console.log(`[Snap] Found tumbler/key pair!`);
                 isTumblerKeyPair = true;
             } else if (sunkenElement.shape === 'circle' && this.shape === 'screw') {
                 // Screws can fill circle holes
             } else if (sunkenElement.shape !== this.shape) {
-                // console.log(`[Snap] Skipping ${sunkenElement.id} - shape mismatch`);
+                console.log(`[Snap] ${sunkenElement.id} Rejected: shape mismatch (${this.shape} -> ${sunkenElement.shape})`);
                 continue;
             }
 
@@ -984,7 +984,12 @@ class UIElement extends BaseElement {
                 if (sunkenElement.sizeComparison === COMPARISON_STRICT ||
                     sunkenElement.sizeComparison === COMPARISON_BIPARTITE_X_STRICT ||
                     sunkenElement.sizeComparison === COMPARISON_BIPARTITE_Y_STRICT) {
-                    if (draggedSize !== sunkenSize || this.color !== sunkenElement.color) {
+                    let requiredColor = sunkenElement.color;
+                    if (sunkenElement.colorSequence) {
+                        requiredColor = sunkenElement.colorSequence[sunkenElement.colorSequenceIndex || 0];
+                    }
+                    if (draggedSize !== sunkenSize || this.color !== requiredColor) {
+                        console.log(`[Snap] ${sunkenElement.id} Rejected: strict mismatch (size: ${draggedSize}==${sunkenSize}, color: ${this.color}==${requiredColor})`);
                         continue;
                     }
                 }
@@ -999,6 +1004,11 @@ class UIElement extends BaseElement {
             // Check if dragged element overlaps with sunken element
             const overlap = (dragRect.left < sunkenRect.right && dragRect.right > sunkenRect.left &&
                 dragRect.top < sunkenRect.bottom && dragRect.bottom > sunkenRect.top);
+
+            if (!overlap) {
+                // Log overlap failures only if we passed shape/size checks
+                // console.log(`[Snap] ${sunkenElement.id} Rejected: no overlap`);
+            }
 
             // console.log(`[Snap] Overlap check for ${sunkenElement.id}: ${overlap}`);
 
@@ -1118,6 +1128,17 @@ class UIElement extends BaseElement {
                     // Mark sunken element as filled
                     sunkenElement.filled++;
                     sunkenElement.filler = this; // Store reference to the filler
+
+                    // Handle color sequence for stacked hole
+                    if (sunkenElement.colorSequence) {
+                        sunkenElement.colorSequenceIndex++;
+                        if (sunkenElement.colorSequenceIndex < sunkenElement.colorSequence.length) {
+                            // Update socket color to next in sequence
+                            sunkenElement.color = sunkenElement.colorSequence[sunkenElement.colorSequenceIndex];
+                            // Update socket appearance
+                            sunkenElement.updateVisuals();
+                        }
+                    }
                 }
 
                 this.socket = sunkenElement; // Store reference to the socket we are in
@@ -1129,6 +1150,16 @@ class UIElement extends BaseElement {
                     this.remoteActions = [{ id: sunkenElement.id, type: 'reset' }];
                     this.element.style.cursor = 'pointer';
                     this.setupEvents();
+                }
+
+                // Stacked hole refinement: Fade out and move to back
+                if (sunkenElement.colorSequence) {
+                    this.element.style.transition = `opacity ${STACKED_FADE_MS / 1000}s ease-out`;
+                    this.element.style.opacity = '0';
+                    this.element.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        this.element.style.zIndex = '-1';
+                    }, STACKED_FADE_MS);
                 }
 
                 // Disable any remote controllers that were controlling this dropped element (c0)
@@ -1181,7 +1212,7 @@ class UIElement extends BaseElement {
         if (this.socket !== null) return true;
 
         // Elements with no target state (no value after color) are auto-satisfied
-        if (this.targetState === 0 && this.method === METHOD_NONE && !this.draggable && !this.sizeComparison) {
+        if (this.targetState === 0 && this.method === METHOD_NONE && !this.draggable && !this.sizeComparison && !this.colorSequence) {
             return true;
         }
         // Purely draggable elements (method='drag' with nothing after it) are auto-satisfied
@@ -1423,6 +1454,7 @@ class UIElement extends BaseElement {
         // If we were hidden inside a socket, ensure we are visible again
         this.element.style.opacity = '1';
         this.element.style.display = '';
+        this.element.style.pointerEvents = '';
 
         if (this.elevation === '+') this.element.classList.add('raised');
         if (this.elevation === '-') this.element.classList.add('sunken');

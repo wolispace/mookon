@@ -9,7 +9,8 @@ class PuzzleGenerator {
             'group': new GroupTechnique(),
             'tumbler': new TumblerTechnique(),
             'semicircle': new SemicircleTechnique(),
-            'switchpattern': new SwitchPatternTechnique()
+            'switchpattern': new SwitchPatternTechnique(),
+            'stackedhole': new StackedHoleTechnique()
         };
         this.techniquesList = Object.values(this.techniques);
         this.plugAndSocketTechniques = this.techniquesList.filter(t => t.hasPlugAndSocket);
