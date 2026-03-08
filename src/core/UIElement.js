@@ -1152,14 +1152,11 @@ class UIElement extends BaseElement {
                     this.setupEvents();
                 }
 
-                // Stacked hole refinement: Fade out and move to back
-                if (sunkenElement.colorSequence) {
-                    this.element.style.transition = `opacity ${STACKED_FADE_MS / 1000}s ease-out`;
-                    this.element.style.opacity = '0';
+                // Stacked hole refinement: hide intermediate plugs so the socket's next color is visible.
+                // The final plug remains visible with standard 'done' darkening as requested.
+                if (sunkenElement.colorSequence && sunkenElement.filled < sunkenElement.fillTarget) {
+                    this.element.style.display = 'none';
                     this.element.style.pointerEvents = 'none';
-                    setTimeout(() => {
-                        this.element.style.zIndex = '-1';
-                    }, STACKED_FADE_MS);
                 }
 
                 // Disable any remote controllers that were controlling this dropped element (c0)
