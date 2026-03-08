@@ -917,11 +917,11 @@ class UIElement extends BaseElement {
                 continue;
             }
 
-            console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, color=${sunkenElement.color}, sequence=${JSON.stringify(sunkenElement.colorSequence)}, seqIdx=${sunkenElement.colorSequenceIndex}`);
+            // console.log(`[Snap] Checking target: ${sunkenElement.shape} ${sunkenElement.id}, color=${sunkenElement.color}, sequence=${JSON.stringify(sunkenElement.colorSequence)}, seqIdx=${sunkenElement.colorSequenceIndex}`);
 
             // Skip if socket is at capacity
             if (sunkenElement.filled >= sunkenElement.fillTarget) {
-                console.log(`[Snap] ${sunkenElement.id} Rejected: at capacity (${sunkenElement.filled}/${sunkenElement.fillTarget})`);
+                // console.log(`[Snap] ${sunkenElement.id} Rejected: at capacity (${sunkenElement.filled}/${sunkenElement.fillTarget})`);
                 continue;
             }
 
@@ -968,7 +968,7 @@ class UIElement extends BaseElement {
             } else if (sunkenElement.shape === 'circle' && this.shape === 'screw') {
                 // Screws can fill circle holes
             } else if (sunkenElement.shape !== this.shape) {
-                console.log(`[Snap] ${sunkenElement.id} Rejected: shape mismatch (${this.shape} -> ${sunkenElement.shape})`);
+                // console.log(`[Snap] ${sunkenElement.id} Rejected: shape mismatch (${this.shape} -> ${sunkenElement.shape})`);
                 continue;
             }
 
@@ -989,7 +989,7 @@ class UIElement extends BaseElement {
                         requiredColor = sunkenElement.colorSequence[sunkenElement.colorSequenceIndex || 0];
                     }
                     if (draggedSize !== sunkenSize || this.color !== requiredColor) {
-                        console.log(`[Snap] ${sunkenElement.id} Rejected: strict mismatch (size: ${draggedSize}==${sunkenSize}, color: ${this.color}==${requiredColor})`);
+                        // console.log(`[Snap] ${sunkenElement.id} Rejected: strict mismatch (size: ${draggedSize}==${sunkenSize}, color: ${this.color}==${requiredColor})`);
                         continue;
                     }
                 }
@@ -1152,11 +1152,35 @@ class UIElement extends BaseElement {
                     this.setupEvents();
                 }
 
-                // Stacked hole refinement: hide intermediate plugs so the socket's next color is visible.
-                // The final plug remains visible with standard 'done' darkening as requested.
+                // Stacked hole refinement: fade out intermediate plugs so the socket's next color is visible.
+                // The final plug remains in place (visible and dark).
                 if (sunkenElement.colorSequence && sunkenElement.filled < sunkenElement.fillTarget) {
-                    this.element.style.display = 'none';
-                    this.element.style.pointerEvents = 'none';
+                    const plugEl = this.element;
+                    const socketEl = sunkenElement.element;
+
+                    // 1. Ensure plug is visually ON TOP of the socket for the fade
+                    if (plugEl.parentElement === socketEl.parentElement) {
+                        socketEl.after(plugEl);
+                    }
+                    plugEl.style.zIndex = '10'; // High z-index during fade
+                    plugEl.style.pointerEvents = 'none';
+
+                    // 2. Perform the fade transition
+                    // Set transition in a timeout to ensure it doesn't conflict with current styles
+                    setTimeout(() => {
+                        plugEl.style.transition = `opacity ${STACKED_FADE_MS / 1000}s ease-out`;
+                        // Force reflow
+                        void plugEl.offsetHeight;
+                        plugEl.style.opacity = '0';
+
+                        // 3. Move BEHIND once fully transparent
+                        setTimeout(() => {
+                            if (plugEl.parentElement === socketEl.parentElement) {
+                                socketEl.before(plugEl);
+                            }
+                            plugEl.style.zIndex = '0';
+                        }, STACKED_FADE_MS);
+                    }, 20);
                 }
 
                 // Disable any remote controllers that were controlling this dropped element (c0)
@@ -1452,6 +1476,8 @@ class UIElement extends BaseElement {
         this.element.style.opacity = '1';
         this.element.style.display = '';
         this.element.style.pointerEvents = '';
+        this.element.style.zIndex = '';
+        this.element.style.transition = '';
 
         if (this.elevation === '+') this.element.classList.add('raised');
         if (this.elevation === '-') this.element.classList.add('sunken');

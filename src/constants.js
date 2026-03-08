@@ -11,7 +11,7 @@ const KEY_HEIGHT = 1.6;
 const ROTATION_DEGREES = 45; // Degrees per rotation step
 const INTERACTION_TIMEOUT = 300; // ms to restore styles after interacting
 const PLUG_DONE_BRIGHTNESS = 0.25; // Multiplier for plug darkening when dropped
-const STACKED_FADE_MS = 10000; // fadeout of stacked elements
+const STACKED_FADE_MS = 2000; // fadeout of stacked elements
 
 // Color constants - single source of truth
 const COLORS = {
