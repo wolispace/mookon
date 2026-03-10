@@ -11,7 +11,7 @@ class HoleTechnique {
 
         for (let i = 0; i < numHoles; i++) {
             const shape = DRAGGABLE_SHAPES[randBetween(0, DRAGGABLE_SHAPES.length - 1)];
-            const size = randBetween(1, 2);
+            const size = randDecimal(1, 2);
             const color = generator.getRandomColor(0.5);
 
             // Find space for socket first
