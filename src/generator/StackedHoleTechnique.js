@@ -11,7 +11,7 @@ class StackedHoleTechnique {
         const shape = shapes[randBetween(0, shapes.length - 1)];
 
         // Sequence of 2-3 colors
-        const sequenceLength = randBetween(2, 3);
+        const sequenceLength = randBetween(0, 4) + PUZZLE_CONFIG.DIFFICULTY;
         const colorSequence = [];
         for (let i = 0; i < sequenceLength; i++) {
             colorSequence.push(generator.getRandomColor(0.2));
@@ -21,7 +21,7 @@ class StackedHoleTechnique {
         const initialColor = colorSequence[0];
 
         // Find space for the socket
-        const socketSize = 2; // Stacked holes should be significant
+        const socketSize = randDecimal(1, 2); // Stacked holes should be significant
         const pos = panel.findFreeSpace(socketSize, socketSize, shape);
         if (!pos) return;
 

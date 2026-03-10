@@ -10,8 +10,8 @@ const KEY_HEIGHT = 1.6;
 // Timing constants
 const ROTATION_DEGREES = 45; // Degrees per rotation step
 const INTERACTION_TIMEOUT = 300; // ms to restore styles after interacting
-const PLUG_DONE_BRIGHTNESS = 0.25; // Multiplier for plug darkening when dropped
-const STACKED_FADE_MS = 2000; // fadeout of stacked elements
+const STACKED_DELAY_MS = 1000; // delay before starting the color change
+const STACKED_FADE_MS = 1000; // fadeout of stacked elements
 
 // Color constants - single source of truth
 const COLORS = {
@@ -140,7 +140,7 @@ const DIFFICULTY_SETTINGS = {
 
 // Debug configuration - set to override random generation
 const DEBUG_CONFIG = {
-    enabled: false,
+    enabled: true,
     showPanelSatisfaction: false, // Show first unsatisfied element in console
     technique: 'stackedhole', // forced technique: 'screw', 'hole', 'switch', 'maze', 'group', 'tumbler', 'switchpattern'
     coverStyle: 1      // Set to 5 for ResetCover

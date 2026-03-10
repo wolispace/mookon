@@ -1165,22 +1165,25 @@ class UIElement extends BaseElement {
                     plugEl.style.zIndex = '10'; // High z-index during fade
                     plugEl.style.pointerEvents = 'none';
 
-                    // 2. Perform the fade transition
-                    // Set transition in a timeout to ensure it doesn't conflict with current styles
+                    // wait before starting the fade so the plug remains visible briefly
                     setTimeout(() => {
-                        plugEl.style.transition = `opacity ${STACKED_FADE_MS / 1000}s ease-out`;
-                        // Force reflow
-                        void plugEl.offsetHeight;
-                        plugEl.style.opacity = '0';
-
-                        // 3. Move BEHIND once fully transparent
+                        // 2. Perform the fade transition
+                        // Set transition in a timeout to ensure it doesn't conflict with current styles
                         setTimeout(() => {
-                            if (plugEl.parentElement === socketEl.parentElement) {
-                                socketEl.before(plugEl);
-                            }
-                            plugEl.style.zIndex = '0';
-                        }, STACKED_FADE_MS);
-                    }, 20);
+                            plugEl.style.transition = `opacity ${STACKED_FADE_MS / 1000}s ease-out`;
+                            // Force reflow
+                            void plugEl.offsetHeight;
+                            plugEl.style.opacity = '0';
+
+                            // 3. Move BEHIND once fully transparent
+                            setTimeout(() => {
+                                if (plugEl.parentElement === socketEl.parentElement) {
+                                    socketEl.before(plugEl);
+                                }
+                                plugEl.style.zIndex = '0';
+                            }, STACKED_FADE_MS);
+                        }, 20);
+                    }, STACKED_DELAY_MS);
                 }
 
                 // Disable any remote controllers that were controlling this dropped element (c0)

@@ -2,6 +2,7 @@
     --bg-color: #1a1a1a;
     --panel-border-depth: 3px;
     --panel-padding: 12px;
+    --plug-done-brightness: 0.25;
 }
 
 * {
@@ -338,7 +339,7 @@ body {
 
 .element.done {
     /* Reuse the sunken look and add darkness */
-    filter: url(#sunken-filter) drop-shadow(-1px -1px 1px rgba(0, 0, 0, 1)) drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5)) brightness(var(--plug-done-brightness, 0.7)) !important;
+    filter: url(#sunken-filter) drop-shadow(-1px -1px 1px rgba(0, 0, 0, 1)) drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.5)) brightness(var(--plug-done-brightness)) !important;
     cursor: pointer !important;
     pointer-events: auto;
 }
